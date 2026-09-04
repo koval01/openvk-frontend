@@ -64,8 +64,7 @@
 
 #page_status_text.page_status_edit_button {
   display: block;
-  width: 100%;
-  max-width: 100%;
+  width: 380px;
   border: 0;
   background: transparent;
   padding: 3px 1px;

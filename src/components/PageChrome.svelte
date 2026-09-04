@@ -68,7 +68,6 @@
   .page_body_centered {
     float: none;
     margin: 12px auto;
-    width: auto;
-    max-width: 720px;
+    width: 632px;
   }
 </style>

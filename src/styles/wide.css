@@ -1,28 +1,7 @@
 /*
- * 2007 chrome, modern viewport: OpenVK main.css is 791px.
- * Keep blocks and class names; let header, columns, and wall use the window.
- * Narrow screens stay on original mobile.css (max-width: 770px).
+ * 2007 frame stays 791px. Wide monitors zoom that frame (--ovk-zoom from
+ * theme-boot.js) instead of stretching columns. mobile.css handles <771px.
  */
-
-html,
-body,
-#app {
-  width: 100%;
-}
-
-html:not([data-theme='dark']) .page_header {
-  background-color: #3a6791;
-  background-image: url(/assets/ui/header.gif), url(/assets/ui/header-fill.png);
-  background-repeat: no-repeat, repeat-x;
-  background-position: left top, left top;
-}
-
-.cookies-popup .contanier {
-  width: auto;
-  max-width: 1400px;
-  padding: 0 12px;
-  box-sizing: border-box;
-}
 
 .page_header button.mobile_title {
   appearance: none;
@@ -37,74 +16,8 @@ html:not([data-theme='dark']) .page_header {
 
 @media (min-width: 771px) {
   .layout {
-    width: 100%;
-    max-width: none;
+    width: 791px;
     margin: 0 auto;
-    box-sizing: border-box;
-  }
-
-  .page_header {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .page_body {
-    float: none;
-    width: auto;
-    margin-right: 12px;
-    overflow: hidden;
-    min-width: 0;
-  }
-
-  .page_content {
-    display: block;
-    width: auto;
-    max-width: none;
-    box-sizing: border-box;
-  }
-
-  #page_act {
-    width: auto;
-    max-width: none;
-  }
-
-  .left_big_block,
-  .right_big_block {
-    float: none;
-    width: auto;
-    max-width: none;
-    overflow: hidden;
-    min-width: 0;
-  }
-
-  .left_small_block {
-    float: left;
-  }
-
-  .right_small_block {
-    float: right;
-  }
-
-  .page_status {
-    width: auto;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .content_list.long {
-    width: auto;
-    max-width: none;
-  }
-
-  .crp-entry--message {
-    width: auto;
-    max-width: none;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .articleView_container {
-    width: auto;
-    max-width: 791px;
+    zoom: var(--ovk-zoom, 1);
   }
 }
