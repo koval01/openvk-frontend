@@ -1,0 +1,16 @@
+---
+description: OpenVK Latte templates are the UI spec for the Svelte rewrite
+alwaysApply: true
+---
+
+# Templates
+
+UI source of truth: [OpenVK `Web/Presenters/templates`](https://github.com/OpenVK/openvk/tree/master/Web/Presenters/templates) (local clone `~/VSCodeProjects/openvk/Web/Presenters/templates`). Do not invent a second page structure. Port blocks and CSS classes, not Latte or jQuery.
+
+**Chrome** (`@layout.latte`): `page_header` → `sidebar` → `page_body` (`page_yellowheader` + `wrap2`/`wrap1`/`page_content`) → `page_footer`. Guest header is login/reg/help; guest sidebar is the fast-login form. Signed-in “edit” goes to `/edit`. Left nav is owner-scoped: `/friends{id}`, `/albums{id}`, `/videos{id}`, `/audios{id}`, `/notes{id}`, `/groups{id}`.
+
+**Pages** extend the layout and fill `title`, `header`, `content` (optional `wrap`). Lists (friends, albums, videos, notes, groups) use `@listView.latte`: tabs, summary, cover/info/actions row, paginator, `nothing`.
+
+**Posts** are `components/post/oldpost.latte` (`post post_oldschool` table). Never `microblogpost.latte`. A permalink is `Wall/Post.latte` (post + comments + actions), not a scroll on the profile. Profile wall is `components/wall.latte` on `User/View.latte`.
+
+When implementing a page, open the matching Latte first and copy its blocks, class names, and URL grammar.

@@ -1,0 +1,330 @@
+/* Night appearance: true-black inverse of the white 2007 site. VK blue stays. */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --ovk-page: #000000;
+  --ovk-surface: #000000;
+  --ovk-surface-alt: #0a0a0a;
+  --ovk-text: #ececec;
+  --ovk-muted: #8a8a8a;
+  --ovk-link: #8cb6d4;
+  --ovk-title: #9ec4de;
+  --ovk-border: #1f1f1f;
+  --ovk-hover: #121212;
+  --ovk-button: #2b587a;
+  --ovk-button-text: #ffffff;
+  --ovk-notice: #0c0a00;
+  --ovk-notice-border: #6e5c14;
+  --ovk-header-link: #c8c8c8;
+  --ovk-post-author: #0a0a0a;
+  --ovk-input: #000000;
+  --ovk-error: #e8789a;
+  scrollbar-color: #2a2a2a #000000;
+
+  ::selection {
+    background: #2b587a;
+    color: #ffffff;
+  }
+
+  body {
+    background-color: #000000;
+    color: var(--ovk-text);
+  }
+
+  a,
+  .navigation .link,
+  .navigation_footer .link,
+  .page_footer .link,
+  #profile_link,
+  .profile_link,
+  .vk-profile-link {
+    color: var(--ovk-link);
+  }
+
+  .nobold,
+  nobold,
+  .page_footer_build,
+  .outline_table td,
+  .page_status,
+  .content_subtitle,
+  .user_info_none,
+  .label,
+  ul {
+    color: var(--ovk-muted);
+  }
+
+  .page_header {
+    background-color: #000000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.82)),
+      url(/assets/ui/header.gif);
+    background-repeat: no-repeat;
+  }
+
+  .header_navigation .link a {
+    color: var(--ovk-header-link);
+  }
+
+  .header_navigation .link a:hover {
+    color: #ffffff;
+  }
+
+  .wrap1,
+  .wrap2,
+  #wrapH,
+  #wrapHI,
+  .page_content,
+  .page_wrap,
+  .container_gray .content,
+  .album {
+    background: #000000;
+    border-color: var(--ovk-border);
+  }
+
+  .page_yellowheader {
+    background-image: none;
+    background-color: #000000;
+    color: var(--ovk-title);
+    border-color: #111111;
+    border-bottom-color: var(--ovk-title);
+  }
+
+  .page_yellowheader span {
+    color: var(--ovk-muted);
+  }
+
+  .page_yellowheader a {
+    color: var(--ovk-link);
+  }
+
+  .content_title_expanded,
+  .content_title_unexpanded,
+  .vk-section-title,
+  .vk-summary {
+    background-color: #000000 !important;
+    background-image: url(/assets/ui/section.gif) !important;
+    color: var(--ovk-title);
+    border-color: var(--ovk-title);
+  }
+
+  .content_subtitle,
+  .vk-subtitle,
+  .post-author {
+    background: #0a0a0a;
+    color: var(--ovk-muted);
+    border-color: #1a1a1a;
+  }
+
+  .post-author {
+    border-top-color: var(--ovk-title);
+  }
+
+  .post-content,
+  .profileName h2,
+  .page_body,
+  .left_tiny_block,
+  .accountInfo,
+  td,
+  th,
+  h2,
+  h4,
+  p {
+    color: var(--ovk-text);
+  }
+
+  .navigation .link,
+  .navigation .link_soon,
+  .navigation_footer .link,
+  .navigation-lang .link_new {
+    color: var(--ovk-link);
+    border-top-color: #000000;
+  }
+
+  .navigation .link:hover,
+  .navigation .link.is-active,
+  .navigation .link_soon:hover,
+  .navigation_footer .link:hover,
+  .page_footer .link:hover,
+  .vk-profile-link:hover,
+  #profile_link:hover,
+  .profile_link:hover,
+  .navigation-lang .link_new:hover,
+  .navigation-lang .link_new.is-current {
+    background: var(--ovk-hover);
+    border-color: var(--ovk-border);
+    color: var(--ovk-link);
+  }
+
+  .navigation .edit-button {
+    background-color: #000000 !important;
+    color: var(--ovk-muted) !important;
+  }
+
+  .tabs {
+    border-bottom-color: var(--ovk-title);
+  }
+
+  #activetabs {
+    background: var(--ovk-button);
+  }
+
+  #activetabs a,
+  #act_tab_a {
+    color: #ffffff;
+  }
+
+  input[type='text'],
+  input[type='password'],
+  input[type='email'],
+  input[type='search'],
+  input[type='phone'],
+  input[type='number'],
+  textarea,
+  select,
+  .vk-input,
+  .vk-textarea,
+  .vk-select,
+  .header_search_input,
+  #search_box input[type='search'],
+  .small-textarea {
+    background: #000000;
+    color: var(--ovk-text);
+    border-color: #2a2a2a;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ovk-text);
+    box-shadow: 0 0 0 1000px #000000 inset;
+    caret-color: var(--ovk-text);
+  }
+
+  .vk-gray-box,
+  .accent-box,
+  .summaryBar,
+  .container_gray,
+  .section_empty,
+  .menu_divider {
+    background: #0a0a0a;
+    color: var(--ovk-text);
+    border-color: var(--ovk-border);
+  }
+
+  .ovk-empty,
+  .vk-empty {
+    background: #000000;
+    color: var(--ovk-muted);
+    border-color: var(--ovk-border);
+  }
+
+  .vk-notice {
+    background: var(--ovk-notice);
+    border-color: var(--ovk-notice-border);
+    color: #d8c98a;
+  }
+
+  .information {
+    background: #0a1218;
+    border: 1px solid #1e3a50;
+    color: var(--ovk-text);
+  }
+
+  .error,
+  .auth-error,
+  .vk-error {
+    color: var(--ovk-error);
+  }
+
+  .error {
+    background: #14080c;
+    border: 1px solid #5a2038;
+  }
+
+  .tour {
+    background: #0c0a00;
+    border-color: #6e5c14;
+    color: var(--ovk-text);
+  }
+
+  .tour div {
+    color: var(--ovk-muted);
+  }
+
+  .vk-avatar {
+    background: #121212;
+    color: var(--ovk-link);
+  }
+
+  .album,
+  .album-photo img,
+  .album-photo--image {
+    background-color: #000000;
+    border-color: #2a2a2a;
+  }
+
+  #ajax_audio_player.ovk-audio-dock,
+  #ajax_audio_player {
+    background: #0a0a0a;
+    color: var(--ovk-text);
+    border: 1px solid #2a2a2a;
+  }
+
+  .ovk-diag-cont {
+    background-color: rgba(0, 0, 0, 0.72);
+  }
+
+  .ovk-diag {
+    background: #000000;
+    border-color: var(--ovk-title);
+  }
+
+  .ovk-diag-head {
+    background-color: var(--ovk-button);
+    border-bottom-color: #000000;
+    color: #ffffff;
+  }
+
+  .ovk-diag-action {
+    background: #0a0a0a;
+  }
+
+  .completeness-gauge-gold {
+    background-color: #161208;
+    border-top-color: #6e5c14;
+  }
+
+  .completeness-gauge-gold > div {
+    background-color: #3a3214;
+  }
+
+  hr {
+    background-color: var(--ovk-border);
+    border-color: var(--ovk-border);
+  }
+
+  #faqhead {
+    background: #0c0a00;
+    border-color: #6e5c14;
+    color: var(--ovk-text);
+  }
+
+  #faqcontent {
+    background: #0a0a0a;
+    border-color: #1f1f1f;
+    color: var(--ovk-text);
+  }
+
+  #tour .rightNav h1 {
+    background: #121212;
+    color: var(--ovk-text);
+  }
+
+  #tour .tab button.active {
+    background: #0a0a0a;
+    color: var(--ovk-text);
+  }
+
+  .page_footer .link {
+    color: var(--ovk-muted);
+  }
+}

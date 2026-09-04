@@ -1,0 +1,32 @@
+{
+  "name": "openvk-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "proto": "pbjs -t static-module -w es6 --keep-case -o src/proto/generated.js src/proto/api.proto && pbts -o src/proto/generated.d.ts src/proto/generated.js",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@tsconfig/svelte": "^5.0.8",
+    "@types/node": "^24.13.3",
+    "protobufjs-cli": "^2.7.0",
+    "svelte": "^5.56.10",
+    "svelte-check": "^4.7.6",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "@lucide/svelte": "^1.40.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "protobufjs": "^8.8.0",
+    "tailwindcss": "^4.3.3"
+  }
+}

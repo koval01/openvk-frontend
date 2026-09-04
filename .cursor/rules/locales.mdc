@@ -1,0 +1,14 @@
+---
+description: OpenVK .strings catalogs are the source of UI copy
+alwaysApply: true
+---
+
+# Locales
+
+UI copy comes from [OpenVK `locales`](https://github.com/OpenVK/openvk/tree/master/locales) (copied to `public/locales`). Russian (`ru`) is the source language and the fallback. Do not invent a second catalog for strings that already exist there.
+
+**Keys:** call `locale.t('key')` / `locale.count('base', n)` from `src/stores/locale.svelte.ts`. Reuse OpenVK keys (`header_home`, `my_page`, `log_in`, `select_language`, …). Rewrite-only phrases go in `src/locales/extra.ts` (Russian first, English overlay).
+
+**Detection:** `localStorage['openvk.lang']` if valid, else the first `navigator.languages` tag that maps to a catalog, else `ru`. Persist only when the user picks a language (`/language` or footer flags).
+
+**Picker:** `/language` is `About/Language.latte` — flag grid, Weblate link. Footer shows the first three catalogs plus “all languages”. Guests can open `/language`.
