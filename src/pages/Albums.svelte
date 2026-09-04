@@ -1,10 +1,13 @@
 <script lang="ts">
+  import HiddenFileButton from '../components/HiddenFileButton.svelte';
   import MediaImg from '../components/MediaImg.svelte';
   import PageChrome from '../components/PageChrome.svelte';
+  import { interceptUnlessModified } from '../lib/router.svelte';
   import { api } from '../services/api';
-  import type { Album } from '../services/types';
+  import { photoPermalink, type Album, type Photo } from '../services/types';
   import { auth } from '../stores/auth.svelte';
   import { locale } from '../stores/locale.svelte';
+  import { overlay } from '../stores/overlay.svelte';
 
   let epoch = $state(0);
   let title = $state('Photos');
@@ -32,7 +35,7 @@
     }
   }
 
-  async function uploadPhoto(albumId: number | undefined, files: FileList | null) {
+  async function uploadPhoto(albumId: number | undefined, files: FileList | null, input: HTMLInputElement) {
     const file = files?.[0];
     if (!file || !auth.token) {
       return;
@@ -46,11 +49,21 @@
       error = caught instanceof Error ? caught.message : 'Could not upload photo';
     } finally {
       uploading = false;
+      input.value = '';
     }
   }
 
   async function removePhoto(albumId: number, mediaId: number) {
     if (!auth.token) {
+      return;
+    }
+    const ok = await overlay.confirm({
+      title: locale.t('warning'),
+      text: locale.t('question_confirm'),
+      yes: locale.t('yes'),
+      no: locale.t('no'),
+    });
+    if (!ok) {
       return;
     }
     error = null;
@@ -61,67 +74,106 @@
       error = caught instanceof Error ? caught.message : 'Could not delete photo';
     }
   }
+
+  function viewerPhotos(album: Album) {
+    return album.photos.map((photo: Photo) => ({
+      id: `${photo.owner_user_id}_${photo.id}`,
+      url: photo.url,
+      title: photo.original_filename ?? album.title,
+      ownerId: photo.owner_user_id,
+      objectId: photo.id,
+      liked: photo.liked,
+      count: photo.like_count,
+    }));
+  }
 </script>
 
 <PageChrome title={locale.t('my_photos')}>
   {#await albumsPromise}
-    <p class="m-0 text-vk-muted">{locale.t('loading_albums')}</p>
+    <p>{locale.t('loading_albums')}</p>
   {:then albums}
-    <div class="vk-summary" data-testid="albums-summary">
-      {albums.length === 0 ? locale.t('albums_list_zero') : locale.count('albums_list', albums.length)}
+    <div class="summaryBar">
+      <div class="summary albumSummary" data-testid="albums-summary">
+        {albums.length === 0 ? locale.t('albums_list_zero') : locale.count('albums_list', albums.length)}
+        <span style="float: right;">
+          &nbsp;|&nbsp;
+          <a href="#create">{locale.t('create_album')}</a>
+        </span>
+      </div>
     </div>
-    <form class="vk-gray-box" data-testid="album-create" onsubmit={createAlbum}>
-      <input class="vk-input" name="title" bind:value={title} placeholder={locale.t('album_title')} />
-      <button class="vk-btn" type="submit">{locale.t('create_album')}</button>
+    <form id="create" class="container_gray" data-testid="album-create" onsubmit={createAlbum}>
+      <input name="title" bind:value={title} placeholder={locale.t('album_title')} />
+      <input type="submit" class="button" value={locale.t('create_album')} />
     </form>
-    <label class="vk-gray-box" style="display:block;">
-      {locale.t('upload_a_photo')}
-      <input
-        data-testid="photo-file"
-        type="file"
+    <div class="container_gray">
+      <HiddenFileButton
+        testId="photo-file"
         accept="image/png,image/jpeg,image/gif,image/webp"
         disabled={uploading}
-        onchange={(event) => {
-          const input = event.currentTarget;
-          void uploadPhoto(albums[0]?.id, input.files).then(() => {
-            input.value = '';
-          });
-        }}
+        label={locale.t('upload_picts')}
+        onpick={(files, input) => void uploadPhoto(albums[0]?.id, files, input)}
       />
-    </label>
+    </div>
     {#if error}
-      <p class="text-vk-error" data-testid="albums-error">{error}</p>
+      <p class="vk-error" data-testid="albums-error">{error}</p>
     {/if}
-    {#each albums as album (album.id)}
-      <div class="border-b border-vk-border py-2" data-testid={`album-${album.id}`}>
-        <b>{album.title}</b>
-        <span class="text-vk-muted"> {album.photo_count} {locale.t('photos')}</span>
-        {#if album.description}
-          <div class="text-vk-muted">{album.description}</div>
-        {/if}
-        <div class="container_gray scroll_container album-flex">
-          {#each album.photos as photo (photo.id)}
-            <div class="album-photo" data-testid={`photo-${photo.id}`}>
-              <MediaImg
-                class="album-photo--image"
-                src={photo.url}
-                alt={photo.original_filename ?? album.title}
-              />
-              <button
-                class="link album-photo--delete"
-                type="button"
-                data-testid={`delete-photo-${photo.id}`}
-                onclick={() => removePhoto(album.id, photo.id)}>{locale.t('delete')}</button
-              >
-            </div>
-          {/each}
+    <div class="list_view container_gray no_scroll_container">
+      {#each albums as album (album.id)}
+        <div class="scroll_node content" data-testid={`album-${album.id}`}>
+          <table>
+            <tbody>
+              <tr>
+                <td valign="top" class="list_view_item_cover">
+                  <MediaImg
+                    src={album.cover_url ?? album.photos[0]?.url}
+                    alt={album.title}
+                    style="height: 130px; width: 170px; object-fit: cover"
+                  />
+                </td>
+                <td valign="top" style="width: 100%" class="list_view_item_info">
+                  <b>{album.title}</b><br />
+                  <span style="color: grey;">{album.photo_count} {locale.t('photos')}</span>
+                  {#if album.description}
+                    <div>{album.description}</div>
+                  {/if}
+                  <div class="container_gray scroll_container album-flex">
+                    {#each album.photos as photo, index (photo.id)}
+                      <div class="album-photo" data-testid={`photo-${photo.id}`}>
+                        <a
+                          href={photoPermalink(photo.owner_user_id, photo.id)}
+                          onclick={(event) => {
+                            if (!interceptUnlessModified(event)) {
+                              return;
+                            }
+                            overlay.openPhoto(viewerPhotos(album), index);
+                          }}
+                        >
+                          <MediaImg
+                            class="album-photo--image"
+                            src={photo.url}
+                            alt={photo.original_filename ?? album.title}
+                          />
+                        </a>
+                        <button
+                          class="link album-photo--delete"
+                          type="button"
+                          data-testid={`delete-photo-${photo.id}`}
+                          onclick={() => removePhoto(album.id, photo.id)}>{locale.t('delete')}</button
+                        >
+                      </div>
+                    {/each}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-    {:else}
-      <div class="vk-empty">{locale.t('nothing_here')}</div>
-    {/each}
+      {:else}
+        <div class="ovk-empty">{locale.t('nothing_here')}</div>
+      {/each}
+    </div>
   {:catch failed}
-    <p class="text-vk-error" data-testid="albums-error">
+    <p class="vk-error" data-testid="albums-error">
       {failed instanceof Error ? failed.message : locale.t('loading_albums')}
     </p>
   {/await}

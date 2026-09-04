@@ -19,9 +19,28 @@ export default defineConfig({
   },
   webServer: [
     {
+      // Media lives in object storage now, so the suite needs a bucket.
+      command: 'docker compose --profile dev up silo silo-init',
+      cwd: backend,
+      url: 'http://127.0.0.1:9000/minio/health/live',
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
       command: 'cargo run',
       cwd: backend,
       url: 'http://127.0.0.1:8080/health',
+      env: {
+        STORAGE_BACKEND: 's3',
+        S3_ENDPOINT: 'http://127.0.0.1:9000',
+        S3_BUCKET: 'openvk',
+        S3_REGION: 'auto',
+        S3_ACCESS_KEY_ID: 'openvk',
+        S3_SECRET_ACCESS_KEY: 'openvk-dev-secret',
+        S3_PATH_STYLE: '1',
+        // The dev server proxies /media to the bucket, so media stays same-origin.
+        MEDIA_PUBLIC_BASE_URL: 'http://127.0.0.1:5173/media',
+      },
       reuseExistingServer: true,
       timeout: 180_000,
     },

@@ -1,17 +1,35 @@
 import type {
   Album,
   AudioTrack,
+  Comment,
+  GeoPoint,
   Group,
   InstanceAbout,
   Message,
   Photo,
   PrivacyLevel,
+  SiteNotification,
   TokenResponse,
   UpdateAccount,
   User,
   Video,
+  WallAttachment,
   WallPost,
+  WriteWallBody,
+  LikeState,
+  Gift,
+  GiftCategory,
+  UserGift,
+  Ticket,
+  TicketReply,
+  SiteReport,
+  Voucher,
+  BannedLink,
+  Warning,
+  NospamResult,
+  AdminOverview,
 } from '../services/types';
+import { rewriteMediaUrl } from '../services/types';
 import { asArrayBuffer, decodeMessage, encodeMessage } from './runtime';
 
 export { asArrayBuffer };
@@ -52,6 +70,15 @@ function optString(value?: string | null): string | null {
   return value ? value : null;
 }
 
+function mediaField(value?: string | null): string {
+  return rewriteMediaUrl(value ?? '');
+}
+
+function optMediaField(value?: string | null): string | null {
+  const valueOrNull = optString(value);
+  return valueOrNull ? rewriteMediaUrl(valueOrNull) : valueOrNull;
+}
+
 function optNumber(value?: number | null): number | null {
   return value === undefined || value === null ? null : Number(value);
 }
@@ -71,7 +98,19 @@ type PbUser = {
   privacy_messages?: number;
   privacy_photos?: number;
   privacy_audio?: number;
+  privacy_profile?: number;
+  privacy_friends?: number;
   created_at?: string;
+  coins?: number;
+  rating?: number;
+  role?: string;
+  banned?: boolean;
+  ban_reason?: string;
+  banned_until?: string;
+  support_banned?: boolean;
+  support_ban_reason?: string;
+  posting_allowed?: boolean;
+  messaging_allowed?: boolean;
 };
 
 export function userFromPb(user: PbUser): User {
@@ -84,13 +123,25 @@ export function userFromPb(user: PbUser): User {
     city: optString(user.city),
     email: optString(user.email),
     phone: optString(user.phone),
-    avatar_url: optString(user.avatar_url),
+    avatar_url: optMediaField(user.avatar_url),
     verified: Boolean(user.verified),
     privacy_wall: privacyFromPb(user.privacy_wall),
     privacy_messages: privacyFromPb(user.privacy_messages),
     privacy_photos: privacyFromPb(user.privacy_photos),
     privacy_audio: privacyFromPb(user.privacy_audio),
+    privacy_profile: privacyFromPb(user.privacy_profile),
+    privacy_friends: privacyFromPb(user.privacy_friends),
     created_at: user.created_at ?? '',
+    coins: Number(user.coins ?? 0),
+    rating: Number(user.rating ?? 0),
+    role: user.role || 'user',
+    banned: Boolean(user.banned),
+    ban_reason: optString(user.ban_reason),
+    banned_until: optString(user.banned_until),
+    support_banned: Boolean(user.support_banned),
+    support_ban_reason: optString(user.support_ban_reason),
+    posting_allowed: user.posting_allowed !== false,
+    messaging_allowed: user.messaging_allowed !== false,
   };
 }
 
@@ -98,6 +149,21 @@ export function usersFromPb(bytes: Uint8Array): User[] {
   const list = decode<{ users?: PbUser[] }>('UserList', bytes);
   return (list.users ?? []).map(userFromPb);
 }
+
+type PbGeo = {
+  lat?: number;
+  lng?: number;
+  name?: string;
+};
+
+type PbWallAttachment = {
+  kind?: string;
+  owner_id?: number;
+  object_id?: number;
+  url?: string;
+  title?: string;
+  src?: string;
+};
 
 type PbWallPost = {
   id?: number;
@@ -108,6 +174,14 @@ type PbWallPost = {
   content?: string;
   permalink?: string;
   created_at?: string;
+  attachments?: PbWallAttachment[];
+  geo?: PbGeo;
+  source?: string;
+  nsfw?: boolean;
+  comment_count?: number;
+  club?: PbGroup;
+  like_count?: number;
+  liked?: boolean;
 };
 
 export function wallPostFromPb(post: PbWallPost): WallPost {
@@ -120,12 +194,119 @@ export function wallPostFromPb(post: PbWallPost): WallPost {
     content: post.content ?? '',
     permalink: post.permalink ?? '',
     created_at: post.created_at ?? '',
+    attachments: (post.attachments ?? []).map((item) => ({
+      kind: item.kind ?? '',
+      owner_id: Number(item.owner_id ?? 0),
+      object_id: Number(item.object_id ?? 0),
+      url: mediaField(item.url),
+      title: item.title ?? '',
+      src: mediaField(item.src),
+    })),
+    geo: post.geo
+      ? {
+          lat: Number(post.geo.lat ?? 0),
+          lng: Number(post.geo.lng ?? 0),
+          name: post.geo.name ?? '',
+        }
+      : null,
+    source: optString(post.source),
+    nsfw: Boolean(post.nsfw),
+    comment_count: Number(post.comment_count ?? 0),
+    club: post.club ? groupFromPb(post.club) : null,
+    like_count: Number(post.like_count ?? 0),
+    liked: Boolean(post.liked),
   };
 }
 
 export function wallPostsFromPb(bytes: Uint8Array): WallPost[] {
   const list = decode<{ posts?: PbWallPost[] }>('WallPostList', bytes);
   return (list.posts ?? []).map(wallPostFromPb);
+}
+
+type PbComment = {
+  id?: number;
+  author_id?: number;
+  author?: PbUser;
+  content?: string;
+  created_at?: string;
+  like_count?: number;
+  liked?: boolean;
+};
+
+export function commentFromPb(comment: PbComment): Comment {
+  return {
+    id: Number(comment.id ?? 0),
+    author_id: Number(comment.author_id ?? 0),
+    author: userFromPb(comment.author ?? {}),
+    content: comment.content ?? '',
+    created_at: comment.created_at ?? '',
+    like_count: Number(comment.like_count ?? 0),
+    liked: Boolean(comment.liked),
+  };
+}
+
+export function commentsFromPb(bytes: Uint8Array): Comment[] {
+  const list = decode<{ comments?: PbComment[] }>('CommentList', bytes);
+  return (list.comments ?? []).map(commentFromPb);
+}
+
+export function likeStateFromPb(bytes: Uint8Array): LikeState {
+  const state = decode<{ liked?: boolean; count?: number }>('LikeState', bytes);
+  return {
+    liked: Boolean(state.liked),
+    count: Number(state.count ?? 0),
+  };
+}
+
+export function encodeWriteWall(body: WriteWallBody): Uint8Array {
+  const geo: GeoPoint | undefined = body.geo ?? undefined;
+  return encode('WriteWall', {
+    content: body.content,
+    attachments: body.attachments.map((item: WallAttachment) => ({
+      kind: item.kind,
+      owner_id: item.owner_id,
+      object_id: item.object_id,
+      url: item.url,
+      title: item.title,
+      src: item.src,
+    })),
+    geo: geo ? { lat: geo.lat, lng: geo.lng, name: geo.name } : undefined,
+    source: body.source || undefined,
+    nsfw: body.nsfw,
+  });
+}
+
+type PbNotification = {
+  id?: number;
+  kind?: string;
+  actor_id?: number;
+  actor?: PbUser;
+  entity_type?: string;
+  entity_id?: number;
+  payload_json?: string;
+  href?: string;
+  read_at?: string;
+  created_at?: string;
+};
+
+export function notificationFromPb(item: PbNotification): SiteNotification {
+  return {
+    id: Number(item.id ?? 0),
+    kind: item.kind ?? '',
+    actor_id: item.actor_id === undefined ? null : Number(item.actor_id),
+    actor: item.actor ? userFromPb(item.actor) : null,
+    entity_type: optString(item.entity_type),
+    entity_id: item.entity_id === undefined ? null : Number(item.entity_id),
+    payload_json: item.payload_json ?? '',
+    href: item.href ?? '/notifications',
+    read_at: optString(item.read_at),
+    created_at: item.created_at ?? '',
+  };
+}
+
+export function notificationsFromPb(bytes: Uint8Array): SiteNotification[] {
+  const list = decode<{ notifications?: PbNotification[] }>('NotificationList', bytes);
+  return (list.notifications ?? []).map(notificationFromPb);
 }
 
 type PbMessage = {
@@ -169,7 +350,7 @@ export function audioFromPb(track: PbAudio): AudioTrack {
     title: track.title ?? '',
     duration_ms: Number(track.duration_ms ?? 0),
     owner_user_id: Number(track.owner_user_id ?? 0),
-    src: track.src ?? '',
+    src: mediaField(track.src),
   };
 }
 
@@ -188,6 +369,8 @@ type PbPhoto = {
   height?: number;
   original_filename?: string;
   url?: string;
+  like_count?: number;
+  liked?: boolean;
 };
 
 export function photoFromPb(photo: PbPhoto): Photo {
@@ -200,7 +383,9 @@ export function photoFromPb(photo: PbPhoto): Photo {
     width: optNumber(photo.width),
     height: optNumber(photo.height),
     original_filename: optString(photo.original_filename),
-    url: photo.url ?? '',
+    url: mediaField(photo.url),
+    like_count: Number(photo.like_count ?? 0),
+    liked: Boolean(photo.liked),
   };
 }
 
@@ -223,7 +408,7 @@ export function albumFromPb(album: PbAlbum): Album {
     owner_user_id: Number(album.owner_user_id ?? 0),
     created_at: album.created_at ?? '',
     photo_count: Number(album.photo_count ?? 0),
-    cover_url: optString(album.cover_url),
+    cover_url: optMediaField(album.cover_url),
     photos: (album.photos ?? []).map(photoFromPb),
   };
 }
@@ -241,6 +426,8 @@ type PbVideo = {
   status?: string;
   owner_user_id?: number;
   src?: string;
+  like_count?: number;
+  liked?: boolean;
 };
 
 export function videoFromPb(video: PbVideo): Video {
@@ -251,7 +438,9 @@ export function videoFromPb(video: PbVideo): Video {
     description: optString(video.description),
     status: video.status ?? '',
     owner_user_id: Number(video.owner_user_id ?? 0),
-    src: optString(video.src),
+    src: optMediaField(video.src),
+    like_count: Number(video.like_count ?? 0),
+    liked: Boolean(video.liked),
   };
 }
 
@@ -266,8 +455,10 @@ type PbGroup = {
   name?: string;
   about?: string;
   kind?: string;
-  owner_id?: number;
+    owner_id?: number;
   created_at?: string;
+  avatar_url?: string;
+  members?: number;
 };
 
 export function groupFromPb(group: PbGroup): Group {
@@ -279,6 +470,8 @@ export function groupFromPb(group: PbGroup): Group {
     kind: group.kind ?? '',
     owner_id: Number(group.owner_id ?? 0),
     created_at: group.created_at ?? '',
+    avatar_url: optMediaField(group.avatar_url),
+    members: Number(group.members ?? 0),
   };
 }
 
@@ -325,9 +518,13 @@ export function tokenFromPb(bytes: Uint8Array): TokenResponse {
   };
 }
 
-export function errorFromPb(bytes: Uint8Array): { code?: string; message?: string } {
-  const error = decode<{ error?: string; message?: string }>('Error', bytes);
-  return { code: error.error || undefined, message: error.message || undefined };
+export function errorFromPb(bytes: Uint8Array): { code?: string; message?: string; traceId?: string } {
+  const error = decode<{ error?: string; message?: string; trace_id?: string }>('Error', bytes);
+  return {
+    code: error.error || undefined,
+    message: error.message || undefined,
+    traceId: error.trace_id || undefined,
+  };
 }
 
 export function encodeUpdateAccount(body: UpdateAccount): Uint8Array {
@@ -339,6 +536,11 @@ export function encodeUpdateAccount(body: UpdateAccount): Uint8Array {
     city: body.city || undefined,
     privacy_wall: privacyToPb(body.privacy_wall),
     privacy_messages: privacyToPb(body.privacy_messages),
+    privacy_photos: privacyToPb(body.privacy_photos ?? 'everyone'),
+    privacy_audio: privacyToPb(body.privacy_audio ?? 'everyone'),
+    privacy_profile: privacyToPb(body.privacy_profile ?? 'everyone'),
+    privacy_friends: privacyToPb(body.privacy_friends ?? 'everyone'),
+    status: body.status === undefined ? undefined : (body.status ?? ''),
   });
 }
 
@@ -411,4 +613,285 @@ export function decodeSocketEvent(bytes: Uint8Array): { type: string; ts: number
     ts: Number(event.ts ?? 0),
     payload,
   };
+}
+
+type PbGift = {
+  id?: number;
+  category_id?: number;
+  name?: string;
+  description?: string;
+  price?: number;
+  image_url?: string;
+};
+
+function giftFromPb(gift: PbGift): Gift {
+  return {
+    id: Number(gift.id ?? 0),
+    category_id: Number(gift.category_id ?? 0),
+    name: gift.name ?? '',
+    description: gift.description ?? '',
+    price: Number(gift.price ?? 0),
+    image_url: gift.image_url ?? '',
+  };
+}
+
+export function catalogFromPb(bytes: Uint8Array): GiftCategory[] {
+  const list = decode<{
+    categories?: {
+      id?: number;
+      slug?: string;
+      name?: string;
+      description?: string;
+      gifts?: PbGift[];
+    }[];
+  }>('GiftCatalog', bytes);
+  return (list.categories ?? []).map((category) => ({
+    id: Number(category.id ?? 0),
+    slug: category.slug ?? '',
+    name: category.name ?? '',
+    description: category.description ?? '',
+    gifts: (category.gifts ?? []).map(giftFromPb),
+  }));
+}
+
+type PbUserGift = {
+  id?: number;
+  gift_id?: number;
+  gift?: PbGift;
+  sender_id?: number;
+  sender?: PbUser;
+  receiver_id?: number;
+  caption?: string;
+  anonymous?: boolean;
+  created_at?: string;
+};
+
+export function userGiftFromPb(gift: PbUserGift): UserGift {
+  return {
+    id: Number(gift.id ?? 0),
+    gift_id: Number(gift.gift_id ?? 0),
+    gift: giftFromPb(gift.gift ?? {}),
+    sender_id: Number(gift.sender_id ?? 0),
+    sender: gift.sender ? userFromPb(gift.sender) : null,
+    receiver_id: Number(gift.receiver_id ?? 0),
+    caption: optString(gift.caption),
+    anonymous: Boolean(gift.anonymous),
+    created_at: gift.created_at ?? '',
+  };
+}
+
+export function userGiftsFromPb(bytes: Uint8Array): UserGift[] {
+  const list = decode<{ gifts?: PbUserGift[] }>('UserGiftList', bytes);
+  return (list.gifts ?? []).map(userGiftFromPb);
+}
+
+type PbTicketReply = {
+  id?: number;
+  ticket_id?: number;
+  author_id?: number;
+  author?: PbUser;
+  content?: string;
+  from_agent?: boolean;
+  created_at?: string;
+};
+
+type PbTicket = {
+  id?: number;
+  author_id?: number;
+  author?: PbUser;
+  subject?: string;
+  content?: string;
+  status?: string;
+  created_at?: string;
+  replies?: PbTicketReply[];
+};
+
+function ticketReplyFromPb(reply: PbTicketReply): TicketReply {
+  return {
+    id: Number(reply.id ?? 0),
+    ticket_id: Number(reply.ticket_id ?? 0),
+    author_id: Number(reply.author_id ?? 0),
+    author: userFromPb(reply.author ?? {}),
+    content: reply.content ?? '',
+    from_agent: Boolean(reply.from_agent),
+    created_at: reply.created_at ?? '',
+  };
+}
+
+export function ticketFromPb(ticket: PbTicket): Ticket {
+  return {
+    id: Number(ticket.id ?? 0),
+    author_id: Number(ticket.author_id ?? 0),
+    author: userFromPb(ticket.author ?? {}),
+    subject: ticket.subject ?? '',
+    content: ticket.content ?? '',
+    status: ticket.status ?? '',
+    created_at: ticket.created_at ?? '',
+    replies: (ticket.replies ?? []).map(ticketReplyFromPb),
+  };
+}
+
+export function ticketsFromPb(bytes: Uint8Array): Ticket[] {
+  const list = decode<{ tickets?: PbTicket[] }>('TicketList', bytes);
+  return (list.tickets ?? []).map(ticketFromPb);
+}
+
+type PbReport = {
+  id?: number;
+  author_id?: number;
+  author?: PbUser;
+  target_type?: string;
+  target_id?: number;
+  reason?: string;
+  status?: string;
+  created_at?: string;
+};
+
+export function reportFromPb(report: PbReport): SiteReport {
+  return {
+    id: Number(report.id ?? 0),
+    author_id: Number(report.author_id ?? 0),
+    author: userFromPb(report.author ?? {}),
+    target_type: report.target_type ?? '',
+    target_id: Number(report.target_id ?? 0),
+    reason: report.reason ?? '',
+    status: report.status ?? '',
+    created_at: report.created_at ?? '',
+  };
+}
+
+export function reportsFromPb(bytes: Uint8Array): SiteReport[] {
+  const list = decode<{ reports?: PbReport[] }>('ReportList', bytes);
+  return (list.reports ?? []).map(reportFromPb);
+}
+
+type PbVoucher = {
+  id?: number;
+  serial?: string;
+  coins?: number;
+  remaining?: number;
+  total?: number;
+  expires_at?: string;
+};
+
+export function voucherFromPb(voucher: PbVoucher): Voucher {
+  return {
+    id: Number(voucher.id ?? 0),
+    serial: voucher.serial ?? '',
+    coins: Number(voucher.coins ?? 0),
+    remaining: Number(voucher.remaining ?? 0),
+    total: Number(voucher.total ?? 0),
+    expires_at: optString(voucher.expires_at),
+  };
+}
+
+export function vouchersFromPb(bytes: Uint8Array): Voucher[] {
+  const list = decode<{ vouchers?: PbVoucher[] }>('VoucherList', bytes);
+  return (list.vouchers ?? []).map(voucherFromPb);
+}
+
+type PbBannedLink = {
+  id?: number;
+  url?: string;
+  reason?: string;
+  created_at?: string;
+};
+
+export function bannedLinkFromPb(link: PbBannedLink): BannedLink {
+  return {
+    id: Number(link.id ?? 0),
+    url: link.url ?? '',
+    reason: link.reason ?? '',
+    created_at: link.created_at ?? '',
+  };
+}
+
+export function bannedLinksFromPb(bytes: Uint8Array): BannedLink[] {
+  const list = decode<{ links?: PbBannedLink[] }>('BannedLinkList', bytes);
+  return (list.links ?? []).map(bannedLinkFromPb);
+}
+
+export function warningFromPb(bytes: Uint8Array): Warning {
+  const warning = decode<{
+    id?: number;
+    user_id?: number;
+    actor_id?: number;
+    reason?: string;
+    created_at?: string;
+  }>('Warning', bytes);
+  return {
+    id: Number(warning.id ?? 0),
+    user_id: Number(warning.user_id ?? 0),
+    actor_id: Number(warning.actor_id ?? 0),
+    reason: warning.reason ?? '',
+    created_at: warning.created_at ?? '',
+  };
+}
+
+export function warningsFromPb(bytes: Uint8Array): Warning[] {
+  const list = decode<{
+    warnings?: {
+      id?: number;
+      user_id?: number;
+      actor_id?: number;
+      reason?: string;
+      created_at?: string;
+    }[];
+  }>('WarningList', bytes);
+  return (list.warnings ?? []).map((warning) => ({
+    id: Number(warning.id ?? 0),
+    user_id: Number(warning.user_id ?? 0),
+    actor_id: Number(warning.actor_id ?? 0),
+    reason: warning.reason ?? '',
+    created_at: warning.created_at ?? '',
+  }));
+}
+
+export function nospamFromPb(bytes: Uint8Array): NospamResult {
+  const result = decode<{
+    action_id?: number;
+    hits?: {
+      post_id?: number;
+      target_id?: number;
+      local_id?: number;
+      author_id?: number;
+      content?: string;
+      permalink?: string;
+    }[];
+    deleted?: number;
+  }>('NospamResult', bytes);
+  return {
+    action_id: Number(result.action_id ?? 0),
+    hits: (result.hits ?? []).map((hit) => ({
+      post_id: Number(hit.post_id ?? 0),
+      target_id: Number(hit.target_id ?? 0),
+      local_id: Number(hit.local_id ?? 0),
+      author_id: Number(hit.author_id ?? 0),
+      content: hit.content ?? '',
+      permalink: hit.permalink ?? '',
+    })),
+    deleted: Number(result.deleted ?? 0),
+  };
+}
+
+export function overviewFromPb(bytes: Uint8Array): AdminOverview {
+  const overview = decode<AdminOverview>('AdminOverview', bytes);
+  return {
+    users: Number(overview.users ?? 0),
+    groups: Number(overview.groups ?? 0),
+    wall_posts: Number(overview.wall_posts ?? 0),
+    tickets_open: Number(overview.tickets_open ?? 0),
+    reports_open: Number(overview.reports_open ?? 0),
+    banned_users: Number(overview.banned_users ?? 0),
+  };
+}
+
+export function adminUsersFromPb(bytes: Uint8Array): User[] {
+  const list = decode<{ users?: PbUser[] }>('AdminUserList', bytes);
+  return (list.users ?? []).map(userFromPb);
+}
+
+export function adminClubsFromPb(bytes: Uint8Array): Group[] {
+  const list = decode<{ groups?: PbGroup[] }>('AdminClubList', bytes);
+  return (list.groups ?? []).map(groupFromPb);
 }

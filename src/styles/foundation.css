@@ -23,8 +23,14 @@ html[data-theme='default'] {
 }
 
 body {
+  min-height: 100vh;
   background-color: var(--ovk-page);
   color: var(--ovk-text);
+}
+
+html {
+  min-height: 100%;
+  background-color: var(--ovk-page, #ffffff);
 }
 
 .page_header {
@@ -127,13 +133,23 @@ button.vk-btn:hover {
   background-color: #e1d7a2;
 }
 
-body.dimmed > .dimmer {
+body.dimmed > .dimmer,
+body.dimmed .dimmer {
+  display: block;
   z-index: 200;
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  opacity: 0.5;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000cf;
+  opacity: 1;
+}
+
+.dimmer {
+  display: none;
 }
 
 .ovk-diag-cont {

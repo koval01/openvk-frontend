@@ -32,16 +32,20 @@
     <div class="vk-empty">{locale.t('nothing_here')}</div>
   {:else}
     {#await friendsPromise}
-      <p class="px-1 py-4 text-vk-muted">{locale.t('loading_friends')}</p>
+      <p>{locale.t('loading_friends')}</p>
     {:then friends}
-      <div class="vk-summary">
-        {friends.length === 0 ? locale.t('friends_list_zero') : locale.count('friends_list', friends.length)}
+      <div class="summaryBar vk-summary">
+        <div class="summary">
+          {friends.length === 0 ? locale.t('friends_list_zero') : locale.count('friends_list', friends.length)}
+        </div>
       </div>
-      {#each friends as friend (friend.id)}
-        <FriendCard {friend} />
-      {:else}
-        <div class="vk-empty">{locale.t('nothing_here')}</div>
-      {/each}
+      <div class="list_view container_gray no_scroll_container">
+        {#each friends as friend (friend.id)}
+          <FriendCard {friend} />
+        {:else}
+          <div class="ovk-empty">{locale.t('nothing_here')}</div>
+        {/each}
+      </div>
     {/await}
   {/if}
 </PageChrome>

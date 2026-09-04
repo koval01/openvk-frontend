@@ -3,7 +3,7 @@ import $protobuf from "protobufjs/minimal.js";
 
 // Common aliases
 const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
-const $Object = $util.global.Object, $undefined = $util.global.undefined, $Error = $util.global.Error, $RangeError = $util.global.RangeError, $TypeError = $util.global.TypeError, $String = $util.global.String, $Boolean = $util.global.Boolean, $Number = $util.global.Number, $parseInt = $util.global.parseInt, $BigInt = $util.global.BigInt, $Array = $util.global.Array;
+const $Object = $util.global.Object, $undefined = $util.global.undefined, $Error = $util.global.Error, $RangeError = $util.global.RangeError, $TypeError = $util.global.TypeError, $String = $util.global.String, $Boolean = $util.global.Boolean, $Number = $util.global.Number, $parseInt = $util.global.parseInt, $BigInt = $util.global.BigInt, $Array = $util.global.Array, $isFinite = $util.global.isFinite;
 
 // Exported root namespace
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
@@ -51,6 +51,7 @@ export const openvk = $root.openvk = (() => {
              * @typedef {Object} openvk.v1.Error.$Properties
              * @property {string|null} [error] Error error
              * @property {string|null} [message] Error message
+             * @property {string|null} [trace_id] Error trace_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -99,6 +100,14 @@ export const openvk = $root.openvk = (() => {
             Error.prototype.message = "";
 
             /**
+             * Error trace_id.
+             * @member {string} trace_id
+             * @memberof openvk.v1.Error
+             * @instance
+             */
+            Error.prototype.trace_id = "";
+
+            /**
              * Creates a new Error instance using the specified properties.
              * @function create
              * @memberof openvk.v1.Error
@@ -134,6 +143,8 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.error);
                 if (message.message != null && $Object.hasOwnProperty.call(message, "message") && message.message !== "")
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.message);
+                if (message.trace_id != null && $Object.hasOwnProperty.call(message, "trace_id") && message.trace_id !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.trace_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -209,6 +220,15 @@ export const openvk = $root.openvk = (() => {
                                 delete message.message;
                             continue;
                         }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.trace_id = value;
+                            else
+                                delete message.trace_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -263,6 +283,9 @@ export const openvk = $root.openvk = (() => {
                 if (message.message != null && $Object.hasOwnProperty.call(message, "message"))
                     if (!$util.isString(message.message))
                         return "message: string expected";
+                if (message.trace_id != null && $Object.hasOwnProperty.call(message, "trace_id"))
+                    if (!$util.isString(message.trace_id))
+                        return "trace_id: string expected";
                 return null;
             };
 
@@ -290,6 +313,9 @@ export const openvk = $root.openvk = (() => {
                 if (object.message != null)
                     if (typeof object.message !== "string" || object.message.length)
                         message.message = $String(object.message);
+                if (object.trace_id != null)
+                    if (typeof object.trace_id !== "string" || object.trace_id.length)
+                        message.trace_id = $String(object.trace_id);
                 return message;
             };
 
@@ -313,11 +339,14 @@ export const openvk = $root.openvk = (() => {
                 if (options.defaults) {
                     object.error = "";
                     object.message = "";
+                    object.trace_id = "";
                 }
                 if (message.error != null && $Object.hasOwnProperty.call(message, "error"))
                     object.error = message.error;
                 if (message.message != null && $Object.hasOwnProperty.call(message, "message"))
                     object.message = message.message;
+                if (message.trace_id != null && $Object.hasOwnProperty.call(message, "trace_id"))
+                    object.trace_id = message.trace_id;
                 return object;
             };
 
@@ -2187,6 +2216,18 @@ export const openvk = $root.openvk = (() => {
              * @property {openvk.v1.PrivacyLevel|null} [privacy_photos] User privacy_photos
              * @property {openvk.v1.PrivacyLevel|null} [privacy_audio] User privacy_audio
              * @property {string|null} [created_at] User created_at
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_profile] User privacy_profile
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_friends] User privacy_friends
+             * @property {number|Long|null} [coins] User coins
+             * @property {number|null} [rating] User rating
+             * @property {string|null} [role] User role
+             * @property {boolean|null} [banned] User banned
+             * @property {string|null} [ban_reason] User ban_reason
+             * @property {string|null} [banned_until] User banned_until
+             * @property {boolean|null} [support_banned] User support_banned
+             * @property {string|null} [support_ban_reason] User support_ban_reason
+             * @property {boolean|null} [posting_allowed] User posting_allowed
+             * @property {boolean|null} [messaging_allowed] User messaging_allowed
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -2338,6 +2379,102 @@ export const openvk = $root.openvk = (() => {
              */
             User.prototype.created_at = "";
 
+            /**
+             * User privacy_profile.
+             * @member {openvk.v1.PrivacyLevel} privacy_profile
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.privacy_profile = 0;
+
+            /**
+             * User privacy_friends.
+             * @member {openvk.v1.PrivacyLevel} privacy_friends
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.privacy_friends = 0;
+
+            /**
+             * User coins.
+             * @member {number|Long} coins
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.coins = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * User rating.
+             * @member {number} rating
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.rating = 0;
+
+            /**
+             * User role.
+             * @member {string} role
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.role = "";
+
+            /**
+             * User banned.
+             * @member {boolean} banned
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.banned = false;
+
+            /**
+             * User ban_reason.
+             * @member {string|null|undefined} ban_reason
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.ban_reason = null;
+
+            /**
+             * User banned_until.
+             * @member {string|null|undefined} banned_until
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.banned_until = null;
+
+            /**
+             * User support_banned.
+             * @member {boolean} support_banned
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.support_banned = false;
+
+            /**
+             * User support_ban_reason.
+             * @member {string|null|undefined} support_ban_reason
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.support_ban_reason = null;
+
+            /**
+             * User posting_allowed.
+             * @member {boolean} posting_allowed
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.posting_allowed = false;
+
+            /**
+             * User messaging_allowed.
+             * @member {boolean} messaging_allowed
+             * @memberof openvk.v1.User
+             * @instance
+             */
+            User.prototype.messaging_allowed = false;
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -2374,6 +2511,24 @@ export const openvk = $root.openvk = (() => {
             // Virtual OneOf for proto3 optional field
             $Object.defineProperty(User.prototype, "_avatar_url", {
                 get: $util.oneOfGetter($oneOfFields = ["avatar_url"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(User.prototype, "_ban_reason", {
+                get: $util.oneOfGetter($oneOfFields = ["ban_reason"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(User.prototype, "_banned_until", {
+                get: $util.oneOfGetter($oneOfFields = ["banned_until"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(User.prototype, "_support_ban_reason", {
+                get: $util.oneOfGetter($oneOfFields = ["support_ban_reason"]),
                 set: $util.oneOfSetter($oneOfFields)
             });
 
@@ -2439,6 +2594,30 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 14, wireType 0 =*/112).int32(message.privacy_audio);
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
                     writer.uint32(/* id 15, wireType 2 =*/122).string(message.created_at);
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile") && message.privacy_profile !== 0)
+                    writer.uint32(/* id 16, wireType 0 =*/128).int32(message.privacy_profile);
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends") && message.privacy_friends !== 0)
+                    writer.uint32(/* id 17, wireType 0 =*/136).int32(message.privacy_friends);
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins") && (typeof message.coins === "object" ? message.coins.low || message.coins.high : message.coins !== 0))
+                    writer.uint32(/* id 18, wireType 0 =*/144).int64(message.coins);
+                if (message.rating != null && $Object.hasOwnProperty.call(message, "rating") && message.rating !== 0)
+                    writer.uint32(/* id 19, wireType 0 =*/152).int32(message.rating);
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role") && message.role !== "")
+                    writer.uint32(/* id 20, wireType 2 =*/162).string(message.role);
+                if (message.banned != null && $Object.hasOwnProperty.call(message, "banned") && message.banned !== false)
+                    writer.uint32(/* id 21, wireType 0 =*/168).bool(message.banned);
+                if (message.ban_reason != null && $Object.hasOwnProperty.call(message, "ban_reason"))
+                    writer.uint32(/* id 22, wireType 2 =*/178).string(message.ban_reason);
+                if (message.banned_until != null && $Object.hasOwnProperty.call(message, "banned_until"))
+                    writer.uint32(/* id 23, wireType 2 =*/186).string(message.banned_until);
+                if (message.support_banned != null && $Object.hasOwnProperty.call(message, "support_banned") && message.support_banned !== false)
+                    writer.uint32(/* id 24, wireType 0 =*/192).bool(message.support_banned);
+                if (message.support_ban_reason != null && $Object.hasOwnProperty.call(message, "support_ban_reason"))
+                    writer.uint32(/* id 25, wireType 2 =*/202).string(message.support_ban_reason);
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed") && message.posting_allowed !== false)
+                    writer.uint32(/* id 26, wireType 0 =*/208).bool(message.posting_allowed);
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed") && message.messaging_allowed !== false)
+                    writer.uint32(/* id 27, wireType 0 =*/216).bool(message.messaging_allowed);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -2619,6 +2798,108 @@ export const openvk = $root.openvk = (() => {
                                 delete message.created_at;
                             continue;
                         }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_profile = value;
+                            else
+                                delete message.privacy_profile;
+                            continue;
+                        }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_friends = value;
+                            else
+                                delete message.privacy_friends;
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.coins = value;
+                            else
+                                delete message.coins;
+                            continue;
+                        }
+                    case 19: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.rating = value;
+                            else
+                                delete message.rating;
+                            continue;
+                        }
+                    case 20: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.role = value;
+                            else
+                                delete message.role;
+                            continue;
+                        }
+                    case 21: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.banned = value;
+                            else
+                                delete message.banned;
+                            continue;
+                        }
+                    case 22: {
+                            if (wireType !== 2)
+                                break;
+                            message.ban_reason = reader.stringVerify();
+                            message._ban_reason = "ban_reason";
+                            continue;
+                        }
+                    case 23: {
+                            if (wireType !== 2)
+                                break;
+                            message.banned_until = reader.stringVerify();
+                            message._banned_until = "banned_until";
+                            continue;
+                        }
+                    case 24: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.support_banned = value;
+                            else
+                                delete message.support_banned;
+                            continue;
+                        }
+                    case 25: {
+                            if (wireType !== 2)
+                                break;
+                            message.support_ban_reason = reader.stringVerify();
+                            message._support_ban_reason = "support_ban_reason";
+                            continue;
+                        }
+                    case 26: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.posting_allowed = value;
+                            else
+                                delete message.posting_allowed;
+                            continue;
+                        }
+                    case 27: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.messaging_allowed = value;
+                            else
+                                delete message.messaging_allowed;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -2725,6 +3006,48 @@ export const openvk = $root.openvk = (() => {
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     if (!$util.isString(message.created_at))
                         return "created_at: string expected";
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile"))
+                    if (typeof message.privacy_profile !== "number" || (message.privacy_profile | 0) !== message.privacy_profile)
+                        return "privacy_profile: enum value expected";
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends"))
+                    if (typeof message.privacy_friends !== "number" || (message.privacy_friends | 0) !== message.privacy_friends)
+                        return "privacy_friends: enum value expected";
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (!$util.isInteger(message.coins) && !(message.coins && $util.isInteger(message.coins.low) && $util.isInteger(message.coins.high)))
+                        return "coins: integer|Long expected";
+                if (message.rating != null && $Object.hasOwnProperty.call(message, "rating"))
+                    if (!$util.isInteger(message.rating))
+                        return "rating: integer expected";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    if (!$util.isString(message.role))
+                        return "role: string expected";
+                if (message.banned != null && $Object.hasOwnProperty.call(message, "banned"))
+                    if (typeof message.banned !== "boolean")
+                        return "banned: boolean expected";
+                if (message.ban_reason != null && $Object.hasOwnProperty.call(message, "ban_reason")) {
+                    properties._ban_reason = 1;
+                    if (!$util.isString(message.ban_reason))
+                        return "ban_reason: string expected";
+                }
+                if (message.banned_until != null && $Object.hasOwnProperty.call(message, "banned_until")) {
+                    properties._banned_until = 1;
+                    if (!$util.isString(message.banned_until))
+                        return "banned_until: string expected";
+                }
+                if (message.support_banned != null && $Object.hasOwnProperty.call(message, "support_banned"))
+                    if (typeof message.support_banned !== "boolean")
+                        return "support_banned: boolean expected";
+                if (message.support_ban_reason != null && $Object.hasOwnProperty.call(message, "support_ban_reason")) {
+                    properties._support_ban_reason = 1;
+                    if (!$util.isString(message.support_ban_reason))
+                        return "support_ban_reason: string expected";
+                }
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed"))
+                    if (typeof message.posting_allowed !== "boolean")
+                        return "posting_allowed: boolean expected";
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed"))
+                    if (typeof message.messaging_allowed !== "boolean")
+                        return "messaging_allowed: boolean expected";
                 return null;
             };
 
@@ -2868,6 +3191,84 @@ export const openvk = $root.openvk = (() => {
                 if (object.created_at != null)
                     if (typeof object.created_at !== "string" || object.created_at.length)
                         message.created_at = $String(object.created_at);
+                if (object.privacy_profile !== 0 && (typeof object.privacy_profile !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_profile] !== 0))
+                    switch (object.privacy_profile) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_profile = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_profile = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_profile = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_profile = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_profile === "number" && (object.privacy_profile | 0) === object.privacy_profile)
+                            message.privacy_profile = object.privacy_profile;
+                    }
+                if (object.privacy_friends !== 0 && (typeof object.privacy_friends !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_friends] !== 0))
+                    switch (object.privacy_friends) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_friends = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_friends = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_friends = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_friends = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_friends === "number" && (object.privacy_friends | 0) === object.privacy_friends)
+                            message.privacy_friends = object.privacy_friends;
+                    }
+                if (object.coins != null)
+                    if (typeof object.coins === "object" ? object.coins.low || object.coins.high : $Number(object.coins) !== 0)
+                        if ($util.Long)
+                            message.coins = $util.Long.fromValue(object.coins, false);
+                        else if (typeof object.coins === "string")
+                            message.coins = $parseInt(object.coins, 10);
+                        else if (typeof object.coins === "number")
+                            message.coins = object.coins;
+                        else if (typeof object.coins === "object")
+                            message.coins = new $util.LongBits(object.coins.low >>> 0, object.coins.high >>> 0).toNumber();
+                if (object.rating != null)
+                    if ($Number(object.rating) !== 0)
+                        message.rating = object.rating | 0;
+                if (object.role != null)
+                    if (typeof object.role !== "string" || object.role.length)
+                        message.role = $String(object.role);
+                if (object.banned != null)
+                    if (object.banned)
+                        message.banned = $Boolean(object.banned);
+                if (object.ban_reason != null)
+                    message.ban_reason = $String(object.ban_reason);
+                if (object.banned_until != null)
+                    message.banned_until = $String(object.banned_until);
+                if (object.support_banned != null)
+                    if (object.support_banned)
+                        message.support_banned = $Boolean(object.support_banned);
+                if (object.support_ban_reason != null)
+                    message.support_ban_reason = $String(object.support_ban_reason);
+                if (object.posting_allowed != null)
+                    if (object.posting_allowed)
+                        message.posting_allowed = $Boolean(object.posting_allowed);
+                if (object.messaging_allowed != null)
+                    if (object.messaging_allowed)
+                        message.messaging_allowed = $Boolean(object.messaging_allowed);
                 return message;
             };
 
@@ -2902,6 +3303,19 @@ export const openvk = $root.openvk = (() => {
                     object.privacy_photos = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
                     object.privacy_audio = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
                     object.created_at = "";
+                    object.privacy_profile = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    object.privacy_friends = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.coins = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.coins = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.rating = 0;
+                    object.role = "";
+                    object.banned = false;
+                    object.support_banned = false;
+                    object.posting_allowed = false;
+                    object.messaging_allowed = false;
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -2938,6 +3352,35 @@ export const openvk = $root.openvk = (() => {
                     object.privacy_audio = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_audio] === $undefined ? message.privacy_audio : $root.openvk.v1.PrivacyLevel[message.privacy_audio] : message.privacy_audio;
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     object.created_at = message.created_at;
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile"))
+                    object.privacy_profile = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_profile] === $undefined ? message.privacy_profile : $root.openvk.v1.PrivacyLevel[message.privacy_profile] : message.privacy_profile;
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends"))
+                    object.privacy_friends = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_friends] === $undefined ? message.privacy_friends : $root.openvk.v1.PrivacyLevel[message.privacy_friends] : message.privacy_friends;
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.coins = typeof message.coins === "number" ? $BigInt(message.coins) : $util.Long.fromBits(message.coins.low >>> 0, message.coins.high >>> 0, false).toBigInt();
+                    else if (typeof message.coins === "number")
+                        object.coins = options.longs === $String ? $String(message.coins) : message.coins;
+                    else
+                        object.coins = options.longs === $String ? $util.Long.prototype.toString.call(message.coins) : options.longs === $Number ? new $util.LongBits(message.coins.low >>> 0, message.coins.high >>> 0).toNumber() : message.coins;
+                if (message.rating != null && $Object.hasOwnProperty.call(message, "rating"))
+                    object.rating = message.rating;
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    object.role = message.role;
+                if (message.banned != null && $Object.hasOwnProperty.call(message, "banned"))
+                    object.banned = message.banned;
+                if (message.ban_reason != null && $Object.hasOwnProperty.call(message, "ban_reason"))
+                    object.ban_reason = message.ban_reason;
+                if (message.banned_until != null && $Object.hasOwnProperty.call(message, "banned_until"))
+                    object.banned_until = message.banned_until;
+                if (message.support_banned != null && $Object.hasOwnProperty.call(message, "support_banned"))
+                    object.support_banned = message.support_banned;
+                if (message.support_ban_reason != null && $Object.hasOwnProperty.call(message, "support_ban_reason"))
+                    object.support_ban_reason = message.support_ban_reason;
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed"))
+                    object.posting_allowed = message.posting_allowed;
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed"))
+                    object.messaging_allowed = message.messaging_allowed;
                 return object;
             };
 
@@ -3273,6 +3716,11 @@ export const openvk = $root.openvk = (() => {
              * @property {string|null} [city] UpdateAccount city
              * @property {openvk.v1.PrivacyLevel|null} [privacy_wall] UpdateAccount privacy_wall
              * @property {openvk.v1.PrivacyLevel|null} [privacy_messages] UpdateAccount privacy_messages
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_photos] UpdateAccount privacy_photos
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_audio] UpdateAccount privacy_audio
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_profile] UpdateAccount privacy_profile
+             * @property {openvk.v1.PrivacyLevel|null} [privacy_friends] UpdateAccount privacy_friends
+             * @property {string|null} [status] UpdateAccount status
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -3360,6 +3808,46 @@ export const openvk = $root.openvk = (() => {
              */
             UpdateAccount.prototype.privacy_messages = 0;
 
+            /**
+             * UpdateAccount privacy_photos.
+             * @member {openvk.v1.PrivacyLevel} privacy_photos
+             * @memberof openvk.v1.UpdateAccount
+             * @instance
+             */
+            UpdateAccount.prototype.privacy_photos = 0;
+
+            /**
+             * UpdateAccount privacy_audio.
+             * @member {openvk.v1.PrivacyLevel} privacy_audio
+             * @memberof openvk.v1.UpdateAccount
+             * @instance
+             */
+            UpdateAccount.prototype.privacy_audio = 0;
+
+            /**
+             * UpdateAccount privacy_profile.
+             * @member {openvk.v1.PrivacyLevel} privacy_profile
+             * @memberof openvk.v1.UpdateAccount
+             * @instance
+             */
+            UpdateAccount.prototype.privacy_profile = 0;
+
+            /**
+             * UpdateAccount privacy_friends.
+             * @member {openvk.v1.PrivacyLevel} privacy_friends
+             * @memberof openvk.v1.UpdateAccount
+             * @instance
+             */
+            UpdateAccount.prototype.privacy_friends = 0;
+
+            /**
+             * UpdateAccount status.
+             * @member {string|null|undefined} status
+             * @memberof openvk.v1.UpdateAccount
+             * @instance
+             */
+            UpdateAccount.prototype.status = null;
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -3378,6 +3866,12 @@ export const openvk = $root.openvk = (() => {
             // Virtual OneOf for proto3 optional field
             $Object.defineProperty(UpdateAccount.prototype, "_city", {
                 get: $util.oneOfGetter($oneOfFields = ["city"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(UpdateAccount.prototype, "_status", {
+                get: $util.oneOfGetter($oneOfFields = ["status"]),
                 set: $util.oneOfSetter($oneOfFields)
             });
 
@@ -3427,6 +3921,16 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 6, wireType 0 =*/48).int32(message.privacy_wall);
                 if (message.privacy_messages != null && $Object.hasOwnProperty.call(message, "privacy_messages") && message.privacy_messages !== 0)
                     writer.uint32(/* id 7, wireType 0 =*/56).int32(message.privacy_messages);
+                if (message.privacy_photos != null && $Object.hasOwnProperty.call(message, "privacy_photos") && message.privacy_photos !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).int32(message.privacy_photos);
+                if (message.privacy_audio != null && $Object.hasOwnProperty.call(message, "privacy_audio") && message.privacy_audio !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).int32(message.privacy_audio);
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile") && message.privacy_profile !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).int32(message.privacy_profile);
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends") && message.privacy_friends !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).int32(message.privacy_friends);
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    writer.uint32(/* id 12, wireType 2 =*/98).string(message.status);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -3541,6 +4045,49 @@ export const openvk = $root.openvk = (() => {
                                 delete message.privacy_messages;
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_photos = value;
+                            else
+                                delete message.privacy_photos;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_audio = value;
+                            else
+                                delete message.privacy_audio;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_profile = value;
+                            else
+                                delete message.privacy_profile;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.privacy_friends = value;
+                            else
+                                delete message.privacy_friends;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            message.status = reader.stringVerify();
+                            message._status = "status";
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -3617,6 +4164,23 @@ export const openvk = $root.openvk = (() => {
                 if (message.privacy_messages != null && $Object.hasOwnProperty.call(message, "privacy_messages"))
                     if (typeof message.privacy_messages !== "number" || (message.privacy_messages | 0) !== message.privacy_messages)
                         return "privacy_messages: enum value expected";
+                if (message.privacy_photos != null && $Object.hasOwnProperty.call(message, "privacy_photos"))
+                    if (typeof message.privacy_photos !== "number" || (message.privacy_photos | 0) !== message.privacy_photos)
+                        return "privacy_photos: enum value expected";
+                if (message.privacy_audio != null && $Object.hasOwnProperty.call(message, "privacy_audio"))
+                    if (typeof message.privacy_audio !== "number" || (message.privacy_audio | 0) !== message.privacy_audio)
+                        return "privacy_audio: enum value expected";
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile"))
+                    if (typeof message.privacy_profile !== "number" || (message.privacy_profile | 0) !== message.privacy_profile)
+                        return "privacy_profile: enum value expected";
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends"))
+                    if (typeof message.privacy_friends !== "number" || (message.privacy_friends | 0) !== message.privacy_friends)
+                        return "privacy_friends: enum value expected";
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status")) {
+                    properties._status = 1;
+                    if (!$util.isString(message.status))
+                        return "status: string expected";
+                }
                 return null;
             };
 
@@ -3694,6 +4258,96 @@ export const openvk = $root.openvk = (() => {
                         if (typeof object.privacy_messages === "number" && (object.privacy_messages | 0) === object.privacy_messages)
                             message.privacy_messages = object.privacy_messages;
                     }
+                if (object.privacy_photos !== 0 && (typeof object.privacy_photos !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_photos] !== 0))
+                    switch (object.privacy_photos) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_photos = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_photos = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_photos = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_photos = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_photos === "number" && (object.privacy_photos | 0) === object.privacy_photos)
+                            message.privacy_photos = object.privacy_photos;
+                    }
+                if (object.privacy_audio !== 0 && (typeof object.privacy_audio !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_audio] !== 0))
+                    switch (object.privacy_audio) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_audio = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_audio = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_audio = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_audio = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_audio === "number" && (object.privacy_audio | 0) === object.privacy_audio)
+                            message.privacy_audio = object.privacy_audio;
+                    }
+                if (object.privacy_profile !== 0 && (typeof object.privacy_profile !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_profile] !== 0))
+                    switch (object.privacy_profile) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_profile = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_profile = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_profile = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_profile = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_profile === "number" && (object.privacy_profile | 0) === object.privacy_profile)
+                            message.privacy_profile = object.privacy_profile;
+                    }
+                if (object.privacy_friends !== 0 && (typeof object.privacy_friends !== "string" || $root.openvk.v1.PrivacyLevel[object.privacy_friends] !== 0))
+                    switch (object.privacy_friends) {
+                    case "PRIVACY_LEVEL_UNSPECIFIED":
+                    case 0:
+                        message.privacy_friends = 0;
+                        break;
+                    case "PRIVACY_LEVEL_EVERYONE":
+                    case 1:
+                        message.privacy_friends = 1;
+                        break;
+                    case "PRIVACY_LEVEL_FRIENDS":
+                    case 2:
+                        message.privacy_friends = 2;
+                        break;
+                    case "PRIVACY_LEVEL_NOBODY":
+                    case 3:
+                        message.privacy_friends = 3;
+                        break;
+                    default:
+                        if (typeof object.privacy_friends === "number" && (object.privacy_friends | 0) === object.privacy_friends)
+                            message.privacy_friends = object.privacy_friends;
+                    }
+                if (object.status != null)
+                    message.status = $String(object.status);
                 return message;
             };
 
@@ -3719,6 +4373,10 @@ export const openvk = $root.openvk = (() => {
                     object.last_name = "";
                     object.privacy_wall = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
                     object.privacy_messages = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    object.privacy_photos = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    object.privacy_audio = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    object.privacy_profile = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
+                    object.privacy_friends = options.enums === $String ? "PRIVACY_LEVEL_UNSPECIFIED" : 0;
                 }
                 if (message.first_name != null && $Object.hasOwnProperty.call(message, "first_name"))
                     object.first_name = message.first_name;
@@ -3734,6 +4392,16 @@ export const openvk = $root.openvk = (() => {
                     object.privacy_wall = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_wall] === $undefined ? message.privacy_wall : $root.openvk.v1.PrivacyLevel[message.privacy_wall] : message.privacy_wall;
                 if (message.privacy_messages != null && $Object.hasOwnProperty.call(message, "privacy_messages"))
                     object.privacy_messages = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_messages] === $undefined ? message.privacy_messages : $root.openvk.v1.PrivacyLevel[message.privacy_messages] : message.privacy_messages;
+                if (message.privacy_photos != null && $Object.hasOwnProperty.call(message, "privacy_photos"))
+                    object.privacy_photos = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_photos] === $undefined ? message.privacy_photos : $root.openvk.v1.PrivacyLevel[message.privacy_photos] : message.privacy_photos;
+                if (message.privacy_audio != null && $Object.hasOwnProperty.call(message, "privacy_audio"))
+                    object.privacy_audio = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_audio] === $undefined ? message.privacy_audio : $root.openvk.v1.PrivacyLevel[message.privacy_audio] : message.privacy_audio;
+                if (message.privacy_profile != null && $Object.hasOwnProperty.call(message, "privacy_profile"))
+                    object.privacy_profile = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_profile] === $undefined ? message.privacy_profile : $root.openvk.v1.PrivacyLevel[message.privacy_profile] : message.privacy_profile;
+                if (message.privacy_friends != null && $Object.hasOwnProperty.call(message, "privacy_friends"))
+                    object.privacy_friends = options.enums === $String ? $root.openvk.v1.PrivacyLevel[message.privacy_friends] === $undefined ? message.privacy_friends : $root.openvk.v1.PrivacyLevel[message.privacy_friends] : message.privacy_friends;
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    object.status = message.status;
                 return object;
             };
 
@@ -3765,6 +4433,793 @@ export const openvk = $root.openvk = (() => {
             return UpdateAccount;
         })();
 
+        v1.GeoPoint = (function() {
+
+            /**
+             * Properties of a GeoPoint.
+             * @typedef {Object} openvk.v1.GeoPoint.$Properties
+             * @property {number|null} [lat] GeoPoint lat
+             * @property {number|null} [lng] GeoPoint lng
+             * @property {string|null} [name] GeoPoint name
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GeoPoint.
+             * @memberof openvk.v1
+             * @interface IGeoPoint
+             * @augments openvk.v1.GeoPoint.$Properties
+             * @deprecated Use openvk.v1.GeoPoint.$Properties instead.
+             */
+
+            /**
+             * Shape of a GeoPoint.
+             * @typedef {openvk.v1.GeoPoint.$Properties} openvk.v1.GeoPoint.$Shape
+             */
+
+            /**
+             * Constructs a new GeoPoint.
+             * @memberof openvk.v1
+             * @classdesc Represents a GeoPoint.
+             * @constructor
+             * @param {openvk.v1.GeoPoint.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const GeoPoint = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GeoPoint lat.
+             * @member {number} lat
+             * @memberof openvk.v1.GeoPoint
+             * @instance
+             */
+            GeoPoint.prototype.lat = 0;
+
+            /**
+             * GeoPoint lng.
+             * @member {number} lng
+             * @memberof openvk.v1.GeoPoint
+             * @instance
+             */
+            GeoPoint.prototype.lng = 0;
+
+            /**
+             * GeoPoint name.
+             * @member {string} name
+             * @memberof openvk.v1.GeoPoint
+             * @instance
+             */
+            GeoPoint.prototype.name = "";
+
+            /**
+             * Creates a new GeoPoint instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {openvk.v1.GeoPoint.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.GeoPoint} GeoPoint instance
+             * @type {{
+             *   (properties: openvk.v1.GeoPoint.$Shape): openvk.v1.GeoPoint & openvk.v1.GeoPoint.$Shape;
+             *   (properties?: openvk.v1.GeoPoint.$Properties): openvk.v1.GeoPoint;
+             * }}
+             */
+            GeoPoint.create = function(properties) {
+                return new GeoPoint(properties);
+            };
+
+            /**
+             * Encodes the specified GeoPoint message. Does not implicitly {@link openvk.v1.GeoPoint.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {openvk.v1.GeoPoint.$Properties} message GeoPoint message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GeoPoint.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.lat != null && $Object.hasOwnProperty.call(message, "lat") && !$Object.is(message.lat, 0))
+                    writer.uint32(/* id 1, wireType 1 =*/9).double(message.lat);
+                if (message.lng != null && $Object.hasOwnProperty.call(message, "lng") && !$Object.is(message.lng, 0))
+                    writer.uint32(/* id 2, wireType 1 =*/17).double(message.lng);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GeoPoint message, length delimited. Does not implicitly {@link openvk.v1.GeoPoint.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {openvk.v1.GeoPoint.$Properties} message GeoPoint message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GeoPoint.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GeoPoint message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.GeoPoint & openvk.v1.GeoPoint.$Shape} GeoPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GeoPoint.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.GeoPoint();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 1)
+                                break;
+                            if (!$Object.is(value = reader.double(), 0))
+                                message.lat = value;
+                            else
+                                delete message.lat;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 1)
+                                break;
+                            if (!$Object.is(value = reader.double(), 0))
+                                message.lng = value;
+                            else
+                                delete message.lng;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GeoPoint message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.GeoPoint & openvk.v1.GeoPoint.$Shape} GeoPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GeoPoint.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a GeoPoint message.
+             * @function verify
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GeoPoint.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.lat != null && $Object.hasOwnProperty.call(message, "lat"))
+                    if (typeof message.lat !== "number")
+                        return "lat: number expected";
+                if (message.lng != null && $Object.hasOwnProperty.call(message, "lng"))
+                    if (typeof message.lng !== "number")
+                        return "lng: number expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a GeoPoint message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.GeoPoint} GeoPoint
+             */
+            GeoPoint.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.GeoPoint)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.GeoPoint: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.GeoPoint();
+                if (object.lat != null)
+                    if (!$Object.is($Number(object.lat), 0))
+                        message.lat = $Number(object.lat);
+                if (object.lng != null)
+                    if (!$Object.is($Number(object.lng), 0))
+                        message.lng = $Number(object.lng);
+                if (object.name != null)
+                    if (typeof object.name !== "string" || object.name.length)
+                        message.name = $String(object.name);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a GeoPoint message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {openvk.v1.GeoPoint} message GeoPoint
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GeoPoint.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.lat = 0;
+                    object.lng = 0;
+                    object.name = "";
+                }
+                if (message.lat != null && $Object.hasOwnProperty.call(message, "lat"))
+                    object.lat = options.json && !$isFinite(message.lat) ? $String(message.lat) : message.lat;
+                if (message.lng != null && $Object.hasOwnProperty.call(message, "lng"))
+                    object.lng = options.json && !$isFinite(message.lng) ? $String(message.lng) : message.lng;
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    object.name = message.name;
+                return object;
+            };
+
+            /**
+             * Converts this GeoPoint to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.GeoPoint
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GeoPoint.prototype.toJSON = function() {
+                return GeoPoint.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for GeoPoint
+             * @function getTypeUrl
+             * @memberof openvk.v1.GeoPoint
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GeoPoint.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.GeoPoint";
+            };
+
+            return GeoPoint;
+        })();
+
+        v1.WallAttachment = (function() {
+
+            /**
+             * Properties of a WallAttachment.
+             * @typedef {Object} openvk.v1.WallAttachment.$Properties
+             * @property {string|null} [kind] WallAttachment kind
+             * @property {number|Long|null} [owner_id] WallAttachment owner_id
+             * @property {number|Long|null} [object_id] WallAttachment object_id
+             * @property {string|null} [url] WallAttachment url
+             * @property {string|null} [title] WallAttachment title
+             * @property {string|null} [src] WallAttachment src
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WallAttachment.
+             * @memberof openvk.v1
+             * @interface IWallAttachment
+             * @augments openvk.v1.WallAttachment.$Properties
+             * @deprecated Use openvk.v1.WallAttachment.$Properties instead.
+             */
+
+            /**
+             * Shape of a WallAttachment.
+             * @typedef {openvk.v1.WallAttachment.$Properties} openvk.v1.WallAttachment.$Shape
+             */
+
+            /**
+             * Constructs a new WallAttachment.
+             * @memberof openvk.v1
+             * @classdesc Represents a WallAttachment.
+             * @constructor
+             * @param {openvk.v1.WallAttachment.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WallAttachment = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WallAttachment kind.
+             * @member {string} kind
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.kind = "";
+
+            /**
+             * WallAttachment owner_id.
+             * @member {number|Long} owner_id
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.owner_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WallAttachment object_id.
+             * @member {number|Long} object_id
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.object_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WallAttachment url.
+             * @member {string} url
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.url = "";
+
+            /**
+             * WallAttachment title.
+             * @member {string} title
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.title = "";
+
+            /**
+             * WallAttachment src.
+             * @member {string} src
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             */
+            WallAttachment.prototype.src = "";
+
+            /**
+             * Creates a new WallAttachment instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {openvk.v1.WallAttachment.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WallAttachment} WallAttachment instance
+             * @type {{
+             *   (properties: openvk.v1.WallAttachment.$Shape): openvk.v1.WallAttachment & openvk.v1.WallAttachment.$Shape;
+             *   (properties?: openvk.v1.WallAttachment.$Properties): openvk.v1.WallAttachment;
+             * }}
+             */
+            WallAttachment.create = function(properties) {
+                return new WallAttachment(properties);
+            };
+
+            /**
+             * Encodes the specified WallAttachment message. Does not implicitly {@link openvk.v1.WallAttachment.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {openvk.v1.WallAttachment.$Properties} message WallAttachment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WallAttachment.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.kind);
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id") && (typeof message.owner_id === "object" ? message.owner_id.low || message.owner_id.high : message.owner_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.owner_id);
+                if (message.object_id != null && $Object.hasOwnProperty.call(message, "object_id") && (typeof message.object_id === "object" ? message.object_id.low || message.object_id.high : message.object_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.object_id);
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url") && message.url !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.url);
+                if (message.title != null && $Object.hasOwnProperty.call(message, "title") && message.title !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.title);
+                if (message.src != null && $Object.hasOwnProperty.call(message, "src") && message.src !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.src);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WallAttachment message, length delimited. Does not implicitly {@link openvk.v1.WallAttachment.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {openvk.v1.WallAttachment.$Properties} message WallAttachment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WallAttachment.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WallAttachment message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WallAttachment & openvk.v1.WallAttachment.$Shape} WallAttachment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WallAttachment.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WallAttachment();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.owner_id = value;
+                            else
+                                delete message.owner_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.object_id = value;
+                            else
+                                delete message.object_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.url = value;
+                            else
+                                delete message.url;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.title = value;
+                            else
+                                delete message.title;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.src = value;
+                            else
+                                delete message.src;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WallAttachment message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WallAttachment & openvk.v1.WallAttachment.$Shape} WallAttachment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WallAttachment.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WallAttachment message.
+             * @function verify
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WallAttachment.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isString(message.kind))
+                        return "kind: string expected";
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id"))
+                    if (!$util.isInteger(message.owner_id) && !(message.owner_id && $util.isInteger(message.owner_id.low) && $util.isInteger(message.owner_id.high)))
+                        return "owner_id: integer|Long expected";
+                if (message.object_id != null && $Object.hasOwnProperty.call(message, "object_id"))
+                    if (!$util.isInteger(message.object_id) && !(message.object_id && $util.isInteger(message.object_id.low) && $util.isInteger(message.object_id.high)))
+                        return "object_id: integer|Long expected";
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    if (!$util.isString(message.url))
+                        return "url: string expected";
+                if (message.title != null && $Object.hasOwnProperty.call(message, "title"))
+                    if (!$util.isString(message.title))
+                        return "title: string expected";
+                if (message.src != null && $Object.hasOwnProperty.call(message, "src"))
+                    if (!$util.isString(message.src))
+                        return "src: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WallAttachment message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WallAttachment} WallAttachment
+             */
+            WallAttachment.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WallAttachment)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WallAttachment: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WallAttachment();
+                if (object.kind != null)
+                    if (typeof object.kind !== "string" || object.kind.length)
+                        message.kind = $String(object.kind);
+                if (object.owner_id != null)
+                    if (typeof object.owner_id === "object" ? object.owner_id.low || object.owner_id.high : $Number(object.owner_id) !== 0)
+                        if ($util.Long)
+                            message.owner_id = $util.Long.fromValue(object.owner_id, false);
+                        else if (typeof object.owner_id === "string")
+                            message.owner_id = $parseInt(object.owner_id, 10);
+                        else if (typeof object.owner_id === "number")
+                            message.owner_id = object.owner_id;
+                        else if (typeof object.owner_id === "object")
+                            message.owner_id = new $util.LongBits(object.owner_id.low >>> 0, object.owner_id.high >>> 0).toNumber();
+                if (object.object_id != null)
+                    if (typeof object.object_id === "object" ? object.object_id.low || object.object_id.high : $Number(object.object_id) !== 0)
+                        if ($util.Long)
+                            message.object_id = $util.Long.fromValue(object.object_id, false);
+                        else if (typeof object.object_id === "string")
+                            message.object_id = $parseInt(object.object_id, 10);
+                        else if (typeof object.object_id === "number")
+                            message.object_id = object.object_id;
+                        else if (typeof object.object_id === "object")
+                            message.object_id = new $util.LongBits(object.object_id.low >>> 0, object.object_id.high >>> 0).toNumber();
+                if (object.url != null)
+                    if (typeof object.url !== "string" || object.url.length)
+                        message.url = $String(object.url);
+                if (object.title != null)
+                    if (typeof object.title !== "string" || object.title.length)
+                        message.title = $String(object.title);
+                if (object.src != null)
+                    if (typeof object.src !== "string" || object.src.length)
+                        message.src = $String(object.src);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WallAttachment message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {openvk.v1.WallAttachment} message WallAttachment
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WallAttachment.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.kind = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.owner_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.owner_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.object_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.object_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.url = "";
+                    object.title = "";
+                    object.src = "";
+                }
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    object.kind = message.kind;
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.owner_id = typeof message.owner_id === "number" ? $BigInt(message.owner_id) : $util.Long.fromBits(message.owner_id.low >>> 0, message.owner_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.owner_id === "number")
+                        object.owner_id = options.longs === $String ? $String(message.owner_id) : message.owner_id;
+                    else
+                        object.owner_id = options.longs === $String ? $util.Long.prototype.toString.call(message.owner_id) : options.longs === $Number ? new $util.LongBits(message.owner_id.low >>> 0, message.owner_id.high >>> 0).toNumber() : message.owner_id;
+                if (message.object_id != null && $Object.hasOwnProperty.call(message, "object_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.object_id = typeof message.object_id === "number" ? $BigInt(message.object_id) : $util.Long.fromBits(message.object_id.low >>> 0, message.object_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.object_id === "number")
+                        object.object_id = options.longs === $String ? $String(message.object_id) : message.object_id;
+                    else
+                        object.object_id = options.longs === $String ? $util.Long.prototype.toString.call(message.object_id) : options.longs === $Number ? new $util.LongBits(message.object_id.low >>> 0, message.object_id.high >>> 0).toNumber() : message.object_id;
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    object.url = message.url;
+                if (message.title != null && $Object.hasOwnProperty.call(message, "title"))
+                    object.title = message.title;
+                if (message.src != null && $Object.hasOwnProperty.call(message, "src"))
+                    object.src = message.src;
+                return object;
+            };
+
+            /**
+             * Converts this WallAttachment to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WallAttachment
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WallAttachment.prototype.toJSON = function() {
+                return WallAttachment.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WallAttachment
+             * @function getTypeUrl
+             * @memberof openvk.v1.WallAttachment
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WallAttachment.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WallAttachment";
+            };
+
+            return WallAttachment;
+        })();
+
         v1.WallPost = (function() {
 
             /**
@@ -3778,6 +5233,14 @@ export const openvk = $root.openvk = (() => {
              * @property {string|null} [content] WallPost content
              * @property {string|null} [permalink] WallPost permalink
              * @property {string|null} [created_at] WallPost created_at
+             * @property {Array.<openvk.v1.WallAttachment.$Properties>|null} [attachments] WallPost attachments
+             * @property {openvk.v1.GeoPoint.$Properties|null} [geo] WallPost geo
+             * @property {string|null} [source] WallPost source
+             * @property {boolean|null} [nsfw] WallPost nsfw
+             * @property {number|null} [comment_count] WallPost comment_count
+             * @property {openvk.v1.Group.$Properties|null} [club] WallPost club
+             * @property {number|null} [like_count] WallPost like_count
+             * @property {boolean|null} [liked] WallPost liked
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -3803,6 +5266,7 @@ export const openvk = $root.openvk = (() => {
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
             const WallPost = function (properties) {
+                this.attachments = [];
                 if (properties)
                     for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -3874,6 +5338,91 @@ export const openvk = $root.openvk = (() => {
             WallPost.prototype.created_at = "";
 
             /**
+             * WallPost attachments.
+             * @member {Array.<openvk.v1.WallAttachment.$Properties>} attachments
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.attachments = $util.emptyArray;
+
+            /**
+             * WallPost geo.
+             * @member {openvk.v1.GeoPoint.$Properties|null|undefined} geo
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.geo = null;
+
+            /**
+             * WallPost source.
+             * @member {string|null|undefined} source
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.source = null;
+
+            /**
+             * WallPost nsfw.
+             * @member {boolean} nsfw
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.nsfw = false;
+
+            /**
+             * WallPost comment_count.
+             * @member {number} comment_count
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.comment_count = 0;
+
+            /**
+             * WallPost club.
+             * @member {openvk.v1.Group.$Properties|null|undefined} club
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.club = null;
+
+            /**
+             * WallPost like_count.
+             * @member {number} like_count
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.like_count = 0;
+
+            /**
+             * WallPost liked.
+             * @member {boolean} liked
+             * @memberof openvk.v1.WallPost
+             * @instance
+             */
+            WallPost.prototype.liked = false;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WallPost.prototype, "_geo", {
+                get: $util.oneOfGetter($oneOfFields = ["geo"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WallPost.prototype, "_source", {
+                get: $util.oneOfGetter($oneOfFields = ["source"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WallPost.prototype, "_club", {
+                get: $util.oneOfGetter($oneOfFields = ["club"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
              * Creates a new WallPost instance using the specified properties.
              * @function create
              * @memberof openvk.v1.WallPost
@@ -3921,6 +5470,23 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.permalink);
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
                     writer.uint32(/* id 8, wireType 2 =*/66).string(message.created_at);
+                if (message.attachments != null && message.attachments.length)
+                    for (let i = 0; i < message.attachments.length; ++i)
+                        $root.openvk.v1.WallAttachment.encode(message.attachments[i], writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo"))
+                    $root.openvk.v1.GeoPoint.encode(message.geo, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source"))
+                    writer.uint32(/* id 11, wireType 2 =*/90).string(message.source);
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw") && message.nsfw !== false)
+                    writer.uint32(/* id 12, wireType 0 =*/96).bool(message.nsfw);
+                if (message.comment_count != null && $Object.hasOwnProperty.call(message, "comment_count") && message.comment_count !== 0)
+                    writer.uint32(/* id 13, wireType 0 =*/104).int32(message.comment_count);
+                if (message.club != null && $Object.hasOwnProperty.call(message, "club"))
+                    $root.openvk.v1.Group.encode(message.club, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count") && message.like_count !== 0)
+                    writer.uint32(/* id 15, wireType 0 =*/120).int32(message.like_count);
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked") && message.liked !== false)
+                    writer.uint32(/* id 16, wireType 0 =*/128).bool(message.liked);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4044,6 +5610,71 @@ export const openvk = $root.openvk = (() => {
                                 delete message.created_at;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.attachments && message.attachments.length))
+                                message.attachments = [];
+                            message.attachments.push($root.openvk.v1.WallAttachment.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.geo = $root.openvk.v1.GeoPoint.decode(reader, reader.uint32(), $undefined, _depth + 1, message.geo);
+                            message._geo = "geo";
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.source = reader.stringVerify();
+                            message._source = "source";
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.nsfw = value;
+                            else
+                                delete message.nsfw;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.comment_count = value;
+                            else
+                                delete message.comment_count;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 2)
+                                break;
+                            message.club = $root.openvk.v1.Group.decode(reader, reader.uint32(), $undefined, _depth + 1, message.club);
+                            message._club = "club";
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.like_count = value;
+                            else
+                                delete message.like_count;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.liked = value;
+                            else
+                                delete message.liked;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -4092,6 +5723,7 @@ export const openvk = $root.openvk = (() => {
                     _depth = 0;
                 if (_depth > $util.recursionLimit)
                     return "max depth exceeded";
+                let properties = {};
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
                         return "id: integer|Long expected";
@@ -4120,6 +5752,48 @@ export const openvk = $root.openvk = (() => {
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     if (!$util.isString(message.created_at))
                         return "created_at: string expected";
+                if (message.attachments != null && $Object.hasOwnProperty.call(message, "attachments")) {
+                    if (!$Array.isArray(message.attachments))
+                        return "attachments: array expected";
+                    for (let i = 0; i < message.attachments.length; ++i) {
+                        let error = $root.openvk.v1.WallAttachment.verify(message.attachments[i], _depth + 1);
+                        if (error)
+                            return "attachments." + error;
+                    }
+                }
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo")) {
+                    properties._geo = 1;
+                    {
+                        let error = $root.openvk.v1.GeoPoint.verify(message.geo, _depth + 1);
+                        if (error)
+                            return "geo." + error;
+                    }
+                }
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source")) {
+                    properties._source = 1;
+                    if (!$util.isString(message.source))
+                        return "source: string expected";
+                }
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw"))
+                    if (typeof message.nsfw !== "boolean")
+                        return "nsfw: boolean expected";
+                if (message.comment_count != null && $Object.hasOwnProperty.call(message, "comment_count"))
+                    if (!$util.isInteger(message.comment_count))
+                        return "comment_count: integer expected";
+                if (message.club != null && $Object.hasOwnProperty.call(message, "club")) {
+                    properties._club = 1;
+                    {
+                        let error = $root.openvk.v1.Group.verify(message.club, _depth + 1);
+                        if (error)
+                            return "club." + error;
+                    }
+                }
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    if (!$util.isInteger(message.like_count))
+                        return "like_count: integer expected";
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    if (typeof message.liked !== "boolean")
+                        return "liked: boolean expected";
                 return null;
             };
 
@@ -4190,6 +5864,40 @@ export const openvk = $root.openvk = (() => {
                 if (object.created_at != null)
                     if (typeof object.created_at !== "string" || object.created_at.length)
                         message.created_at = $String(object.created_at);
+                if (object.attachments) {
+                    if (!$Array.isArray(object.attachments))
+                        throw $TypeError(".openvk.v1.WallPost.attachments: array expected");
+                    message.attachments = $Array(object.attachments.length);
+                    for (let i = 0; i < object.attachments.length; ++i) {
+                        if (!$util.isObject(object.attachments[i]))
+                            throw $TypeError(".openvk.v1.WallPost.attachments: object expected");
+                        message.attachments[i] = $root.openvk.v1.WallAttachment.fromObject(object.attachments[i], _depth + 1);
+                    }
+                }
+                if (object.geo != null) {
+                    if (!$util.isObject(object.geo))
+                        throw $TypeError(".openvk.v1.WallPost.geo: object expected");
+                    message.geo = $root.openvk.v1.GeoPoint.fromObject(object.geo, _depth + 1);
+                }
+                if (object.source != null)
+                    message.source = $String(object.source);
+                if (object.nsfw != null)
+                    if (object.nsfw)
+                        message.nsfw = $Boolean(object.nsfw);
+                if (object.comment_count != null)
+                    if ($Number(object.comment_count) !== 0)
+                        message.comment_count = object.comment_count | 0;
+                if (object.club != null) {
+                    if (!$util.isObject(object.club))
+                        throw $TypeError(".openvk.v1.WallPost.club: object expected");
+                    message.club = $root.openvk.v1.Group.fromObject(object.club, _depth + 1);
+                }
+                if (object.like_count != null)
+                    if ($Number(object.like_count) !== 0)
+                        message.like_count = object.like_count | 0;
+                if (object.liked != null)
+                    if (object.liked)
+                        message.liked = $Boolean(object.liked);
                 return message;
             };
 
@@ -4210,6 +5918,8 @@ export const openvk = $root.openvk = (() => {
                 if (_depth > $util.recursionLimit)
                     throw $Error("max depth exceeded");
                 let object = {};
+                if (options.arrays || options.defaults)
+                    object.attachments = [];
                 if (options.defaults) {
                     if ($util.Long) {
                         let long = new $util.Long(0, 0, false);
@@ -4231,6 +5941,10 @@ export const openvk = $root.openvk = (() => {
                     object.content = "";
                     object.permalink = "";
                     object.created_at = "";
+                    object.nsfw = false;
+                    object.comment_count = 0;
+                    object.like_count = 0;
+                    object.liked = false;
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -4263,6 +5977,25 @@ export const openvk = $root.openvk = (() => {
                     object.permalink = message.permalink;
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     object.created_at = message.created_at;
+                if (message.attachments && message.attachments.length) {
+                    object.attachments = $Array(message.attachments.length);
+                    for (let j = 0; j < message.attachments.length; ++j)
+                        object.attachments[j] = $root.openvk.v1.WallAttachment.toObject(message.attachments[j], options, _depth + 1);
+                }
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo"))
+                    object.geo = $root.openvk.v1.GeoPoint.toObject(message.geo, options, _depth + 1);
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source"))
+                    object.source = message.source;
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw"))
+                    object.nsfw = message.nsfw;
+                if (message.comment_count != null && $Object.hasOwnProperty.call(message, "comment_count"))
+                    object.comment_count = message.comment_count;
+                if (message.club != null && $Object.hasOwnProperty.call(message, "club"))
+                    object.club = $root.openvk.v1.Group.toObject(message.club, options, _depth + 1);
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    object.like_count = message.like_count;
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    object.liked = message.liked;
                 return object;
             };
 
@@ -4592,6 +6325,10 @@ export const openvk = $root.openvk = (() => {
              * Properties of a WriteWall.
              * @typedef {Object} openvk.v1.WriteWall.$Properties
              * @property {string|null} [content] WriteWall content
+             * @property {Array.<openvk.v1.WallAttachment.$Properties>|null} [attachments] WriteWall attachments
+             * @property {openvk.v1.GeoPoint.$Properties|null} [geo] WriteWall geo
+             * @property {string|null} [source] WriteWall source
+             * @property {boolean|null} [nsfw] WriteWall nsfw
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -4617,6 +6354,7 @@ export const openvk = $root.openvk = (() => {
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
             const WriteWall = function (properties) {
+                this.attachments = [];
                 if (properties)
                     for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -4630,6 +6368,53 @@ export const openvk = $root.openvk = (() => {
              * @instance
              */
             WriteWall.prototype.content = "";
+
+            /**
+             * WriteWall attachments.
+             * @member {Array.<openvk.v1.WallAttachment.$Properties>} attachments
+             * @memberof openvk.v1.WriteWall
+             * @instance
+             */
+            WriteWall.prototype.attachments = $util.emptyArray;
+
+            /**
+             * WriteWall geo.
+             * @member {openvk.v1.GeoPoint.$Properties|null|undefined} geo
+             * @memberof openvk.v1.WriteWall
+             * @instance
+             */
+            WriteWall.prototype.geo = null;
+
+            /**
+             * WriteWall source.
+             * @member {string|null|undefined} source
+             * @memberof openvk.v1.WriteWall
+             * @instance
+             */
+            WriteWall.prototype.source = null;
+
+            /**
+             * WriteWall nsfw.
+             * @member {boolean} nsfw
+             * @memberof openvk.v1.WriteWall
+             * @instance
+             */
+            WriteWall.prototype.nsfw = false;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WriteWall.prototype, "_geo", {
+                get: $util.oneOfGetter($oneOfFields = ["geo"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WriteWall.prototype, "_source", {
+                get: $util.oneOfGetter($oneOfFields = ["source"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
 
             /**
              * Creates a new WriteWall instance using the specified properties.
@@ -4665,6 +6450,15 @@ export const openvk = $root.openvk = (() => {
                     throw $Error("max depth exceeded");
                 if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.content);
+                if (message.attachments != null && message.attachments.length)
+                    for (let i = 0; i < message.attachments.length; ++i)
+                        $root.openvk.v1.WallAttachment.encode(message.attachments[i], writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo"))
+                    $root.openvk.v1.GeoPoint.encode(message.geo, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source"))
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.source);
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw") && message.nsfw !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.nsfw);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4731,6 +6525,37 @@ export const openvk = $root.openvk = (() => {
                                 delete message.content;
                             continue;
                         }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.attachments && message.attachments.length))
+                                message.attachments = [];
+                            message.attachments.push($root.openvk.v1.WallAttachment.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.geo = $root.openvk.v1.GeoPoint.decode(reader, reader.uint32(), $undefined, _depth + 1, message.geo);
+                            message._geo = "geo";
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.source = reader.stringVerify();
+                            message._source = "source";
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.nsfw = value;
+                            else
+                                delete message.nsfw;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -4779,9 +6604,35 @@ export const openvk = $root.openvk = (() => {
                     _depth = 0;
                 if (_depth > $util.recursionLimit)
                     return "max depth exceeded";
+                let properties = {};
                 if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
                     if (!$util.isString(message.content))
                         return "content: string expected";
+                if (message.attachments != null && $Object.hasOwnProperty.call(message, "attachments")) {
+                    if (!$Array.isArray(message.attachments))
+                        return "attachments: array expected";
+                    for (let i = 0; i < message.attachments.length; ++i) {
+                        let error = $root.openvk.v1.WallAttachment.verify(message.attachments[i], _depth + 1);
+                        if (error)
+                            return "attachments." + error;
+                    }
+                }
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo")) {
+                    properties._geo = 1;
+                    {
+                        let error = $root.openvk.v1.GeoPoint.verify(message.geo, _depth + 1);
+                        if (error)
+                            return "geo." + error;
+                    }
+                }
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source")) {
+                    properties._source = 1;
+                    if (!$util.isString(message.source))
+                        return "source: string expected";
+                }
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw"))
+                    if (typeof message.nsfw !== "boolean")
+                        return "nsfw: boolean expected";
                 return null;
             };
 
@@ -4806,6 +6657,26 @@ export const openvk = $root.openvk = (() => {
                 if (object.content != null)
                     if (typeof object.content !== "string" || object.content.length)
                         message.content = $String(object.content);
+                if (object.attachments) {
+                    if (!$Array.isArray(object.attachments))
+                        throw $TypeError(".openvk.v1.WriteWall.attachments: array expected");
+                    message.attachments = $Array(object.attachments.length);
+                    for (let i = 0; i < object.attachments.length; ++i) {
+                        if (!$util.isObject(object.attachments[i]))
+                            throw $TypeError(".openvk.v1.WriteWall.attachments: object expected");
+                        message.attachments[i] = $root.openvk.v1.WallAttachment.fromObject(object.attachments[i], _depth + 1);
+                    }
+                }
+                if (object.geo != null) {
+                    if (!$util.isObject(object.geo))
+                        throw $TypeError(".openvk.v1.WriteWall.geo: object expected");
+                    message.geo = $root.openvk.v1.GeoPoint.fromObject(object.geo, _depth + 1);
+                }
+                if (object.source != null)
+                    message.source = $String(object.source);
+                if (object.nsfw != null)
+                    if (object.nsfw)
+                        message.nsfw = $Boolean(object.nsfw);
                 return message;
             };
 
@@ -4826,10 +6697,25 @@ export const openvk = $root.openvk = (() => {
                 if (_depth > $util.recursionLimit)
                     throw $Error("max depth exceeded");
                 let object = {};
-                if (options.defaults)
+                if (options.arrays || options.defaults)
+                    object.attachments = [];
+                if (options.defaults) {
                     object.content = "";
+                    object.nsfw = false;
+                }
                 if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
                     object.content = message.content;
+                if (message.attachments && message.attachments.length) {
+                    object.attachments = $Array(message.attachments.length);
+                    for (let j = 0; j < message.attachments.length; ++j)
+                        object.attachments[j] = $root.openvk.v1.WallAttachment.toObject(message.attachments[j], options, _depth + 1);
+                }
+                if (message.geo != null && $Object.hasOwnProperty.call(message, "geo"))
+                    object.geo = $root.openvk.v1.GeoPoint.toObject(message.geo, options, _depth + 1);
+                if (message.source != null && $Object.hasOwnProperty.call(message, "source"))
+                    object.source = message.source;
+                if (message.nsfw != null && $Object.hasOwnProperty.call(message, "nsfw"))
+                    object.nsfw = message.nsfw;
                 return object;
             };
 
@@ -4859,6 +6745,1361 @@ export const openvk = $root.openvk = (() => {
             };
 
             return WriteWall;
+        })();
+
+        v1.Comment = (function() {
+
+            /**
+             * Properties of a Comment.
+             * @typedef {Object} openvk.v1.Comment.$Properties
+             * @property {number|Long|null} [id] Comment id
+             * @property {number|Long|null} [author_id] Comment author_id
+             * @property {openvk.v1.User.$Properties|null} [author] Comment author
+             * @property {string|null} [content] Comment content
+             * @property {string|null} [created_at] Comment created_at
+             * @property {number|null} [like_count] Comment like_count
+             * @property {boolean|null} [liked] Comment liked
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Comment.
+             * @memberof openvk.v1
+             * @interface IComment
+             * @augments openvk.v1.Comment.$Properties
+             * @deprecated Use openvk.v1.Comment.$Properties instead.
+             */
+
+            /**
+             * Shape of a Comment.
+             * @typedef {openvk.v1.Comment.$Properties} openvk.v1.Comment.$Shape
+             */
+
+            /**
+             * Constructs a new Comment.
+             * @memberof openvk.v1
+             * @classdesc Represents a Comment.
+             * @constructor
+             * @param {openvk.v1.Comment.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Comment = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Comment id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Comment author_id.
+             * @member {number|Long} author_id
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.author_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Comment author.
+             * @member {openvk.v1.User.$Properties|null|undefined} author
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.author = null;
+
+            /**
+             * Comment content.
+             * @member {string} content
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.content = "";
+
+            /**
+             * Comment created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.created_at = "";
+
+            /**
+             * Comment like_count.
+             * @member {number} like_count
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.like_count = 0;
+
+            /**
+             * Comment liked.
+             * @member {boolean} liked
+             * @memberof openvk.v1.Comment
+             * @instance
+             */
+            Comment.prototype.liked = false;
+
+            /**
+             * Creates a new Comment instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {openvk.v1.Comment.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Comment} Comment instance
+             * @type {{
+             *   (properties: openvk.v1.Comment.$Shape): openvk.v1.Comment & openvk.v1.Comment.$Shape;
+             *   (properties?: openvk.v1.Comment.$Properties): openvk.v1.Comment;
+             * }}
+             */
+            Comment.create = function(properties) {
+                return new Comment(properties);
+            };
+
+            /**
+             * Encodes the specified Comment message. Does not implicitly {@link openvk.v1.Comment.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {openvk.v1.Comment.$Properties} message Comment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Comment.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id") && (typeof message.author_id === "object" ? message.author_id.low || message.author_id.high : message.author_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.author_id);
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    $root.openvk.v1.User.encode(message.author, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.content);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.created_at);
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count") && message.like_count !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).int32(message.like_count);
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked") && message.liked !== false)
+                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.liked);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Comment message, length delimited. Does not implicitly {@link openvk.v1.Comment.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {openvk.v1.Comment.$Properties} message Comment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Comment.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Comment message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Comment & openvk.v1.Comment.$Shape} Comment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Comment.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Comment();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.author_id = value;
+                            else
+                                delete message.author_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.author = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.author);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.like_count = value;
+                            else
+                                delete message.like_count;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.liked = value;
+                            else
+                                delete message.liked;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Comment message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Comment & openvk.v1.Comment.$Shape} Comment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Comment.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Comment message.
+             * @function verify
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Comment.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (!$util.isInteger(message.author_id) && !(message.author_id && $util.isInteger(message.author_id.low) && $util.isInteger(message.author_id.high)))
+                        return "author_id: integer|Long expected";
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author")) {
+                    let error = $root.openvk.v1.User.verify(message.author, _depth + 1);
+                    if (error)
+                        return "author." + error;
+                }
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    if (!$util.isInteger(message.like_count))
+                        return "like_count: integer expected";
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    if (typeof message.liked !== "boolean")
+                        return "liked: boolean expected";
+                return null;
+            };
+
+            /**
+             * Creates a Comment message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Comment} Comment
+             */
+            Comment.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Comment)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Comment: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Comment();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.author_id != null)
+                    if (typeof object.author_id === "object" ? object.author_id.low || object.author_id.high : $Number(object.author_id) !== 0)
+                        if ($util.Long)
+                            message.author_id = $util.Long.fromValue(object.author_id, false);
+                        else if (typeof object.author_id === "string")
+                            message.author_id = $parseInt(object.author_id, 10);
+                        else if (typeof object.author_id === "number")
+                            message.author_id = object.author_id;
+                        else if (typeof object.author_id === "object")
+                            message.author_id = new $util.LongBits(object.author_id.low >>> 0, object.author_id.high >>> 0).toNumber();
+                if (object.author != null) {
+                    if (!$util.isObject(object.author))
+                        throw $TypeError(".openvk.v1.Comment.author: object expected");
+                    message.author = $root.openvk.v1.User.fromObject(object.author, _depth + 1);
+                }
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                if (object.like_count != null)
+                    if ($Number(object.like_count) !== 0)
+                        message.like_count = object.like_count | 0;
+                if (object.liked != null)
+                    if (object.liked)
+                        message.liked = $Boolean(object.liked);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Comment message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {openvk.v1.Comment} message Comment
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Comment.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.author_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.author_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.author = null;
+                    object.content = "";
+                    object.created_at = "";
+                    object.like_count = 0;
+                    object.liked = false;
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.author_id = typeof message.author_id === "number" ? $BigInt(message.author_id) : $util.Long.fromBits(message.author_id.low >>> 0, message.author_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.author_id === "number")
+                        object.author_id = options.longs === $String ? $String(message.author_id) : message.author_id;
+                    else
+                        object.author_id = options.longs === $String ? $util.Long.prototype.toString.call(message.author_id) : options.longs === $Number ? new $util.LongBits(message.author_id.low >>> 0, message.author_id.high >>> 0).toNumber() : message.author_id;
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    object.author = $root.openvk.v1.User.toObject(message.author, options, _depth + 1);
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    object.like_count = message.like_count;
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    object.liked = message.liked;
+                return object;
+            };
+
+            /**
+             * Converts this Comment to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Comment
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Comment.prototype.toJSON = function() {
+                return Comment.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Comment
+             * @function getTypeUrl
+             * @memberof openvk.v1.Comment
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Comment.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Comment";
+            };
+
+            return Comment;
+        })();
+
+        v1.CommentList = (function() {
+
+            /**
+             * Properties of a CommentList.
+             * @typedef {Object} openvk.v1.CommentList.$Properties
+             * @property {Array.<openvk.v1.Comment.$Properties>|null} [comments] CommentList comments
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CommentList.
+             * @memberof openvk.v1
+             * @interface ICommentList
+             * @augments openvk.v1.CommentList.$Properties
+             * @deprecated Use openvk.v1.CommentList.$Properties instead.
+             */
+
+            /**
+             * Shape of a CommentList.
+             * @typedef {openvk.v1.CommentList.$Properties} openvk.v1.CommentList.$Shape
+             */
+
+            /**
+             * Constructs a new CommentList.
+             * @memberof openvk.v1
+             * @classdesc Represents a CommentList.
+             * @constructor
+             * @param {openvk.v1.CommentList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const CommentList = function (properties) {
+                this.comments = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CommentList comments.
+             * @member {Array.<openvk.v1.Comment.$Properties>} comments
+             * @memberof openvk.v1.CommentList
+             * @instance
+             */
+            CommentList.prototype.comments = $util.emptyArray;
+
+            /**
+             * Creates a new CommentList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {openvk.v1.CommentList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.CommentList} CommentList instance
+             * @type {{
+             *   (properties: openvk.v1.CommentList.$Shape): openvk.v1.CommentList & openvk.v1.CommentList.$Shape;
+             *   (properties?: openvk.v1.CommentList.$Properties): openvk.v1.CommentList;
+             * }}
+             */
+            CommentList.create = function(properties) {
+                return new CommentList(properties);
+            };
+
+            /**
+             * Encodes the specified CommentList message. Does not implicitly {@link openvk.v1.CommentList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {openvk.v1.CommentList.$Properties} message CommentList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CommentList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.comments != null && message.comments.length)
+                    for (let i = 0; i < message.comments.length; ++i)
+                        $root.openvk.v1.Comment.encode(message.comments[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CommentList message, length delimited. Does not implicitly {@link openvk.v1.CommentList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {openvk.v1.CommentList.$Properties} message CommentList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CommentList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CommentList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.CommentList & openvk.v1.CommentList.$Shape} CommentList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CommentList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.CommentList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.comments && message.comments.length))
+                                message.comments = [];
+                            message.comments.push($root.openvk.v1.Comment.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CommentList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.CommentList & openvk.v1.CommentList.$Shape} CommentList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CommentList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a CommentList message.
+             * @function verify
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CommentList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.comments != null && $Object.hasOwnProperty.call(message, "comments")) {
+                    if (!$Array.isArray(message.comments))
+                        return "comments: array expected";
+                    for (let i = 0; i < message.comments.length; ++i) {
+                        let error = $root.openvk.v1.Comment.verify(message.comments[i], _depth + 1);
+                        if (error)
+                            return "comments." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a CommentList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.CommentList} CommentList
+             */
+            CommentList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.CommentList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.CommentList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.CommentList();
+                if (object.comments) {
+                    if (!$Array.isArray(object.comments))
+                        throw $TypeError(".openvk.v1.CommentList.comments: array expected");
+                    message.comments = $Array(object.comments.length);
+                    for (let i = 0; i < object.comments.length; ++i) {
+                        if (!$util.isObject(object.comments[i]))
+                            throw $TypeError(".openvk.v1.CommentList.comments: object expected");
+                        message.comments[i] = $root.openvk.v1.Comment.fromObject(object.comments[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a CommentList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {openvk.v1.CommentList} message CommentList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CommentList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.comments = [];
+                if (message.comments && message.comments.length) {
+                    object.comments = $Array(message.comments.length);
+                    for (let j = 0; j < message.comments.length; ++j)
+                        object.comments[j] = $root.openvk.v1.Comment.toObject(message.comments[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this CommentList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.CommentList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CommentList.prototype.toJSON = function() {
+                return CommentList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for CommentList
+             * @function getTypeUrl
+             * @memberof openvk.v1.CommentList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CommentList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.CommentList";
+            };
+
+            return CommentList;
+        })();
+
+        v1.WriteComment = (function() {
+
+            /**
+             * Properties of a WriteComment.
+             * @typedef {Object} openvk.v1.WriteComment.$Properties
+             * @property {string|null} [content] WriteComment content
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WriteComment.
+             * @memberof openvk.v1
+             * @interface IWriteComment
+             * @augments openvk.v1.WriteComment.$Properties
+             * @deprecated Use openvk.v1.WriteComment.$Properties instead.
+             */
+
+            /**
+             * Shape of a WriteComment.
+             * @typedef {openvk.v1.WriteComment.$Properties} openvk.v1.WriteComment.$Shape
+             */
+
+            /**
+             * Constructs a new WriteComment.
+             * @memberof openvk.v1
+             * @classdesc Represents a WriteComment.
+             * @constructor
+             * @param {openvk.v1.WriteComment.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WriteComment = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WriteComment content.
+             * @member {string} content
+             * @memberof openvk.v1.WriteComment
+             * @instance
+             */
+            WriteComment.prototype.content = "";
+
+            /**
+             * Creates a new WriteComment instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {openvk.v1.WriteComment.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WriteComment} WriteComment instance
+             * @type {{
+             *   (properties: openvk.v1.WriteComment.$Shape): openvk.v1.WriteComment & openvk.v1.WriteComment.$Shape;
+             *   (properties?: openvk.v1.WriteComment.$Properties): openvk.v1.WriteComment;
+             * }}
+             */
+            WriteComment.create = function(properties) {
+                return new WriteComment(properties);
+            };
+
+            /**
+             * Encodes the specified WriteComment message. Does not implicitly {@link openvk.v1.WriteComment.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {openvk.v1.WriteComment.$Properties} message WriteComment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteComment.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.content);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WriteComment message, length delimited. Does not implicitly {@link openvk.v1.WriteComment.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {openvk.v1.WriteComment.$Properties} message WriteComment message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteComment.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WriteComment message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WriteComment & openvk.v1.WriteComment.$Shape} WriteComment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteComment.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WriteComment();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WriteComment message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WriteComment & openvk.v1.WriteComment.$Shape} WriteComment
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteComment.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WriteComment message.
+             * @function verify
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WriteComment.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WriteComment message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WriteComment} WriteComment
+             */
+            WriteComment.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WriteComment)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WriteComment: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WriteComment();
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WriteComment message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {openvk.v1.WriteComment} message WriteComment
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WriteComment.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.content = "";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                return object;
+            };
+
+            /**
+             * Converts this WriteComment to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WriteComment
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WriteComment.prototype.toJSON = function() {
+                return WriteComment.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WriteComment
+             * @function getTypeUrl
+             * @memberof openvk.v1.WriteComment
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WriteComment.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WriteComment";
+            };
+
+            return WriteComment;
+        })();
+
+        v1.LikeState = (function() {
+
+            /**
+             * Properties of a LikeState.
+             * @typedef {Object} openvk.v1.LikeState.$Properties
+             * @property {boolean|null} [liked] LikeState liked
+             * @property {number|null} [count] LikeState count
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a LikeState.
+             * @memberof openvk.v1
+             * @interface ILikeState
+             * @augments openvk.v1.LikeState.$Properties
+             * @deprecated Use openvk.v1.LikeState.$Properties instead.
+             */
+
+            /**
+             * Shape of a LikeState.
+             * @typedef {openvk.v1.LikeState.$Properties} openvk.v1.LikeState.$Shape
+             */
+
+            /**
+             * Constructs a new LikeState.
+             * @memberof openvk.v1
+             * @classdesc Represents a LikeState.
+             * @constructor
+             * @param {openvk.v1.LikeState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const LikeState = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * LikeState liked.
+             * @member {boolean} liked
+             * @memberof openvk.v1.LikeState
+             * @instance
+             */
+            LikeState.prototype.liked = false;
+
+            /**
+             * LikeState count.
+             * @member {number} count
+             * @memberof openvk.v1.LikeState
+             * @instance
+             */
+            LikeState.prototype.count = 0;
+
+            /**
+             * Creates a new LikeState instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {openvk.v1.LikeState.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.LikeState} LikeState instance
+             * @type {{
+             *   (properties: openvk.v1.LikeState.$Shape): openvk.v1.LikeState & openvk.v1.LikeState.$Shape;
+             *   (properties?: openvk.v1.LikeState.$Properties): openvk.v1.LikeState;
+             * }}
+             */
+            LikeState.create = function(properties) {
+                return new LikeState(properties);
+            };
+
+            /**
+             * Encodes the specified LikeState message. Does not implicitly {@link openvk.v1.LikeState.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {openvk.v1.LikeState.$Properties} message LikeState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LikeState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked") && message.liked !== false)
+                    writer.uint32(/* id 1, wireType 0 =*/8).bool(message.liked);
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count") && message.count !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.count);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified LikeState message, length delimited. Does not implicitly {@link openvk.v1.LikeState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {openvk.v1.LikeState.$Properties} message LikeState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            LikeState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a LikeState message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.LikeState & openvk.v1.LikeState.$Shape} LikeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LikeState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.LikeState();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.liked = value;
+                            else
+                                delete message.liked;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.count = value;
+                            else
+                                delete message.count;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a LikeState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.LikeState & openvk.v1.LikeState.$Shape} LikeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            LikeState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a LikeState message.
+             * @function verify
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            LikeState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    if (typeof message.liked !== "boolean")
+                        return "liked: boolean expected";
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count"))
+                    if (!$util.isInteger(message.count))
+                        return "count: integer expected";
+                return null;
+            };
+
+            /**
+             * Creates a LikeState message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.LikeState} LikeState
+             */
+            LikeState.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.LikeState)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.LikeState: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.LikeState();
+                if (object.liked != null)
+                    if (object.liked)
+                        message.liked = $Boolean(object.liked);
+                if (object.count != null)
+                    if ($Number(object.count) !== 0)
+                        message.count = object.count | 0;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a LikeState message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {openvk.v1.LikeState} message LikeState
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            LikeState.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.liked = false;
+                    object.count = 0;
+                }
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    object.liked = message.liked;
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count"))
+                    object.count = message.count;
+                return object;
+            };
+
+            /**
+             * Converts this LikeState to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.LikeState
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            LikeState.prototype.toJSON = function() {
+                return LikeState.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for LikeState
+             * @function getTypeUrl
+             * @memberof openvk.v1.LikeState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            LikeState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.LikeState";
+            };
+
+            return LikeState;
         })();
 
         v1.Message = (function() {
@@ -6718,6 +9959,8 @@ export const openvk = $root.openvk = (() => {
              * @property {number|null} [height] Photo height
              * @property {string|null} [original_filename] Photo original_filename
              * @property {string|null} [url] Photo url
+             * @property {number|null} [like_count] Photo like_count
+             * @property {boolean|null} [liked] Photo liked
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -6821,6 +10064,22 @@ export const openvk = $root.openvk = (() => {
              */
             Photo.prototype.url = "";
 
+            /**
+             * Photo like_count.
+             * @member {number} like_count
+             * @memberof openvk.v1.Photo
+             * @instance
+             */
+            Photo.prototype.like_count = 0;
+
+            /**
+             * Photo liked.
+             * @member {boolean} liked
+             * @memberof openvk.v1.Photo
+             * @instance
+             */
+            Photo.prototype.liked = false;
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -6892,6 +10151,10 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 8, wireType 2 =*/66).string(message.original_filename);
                 if (message.url != null && $Object.hasOwnProperty.call(message, "url") && message.url !== "")
                     writer.uint32(/* id 9, wireType 2 =*/74).string(message.url);
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count") && message.like_count !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).int32(message.like_count);
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked") && message.liked !== false)
+                    writer.uint32(/* id 11, wireType 0 =*/88).bool(message.liked);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7024,6 +10287,24 @@ export const openvk = $root.openvk = (() => {
                                 delete message.url;
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.like_count = value;
+                            else
+                                delete message.like_count;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.liked = value;
+                            else
+                                delete message.liked;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7106,6 +10387,12 @@ export const openvk = $root.openvk = (() => {
                 if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
                     if (!$util.isString(message.url))
                         return "url: string expected";
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    if (!$util.isInteger(message.like_count))
+                        return "like_count: integer expected";
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    if (typeof message.liked !== "boolean")
+                        return "liked: boolean expected";
                 return null;
             };
 
@@ -7179,6 +10466,12 @@ export const openvk = $root.openvk = (() => {
                 if (object.url != null)
                     if (typeof object.url !== "string" || object.url.length)
                         message.url = $String(object.url);
+                if (object.like_count != null)
+                    if ($Number(object.like_count) !== 0)
+                        message.like_count = object.like_count | 0;
+                if (object.liked != null)
+                    if (object.liked)
+                        message.liked = $Boolean(object.liked);
                 return message;
             };
 
@@ -7222,6 +10515,8 @@ export const openvk = $root.openvk = (() => {
                     } else
                         object.size_bytes = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
                     object.url = "";
+                    object.like_count = 0;
+                    object.liked = false;
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -7261,6 +10556,10 @@ export const openvk = $root.openvk = (() => {
                     object.original_filename = message.original_filename;
                 if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
                     object.url = message.url;
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    object.like_count = message.like_count;
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    object.liked = message.liked;
                 return object;
             };
 
@@ -8465,6 +11764,8 @@ export const openvk = $root.openvk = (() => {
              * @property {string|null} [status] Video status
              * @property {number|Long|null} [owner_user_id] Video owner_user_id
              * @property {string|null} [src] Video src
+             * @property {number|null} [like_count] Video like_count
+             * @property {boolean|null} [liked] Video liked
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -8552,6 +11853,22 @@ export const openvk = $root.openvk = (() => {
              */
             Video.prototype.src = null;
 
+            /**
+             * Video like_count.
+             * @member {number} like_count
+             * @memberof openvk.v1.Video
+             * @instance
+             */
+            Video.prototype.like_count = 0;
+
+            /**
+             * Video liked.
+             * @member {boolean} liked
+             * @memberof openvk.v1.Video
+             * @instance
+             */
+            Video.prototype.liked = false;
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -8619,6 +11936,10 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 6, wireType 0 =*/48).int64(message.owner_user_id);
                 if (message.src != null && $Object.hasOwnProperty.call(message, "src"))
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.src);
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count") && message.like_count !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).int32(message.like_count);
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked") && message.liked !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.liked);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -8733,6 +12054,24 @@ export const openvk = $root.openvk = (() => {
                             message._src = "src";
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.like_count = value;
+                            else
+                                delete message.like_count;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.liked = value;
+                            else
+                                delete message.liked;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -8809,6 +12148,12 @@ export const openvk = $root.openvk = (() => {
                     if (!$util.isString(message.src))
                         return "src: string expected";
                 }
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    if (!$util.isInteger(message.like_count))
+                        return "like_count: integer expected";
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    if (typeof message.liked !== "boolean")
+                        return "liked: boolean expected";
                 return null;
             };
 
@@ -8869,6 +12214,12 @@ export const openvk = $root.openvk = (() => {
                             message.owner_user_id = new $util.LongBits(object.owner_user_id.low >>> 0, object.owner_user_id.high >>> 0).toNumber();
                 if (object.src != null)
                     message.src = $String(object.src);
+                if (object.like_count != null)
+                    if ($Number(object.like_count) !== 0)
+                        message.like_count = object.like_count | 0;
+                if (object.liked != null)
+                    if (object.liked)
+                        message.liked = $Boolean(object.liked);
                 return message;
             };
 
@@ -8902,6 +12253,8 @@ export const openvk = $root.openvk = (() => {
                         object.owner_user_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
                     } else
                         object.owner_user_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.like_count = 0;
+                    object.liked = false;
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -8932,6 +12285,10 @@ export const openvk = $root.openvk = (() => {
                         object.owner_user_id = options.longs === $String ? $util.Long.prototype.toString.call(message.owner_user_id) : options.longs === $Number ? new $util.LongBits(message.owner_user_id.low >>> 0, message.owner_user_id.high >>> 0).toNumber() : message.owner_user_id;
                 if (message.src != null && $Object.hasOwnProperty.call(message, "src"))
                     object.src = message.src;
+                if (message.like_count != null && $Object.hasOwnProperty.call(message, "like_count"))
+                    object.like_count = message.like_count;
+                if (message.liked != null && $Object.hasOwnProperty.call(message, "liked"))
+                    object.liked = message.liked;
                 return object;
             };
 
@@ -9267,6 +12624,8 @@ export const openvk = $root.openvk = (() => {
              * @property {string|null} [kind] Group kind
              * @property {number|Long|null} [owner_id] Group owner_id
              * @property {string|null} [created_at] Group created_at
+             * @property {string|null} [avatar_url] Group avatar_url
+             * @property {number|Long|null} [members] Group members
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -9354,12 +12713,34 @@ export const openvk = $root.openvk = (() => {
              */
             Group.prototype.created_at = "";
 
+            /**
+             * Group avatar_url.
+             * @member {string|null|undefined} avatar_url
+             * @memberof openvk.v1.Group
+             * @instance
+             */
+            Group.prototype.avatar_url = null;
+
+            /**
+             * Group members.
+             * @member {number|Long} members
+             * @memberof openvk.v1.Group
+             * @instance
+             */
+            Group.prototype.members = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
             // Virtual OneOf for proto3 optional field
             $Object.defineProperty(Group.prototype, "_about", {
                 get: $util.oneOfGetter($oneOfFields = ["about"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(Group.prototype, "_avatar_url", {
+                get: $util.oneOfGetter($oneOfFields = ["avatar_url"]),
                 set: $util.oneOfSetter($oneOfFields)
             });
 
@@ -9409,6 +12790,10 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 6, wireType 0 =*/48).int64(message.owner_id);
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.created_at);
+                if (message.avatar_url != null && $Object.hasOwnProperty.call(message, "avatar_url"))
+                    writer.uint32(/* id 8, wireType 2 =*/66).string(message.avatar_url);
+                if (message.members != null && $Object.hasOwnProperty.call(message, "members") && (typeof message.members === "object" ? message.members.low || message.members.high : message.members !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.members);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -9527,6 +12912,22 @@ export const openvk = $root.openvk = (() => {
                                 delete message.created_at;
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            message.avatar_url = reader.stringVerify();
+                            message._avatar_url = "avatar_url";
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.members = value;
+                            else
+                                delete message.members;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -9599,6 +13000,14 @@ export const openvk = $root.openvk = (() => {
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     if (!$util.isString(message.created_at))
                         return "created_at: string expected";
+                if (message.avatar_url != null && $Object.hasOwnProperty.call(message, "avatar_url")) {
+                    properties._avatar_url = 1;
+                    if (!$util.isString(message.avatar_url))
+                        return "avatar_url: string expected";
+                }
+                if (message.members != null && $Object.hasOwnProperty.call(message, "members"))
+                    if (!$util.isInteger(message.members) && !(message.members && $util.isInteger(message.members.low) && $util.isInteger(message.members.high)))
+                        return "members: integer|Long expected";
                 return null;
             };
 
@@ -9654,6 +13063,18 @@ export const openvk = $root.openvk = (() => {
                 if (object.created_at != null)
                     if (typeof object.created_at !== "string" || object.created_at.length)
                         message.created_at = $String(object.created_at);
+                if (object.avatar_url != null)
+                    message.avatar_url = $String(object.avatar_url);
+                if (object.members != null)
+                    if (typeof object.members === "object" ? object.members.low || object.members.high : $Number(object.members) !== 0)
+                        if ($util.Long)
+                            message.members = $util.Long.fromValue(object.members, false);
+                        else if (typeof object.members === "string")
+                            message.members = $parseInt(object.members, 10);
+                        else if (typeof object.members === "number")
+                            message.members = object.members;
+                        else if (typeof object.members === "object")
+                            message.members = new $util.LongBits(object.members.low >>> 0, object.members.high >>> 0).toNumber();
                 return message;
             };
 
@@ -9689,6 +13110,11 @@ export const openvk = $root.openvk = (() => {
                     } else
                         object.owner_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
                     object.created_at = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.members = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.members = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -9714,6 +13140,15 @@ export const openvk = $root.openvk = (() => {
                         object.owner_id = options.longs === $String ? $util.Long.prototype.toString.call(message.owner_id) : options.longs === $Number ? new $util.LongBits(message.owner_id.low >>> 0, message.owner_id.high >>> 0).toNumber() : message.owner_id;
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     object.created_at = message.created_at;
+                if (message.avatar_url != null && $Object.hasOwnProperty.call(message, "avatar_url"))
+                    object.avatar_url = message.avatar_url;
+                if (message.members != null && $Object.hasOwnProperty.call(message, "members"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.members = typeof message.members === "number" ? $BigInt(message.members) : $util.Long.fromBits(message.members.low >>> 0, message.members.high >>> 0, false).toBigInt();
+                    else if (typeof message.members === "number")
+                        object.members = options.longs === $String ? $String(message.members) : message.members;
+                    else
+                        object.members = options.longs === $String ? $util.Long.prototype.toString.call(message.members) : options.longs === $Number ? new $util.LongBits(message.members.low >>> 0, message.members.high >>> 0).toNumber() : message.members;
                 return object;
             };
 
@@ -10050,6 +13485,8 @@ export const openvk = $root.openvk = (() => {
              * @property {string|null} [payload_json] Notification payload_json
              * @property {string|null} [read_at] Notification read_at
              * @property {string|null} [created_at] Notification created_at
+             * @property {openvk.v1.User.$Properties|null} [actor] Notification actor
+             * @property {string|null} [href] Notification href
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -10145,6 +13582,22 @@ export const openvk = $root.openvk = (() => {
              */
             Notification.prototype.created_at = "";
 
+            /**
+             * Notification actor.
+             * @member {openvk.v1.User.$Properties|null|undefined} actor
+             * @memberof openvk.v1.Notification
+             * @instance
+             */
+            Notification.prototype.actor = null;
+
+            /**
+             * Notification href.
+             * @member {string} href
+             * @memberof openvk.v1.Notification
+             * @instance
+             */
+            Notification.prototype.href = "";
+
             // OneOf field names bound to virtual getters and setters
             let $oneOfFields;
 
@@ -10169,6 +13622,12 @@ export const openvk = $root.openvk = (() => {
             // Virtual OneOf for proto3 optional field
             $Object.defineProperty(Notification.prototype, "_read_at", {
                 get: $util.oneOfGetter($oneOfFields = ["read_at"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(Notification.prototype, "_actor", {
+                get: $util.oneOfGetter($oneOfFields = ["actor"]),
                 set: $util.oneOfSetter($oneOfFields)
             });
 
@@ -10220,6 +13679,10 @@ export const openvk = $root.openvk = (() => {
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.read_at);
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
                     writer.uint32(/* id 8, wireType 2 =*/66).string(message.created_at);
+                if (message.actor != null && $Object.hasOwnProperty.call(message, "actor"))
+                    $root.openvk.v1.User.encode(message.actor, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.href != null && $Object.hasOwnProperty.call(message, "href") && message.href !== "")
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.href);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (let i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -10341,6 +13804,22 @@ export const openvk = $root.openvk = (() => {
                                 delete message.created_at;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            message.actor = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.actor);
+                            message._actor = "actor";
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.href = value;
+                            else
+                                delete message.href;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -10422,6 +13901,17 @@ export const openvk = $root.openvk = (() => {
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     if (!$util.isString(message.created_at))
                         return "created_at: string expected";
+                if (message.actor != null && $Object.hasOwnProperty.call(message, "actor")) {
+                    properties._actor = 1;
+                    {
+                        let error = $root.openvk.v1.User.verify(message.actor, _depth + 1);
+                        if (error)
+                            return "actor." + error;
+                    }
+                }
+                if (message.href != null && $Object.hasOwnProperty.call(message, "href"))
+                    if (!$util.isString(message.href))
+                        return "href: string expected";
                 return null;
             };
 
@@ -10484,6 +13974,14 @@ export const openvk = $root.openvk = (() => {
                 if (object.created_at != null)
                     if (typeof object.created_at !== "string" || object.created_at.length)
                         message.created_at = $String(object.created_at);
+                if (object.actor != null) {
+                    if (!$util.isObject(object.actor))
+                        throw $TypeError(".openvk.v1.Notification.actor: object expected");
+                    message.actor = $root.openvk.v1.User.fromObject(object.actor, _depth + 1);
+                }
+                if (object.href != null)
+                    if (typeof object.href !== "string" || object.href.length)
+                        message.href = $String(object.href);
                 return message;
             };
 
@@ -10513,6 +14011,7 @@ export const openvk = $root.openvk = (() => {
                     object.kind = "";
                     object.payload_json = "";
                     object.created_at = "";
+                    object.href = "";
                 }
                 if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
                     if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
@@ -10545,6 +14044,10 @@ export const openvk = $root.openvk = (() => {
                     object.read_at = message.read_at;
                 if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
                     object.created_at = message.created_at;
+                if (message.actor != null && $Object.hasOwnProperty.call(message, "actor"))
+                    object.actor = $root.openvk.v1.User.toObject(message.actor, options, _depth + 1);
+                if (message.href != null && $Object.hasOwnProperty.call(message, "href"))
+                    object.href = message.href;
                 return object;
             };
 
@@ -12101,6 +15604,12522 @@ export const openvk = $root.openvk = (() => {
             };
 
             return InstanceAbout;
+        })();
+
+        v1.Gift = (function() {
+
+            /**
+             * Properties of a Gift.
+             * @typedef {Object} openvk.v1.Gift.$Properties
+             * @property {number|Long|null} [id] Gift id
+             * @property {number|Long|null} [category_id] Gift category_id
+             * @property {string|null} [name] Gift name
+             * @property {string|null} [description] Gift description
+             * @property {number|Long|null} [price] Gift price
+             * @property {string|null} [image_url] Gift image_url
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Gift.
+             * @memberof openvk.v1
+             * @interface IGift
+             * @augments openvk.v1.Gift.$Properties
+             * @deprecated Use openvk.v1.Gift.$Properties instead.
+             */
+
+            /**
+             * Shape of a Gift.
+             * @typedef {openvk.v1.Gift.$Properties} openvk.v1.Gift.$Shape
+             */
+
+            /**
+             * Constructs a new Gift.
+             * @memberof openvk.v1
+             * @classdesc Represents a Gift.
+             * @constructor
+             * @param {openvk.v1.Gift.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Gift = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Gift id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Gift category_id.
+             * @member {number|Long} category_id
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.category_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Gift name.
+             * @member {string} name
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.name = "";
+
+            /**
+             * Gift description.
+             * @member {string} description
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.description = "";
+
+            /**
+             * Gift price.
+             * @member {number|Long} price
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.price = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Gift image_url.
+             * @member {string} image_url
+             * @memberof openvk.v1.Gift
+             * @instance
+             */
+            Gift.prototype.image_url = "";
+
+            /**
+             * Creates a new Gift instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {openvk.v1.Gift.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Gift} Gift instance
+             * @type {{
+             *   (properties: openvk.v1.Gift.$Shape): openvk.v1.Gift & openvk.v1.Gift.$Shape;
+             *   (properties?: openvk.v1.Gift.$Properties): openvk.v1.Gift;
+             * }}
+             */
+            Gift.create = function(properties) {
+                return new Gift(properties);
+            };
+
+            /**
+             * Encodes the specified Gift message. Does not implicitly {@link openvk.v1.Gift.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {openvk.v1.Gift.$Properties} message Gift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Gift.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.category_id != null && $Object.hasOwnProperty.call(message, "category_id") && (typeof message.category_id === "object" ? message.category_id.low || message.category_id.high : message.category_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.category_id);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description") && message.description !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.description);
+                if (message.price != null && $Object.hasOwnProperty.call(message, "price") && (typeof message.price === "object" ? message.price.low || message.price.high : message.price !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.price);
+                if (message.image_url != null && $Object.hasOwnProperty.call(message, "image_url") && message.image_url !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.image_url);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Gift message, length delimited. Does not implicitly {@link openvk.v1.Gift.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {openvk.v1.Gift.$Properties} message Gift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Gift.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Gift message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Gift & openvk.v1.Gift.$Shape} Gift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Gift.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Gift();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.category_id = value;
+                            else
+                                delete message.category_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.description = value;
+                            else
+                                delete message.description;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.price = value;
+                            else
+                                delete message.price;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.image_url = value;
+                            else
+                                delete message.image_url;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Gift message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Gift & openvk.v1.Gift.$Shape} Gift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Gift.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Gift message.
+             * @function verify
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Gift.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.category_id != null && $Object.hasOwnProperty.call(message, "category_id"))
+                    if (!$util.isInteger(message.category_id) && !(message.category_id && $util.isInteger(message.category_id.low) && $util.isInteger(message.category_id.high)))
+                        return "category_id: integer|Long expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description"))
+                    if (!$util.isString(message.description))
+                        return "description: string expected";
+                if (message.price != null && $Object.hasOwnProperty.call(message, "price"))
+                    if (!$util.isInteger(message.price) && !(message.price && $util.isInteger(message.price.low) && $util.isInteger(message.price.high)))
+                        return "price: integer|Long expected";
+                if (message.image_url != null && $Object.hasOwnProperty.call(message, "image_url"))
+                    if (!$util.isString(message.image_url))
+                        return "image_url: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a Gift message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Gift} Gift
+             */
+            Gift.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Gift)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Gift: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Gift();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.category_id != null)
+                    if (typeof object.category_id === "object" ? object.category_id.low || object.category_id.high : $Number(object.category_id) !== 0)
+                        if ($util.Long)
+                            message.category_id = $util.Long.fromValue(object.category_id, false);
+                        else if (typeof object.category_id === "string")
+                            message.category_id = $parseInt(object.category_id, 10);
+                        else if (typeof object.category_id === "number")
+                            message.category_id = object.category_id;
+                        else if (typeof object.category_id === "object")
+                            message.category_id = new $util.LongBits(object.category_id.low >>> 0, object.category_id.high >>> 0).toNumber();
+                if (object.name != null)
+                    if (typeof object.name !== "string" || object.name.length)
+                        message.name = $String(object.name);
+                if (object.description != null)
+                    if (typeof object.description !== "string" || object.description.length)
+                        message.description = $String(object.description);
+                if (object.price != null)
+                    if (typeof object.price === "object" ? object.price.low || object.price.high : $Number(object.price) !== 0)
+                        if ($util.Long)
+                            message.price = $util.Long.fromValue(object.price, false);
+                        else if (typeof object.price === "string")
+                            message.price = $parseInt(object.price, 10);
+                        else if (typeof object.price === "number")
+                            message.price = object.price;
+                        else if (typeof object.price === "object")
+                            message.price = new $util.LongBits(object.price.low >>> 0, object.price.high >>> 0).toNumber();
+                if (object.image_url != null)
+                    if (typeof object.image_url !== "string" || object.image_url.length)
+                        message.image_url = $String(object.image_url);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Gift message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {openvk.v1.Gift} message Gift
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Gift.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.category_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.category_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.name = "";
+                    object.description = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.price = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.price = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.image_url = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.category_id != null && $Object.hasOwnProperty.call(message, "category_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.category_id = typeof message.category_id === "number" ? $BigInt(message.category_id) : $util.Long.fromBits(message.category_id.low >>> 0, message.category_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.category_id === "number")
+                        object.category_id = options.longs === $String ? $String(message.category_id) : message.category_id;
+                    else
+                        object.category_id = options.longs === $String ? $util.Long.prototype.toString.call(message.category_id) : options.longs === $Number ? new $util.LongBits(message.category_id.low >>> 0, message.category_id.high >>> 0).toNumber() : message.category_id;
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    object.name = message.name;
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description"))
+                    object.description = message.description;
+                if (message.price != null && $Object.hasOwnProperty.call(message, "price"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.price = typeof message.price === "number" ? $BigInt(message.price) : $util.Long.fromBits(message.price.low >>> 0, message.price.high >>> 0, false).toBigInt();
+                    else if (typeof message.price === "number")
+                        object.price = options.longs === $String ? $String(message.price) : message.price;
+                    else
+                        object.price = options.longs === $String ? $util.Long.prototype.toString.call(message.price) : options.longs === $Number ? new $util.LongBits(message.price.low >>> 0, message.price.high >>> 0).toNumber() : message.price;
+                if (message.image_url != null && $Object.hasOwnProperty.call(message, "image_url"))
+                    object.image_url = message.image_url;
+                return object;
+            };
+
+            /**
+             * Converts this Gift to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Gift
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Gift.prototype.toJSON = function() {
+                return Gift.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Gift
+             * @function getTypeUrl
+             * @memberof openvk.v1.Gift
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Gift.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Gift";
+            };
+
+            return Gift;
+        })();
+
+        v1.GiftCategory = (function() {
+
+            /**
+             * Properties of a GiftCategory.
+             * @typedef {Object} openvk.v1.GiftCategory.$Properties
+             * @property {number|Long|null} [id] GiftCategory id
+             * @property {string|null} [slug] GiftCategory slug
+             * @property {string|null} [name] GiftCategory name
+             * @property {string|null} [description] GiftCategory description
+             * @property {Array.<openvk.v1.Gift.$Properties>|null} [gifts] GiftCategory gifts
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GiftCategory.
+             * @memberof openvk.v1
+             * @interface IGiftCategory
+             * @augments openvk.v1.GiftCategory.$Properties
+             * @deprecated Use openvk.v1.GiftCategory.$Properties instead.
+             */
+
+            /**
+             * Shape of a GiftCategory.
+             * @typedef {openvk.v1.GiftCategory.$Properties} openvk.v1.GiftCategory.$Shape
+             */
+
+            /**
+             * Constructs a new GiftCategory.
+             * @memberof openvk.v1
+             * @classdesc Represents a GiftCategory.
+             * @constructor
+             * @param {openvk.v1.GiftCategory.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const GiftCategory = function (properties) {
+                this.gifts = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GiftCategory id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             */
+            GiftCategory.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GiftCategory slug.
+             * @member {string} slug
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             */
+            GiftCategory.prototype.slug = "";
+
+            /**
+             * GiftCategory name.
+             * @member {string} name
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             */
+            GiftCategory.prototype.name = "";
+
+            /**
+             * GiftCategory description.
+             * @member {string} description
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             */
+            GiftCategory.prototype.description = "";
+
+            /**
+             * GiftCategory gifts.
+             * @member {Array.<openvk.v1.Gift.$Properties>} gifts
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             */
+            GiftCategory.prototype.gifts = $util.emptyArray;
+
+            /**
+             * Creates a new GiftCategory instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {openvk.v1.GiftCategory.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.GiftCategory} GiftCategory instance
+             * @type {{
+             *   (properties: openvk.v1.GiftCategory.$Shape): openvk.v1.GiftCategory & openvk.v1.GiftCategory.$Shape;
+             *   (properties?: openvk.v1.GiftCategory.$Properties): openvk.v1.GiftCategory;
+             * }}
+             */
+            GiftCategory.create = function(properties) {
+                return new GiftCategory(properties);
+            };
+
+            /**
+             * Encodes the specified GiftCategory message. Does not implicitly {@link openvk.v1.GiftCategory.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {openvk.v1.GiftCategory.$Properties} message GiftCategory message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GiftCategory.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.slug != null && $Object.hasOwnProperty.call(message, "slug") && message.slug !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.slug);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description") && message.description !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.description);
+                if (message.gifts != null && message.gifts.length)
+                    for (let i = 0; i < message.gifts.length; ++i)
+                        $root.openvk.v1.Gift.encode(message.gifts[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GiftCategory message, length delimited. Does not implicitly {@link openvk.v1.GiftCategory.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {openvk.v1.GiftCategory.$Properties} message GiftCategory message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GiftCategory.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GiftCategory message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.GiftCategory & openvk.v1.GiftCategory.$Shape} GiftCategory
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GiftCategory.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.GiftCategory();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.slug = value;
+                            else
+                                delete message.slug;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.description = value;
+                            else
+                                delete message.description;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.gifts && message.gifts.length))
+                                message.gifts = [];
+                            message.gifts.push($root.openvk.v1.Gift.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GiftCategory message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.GiftCategory & openvk.v1.GiftCategory.$Shape} GiftCategory
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GiftCategory.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a GiftCategory message.
+             * @function verify
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GiftCategory.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.slug != null && $Object.hasOwnProperty.call(message, "slug"))
+                    if (!$util.isString(message.slug))
+                        return "slug: string expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description"))
+                    if (!$util.isString(message.description))
+                        return "description: string expected";
+                if (message.gifts != null && $Object.hasOwnProperty.call(message, "gifts")) {
+                    if (!$Array.isArray(message.gifts))
+                        return "gifts: array expected";
+                    for (let i = 0; i < message.gifts.length; ++i) {
+                        let error = $root.openvk.v1.Gift.verify(message.gifts[i], _depth + 1);
+                        if (error)
+                            return "gifts." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a GiftCategory message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.GiftCategory} GiftCategory
+             */
+            GiftCategory.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.GiftCategory)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.GiftCategory: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.GiftCategory();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.slug != null)
+                    if (typeof object.slug !== "string" || object.slug.length)
+                        message.slug = $String(object.slug);
+                if (object.name != null)
+                    if (typeof object.name !== "string" || object.name.length)
+                        message.name = $String(object.name);
+                if (object.description != null)
+                    if (typeof object.description !== "string" || object.description.length)
+                        message.description = $String(object.description);
+                if (object.gifts) {
+                    if (!$Array.isArray(object.gifts))
+                        throw $TypeError(".openvk.v1.GiftCategory.gifts: array expected");
+                    message.gifts = $Array(object.gifts.length);
+                    for (let i = 0; i < object.gifts.length; ++i) {
+                        if (!$util.isObject(object.gifts[i]))
+                            throw $TypeError(".openvk.v1.GiftCategory.gifts: object expected");
+                        message.gifts[i] = $root.openvk.v1.Gift.fromObject(object.gifts[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a GiftCategory message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {openvk.v1.GiftCategory} message GiftCategory
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GiftCategory.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.gifts = [];
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.slug = "";
+                    object.name = "";
+                    object.description = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.slug != null && $Object.hasOwnProperty.call(message, "slug"))
+                    object.slug = message.slug;
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    object.name = message.name;
+                if (message.description != null && $Object.hasOwnProperty.call(message, "description"))
+                    object.description = message.description;
+                if (message.gifts && message.gifts.length) {
+                    object.gifts = $Array(message.gifts.length);
+                    for (let j = 0; j < message.gifts.length; ++j)
+                        object.gifts[j] = $root.openvk.v1.Gift.toObject(message.gifts[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this GiftCategory to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.GiftCategory
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GiftCategory.prototype.toJSON = function() {
+                return GiftCategory.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for GiftCategory
+             * @function getTypeUrl
+             * @memberof openvk.v1.GiftCategory
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GiftCategory.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.GiftCategory";
+            };
+
+            return GiftCategory;
+        })();
+
+        v1.GiftCatalog = (function() {
+
+            /**
+             * Properties of a GiftCatalog.
+             * @typedef {Object} openvk.v1.GiftCatalog.$Properties
+             * @property {Array.<openvk.v1.GiftCategory.$Properties>|null} [categories] GiftCatalog categories
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GiftCatalog.
+             * @memberof openvk.v1
+             * @interface IGiftCatalog
+             * @augments openvk.v1.GiftCatalog.$Properties
+             * @deprecated Use openvk.v1.GiftCatalog.$Properties instead.
+             */
+
+            /**
+             * Shape of a GiftCatalog.
+             * @typedef {openvk.v1.GiftCatalog.$Properties} openvk.v1.GiftCatalog.$Shape
+             */
+
+            /**
+             * Constructs a new GiftCatalog.
+             * @memberof openvk.v1
+             * @classdesc Represents a GiftCatalog.
+             * @constructor
+             * @param {openvk.v1.GiftCatalog.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const GiftCatalog = function (properties) {
+                this.categories = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GiftCatalog categories.
+             * @member {Array.<openvk.v1.GiftCategory.$Properties>} categories
+             * @memberof openvk.v1.GiftCatalog
+             * @instance
+             */
+            GiftCatalog.prototype.categories = $util.emptyArray;
+
+            /**
+             * Creates a new GiftCatalog instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {openvk.v1.GiftCatalog.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.GiftCatalog} GiftCatalog instance
+             * @type {{
+             *   (properties: openvk.v1.GiftCatalog.$Shape): openvk.v1.GiftCatalog & openvk.v1.GiftCatalog.$Shape;
+             *   (properties?: openvk.v1.GiftCatalog.$Properties): openvk.v1.GiftCatalog;
+             * }}
+             */
+            GiftCatalog.create = function(properties) {
+                return new GiftCatalog(properties);
+            };
+
+            /**
+             * Encodes the specified GiftCatalog message. Does not implicitly {@link openvk.v1.GiftCatalog.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {openvk.v1.GiftCatalog.$Properties} message GiftCatalog message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GiftCatalog.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.categories != null && message.categories.length)
+                    for (let i = 0; i < message.categories.length; ++i)
+                        $root.openvk.v1.GiftCategory.encode(message.categories[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GiftCatalog message, length delimited. Does not implicitly {@link openvk.v1.GiftCatalog.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {openvk.v1.GiftCatalog.$Properties} message GiftCatalog message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GiftCatalog.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GiftCatalog message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.GiftCatalog & openvk.v1.GiftCatalog.$Shape} GiftCatalog
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GiftCatalog.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.GiftCatalog();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.categories && message.categories.length))
+                                message.categories = [];
+                            message.categories.push($root.openvk.v1.GiftCategory.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GiftCatalog message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.GiftCatalog & openvk.v1.GiftCatalog.$Shape} GiftCatalog
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GiftCatalog.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a GiftCatalog message.
+             * @function verify
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GiftCatalog.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.categories != null && $Object.hasOwnProperty.call(message, "categories")) {
+                    if (!$Array.isArray(message.categories))
+                        return "categories: array expected";
+                    for (let i = 0; i < message.categories.length; ++i) {
+                        let error = $root.openvk.v1.GiftCategory.verify(message.categories[i], _depth + 1);
+                        if (error)
+                            return "categories." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a GiftCatalog message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.GiftCatalog} GiftCatalog
+             */
+            GiftCatalog.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.GiftCatalog)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.GiftCatalog: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.GiftCatalog();
+                if (object.categories) {
+                    if (!$Array.isArray(object.categories))
+                        throw $TypeError(".openvk.v1.GiftCatalog.categories: array expected");
+                    message.categories = $Array(object.categories.length);
+                    for (let i = 0; i < object.categories.length; ++i) {
+                        if (!$util.isObject(object.categories[i]))
+                            throw $TypeError(".openvk.v1.GiftCatalog.categories: object expected");
+                        message.categories[i] = $root.openvk.v1.GiftCategory.fromObject(object.categories[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a GiftCatalog message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {openvk.v1.GiftCatalog} message GiftCatalog
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GiftCatalog.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.categories = [];
+                if (message.categories && message.categories.length) {
+                    object.categories = $Array(message.categories.length);
+                    for (let j = 0; j < message.categories.length; ++j)
+                        object.categories[j] = $root.openvk.v1.GiftCategory.toObject(message.categories[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this GiftCatalog to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.GiftCatalog
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GiftCatalog.prototype.toJSON = function() {
+                return GiftCatalog.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for GiftCatalog
+             * @function getTypeUrl
+             * @memberof openvk.v1.GiftCatalog
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GiftCatalog.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.GiftCatalog";
+            };
+
+            return GiftCatalog;
+        })();
+
+        v1.UserGift = (function() {
+
+            /**
+             * Properties of a UserGift.
+             * @typedef {Object} openvk.v1.UserGift.$Properties
+             * @property {number|Long|null} [id] UserGift id
+             * @property {number|Long|null} [gift_id] UserGift gift_id
+             * @property {openvk.v1.Gift.$Properties|null} [gift] UserGift gift
+             * @property {number|Long|null} [sender_id] UserGift sender_id
+             * @property {openvk.v1.User.$Properties|null} [sender] UserGift sender
+             * @property {number|Long|null} [receiver_id] UserGift receiver_id
+             * @property {string|null} [caption] UserGift caption
+             * @property {boolean|null} [anonymous] UserGift anonymous
+             * @property {string|null} [created_at] UserGift created_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a UserGift.
+             * @memberof openvk.v1
+             * @interface IUserGift
+             * @augments openvk.v1.UserGift.$Properties
+             * @deprecated Use openvk.v1.UserGift.$Properties instead.
+             */
+
+            /**
+             * Shape of a UserGift.
+             * @typedef {openvk.v1.UserGift.$Properties} openvk.v1.UserGift.$Shape
+             */
+
+            /**
+             * Constructs a new UserGift.
+             * @memberof openvk.v1
+             * @classdesc Represents a UserGift.
+             * @constructor
+             * @param {openvk.v1.UserGift.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const UserGift = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * UserGift id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * UserGift gift_id.
+             * @member {number|Long} gift_id
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.gift_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * UserGift gift.
+             * @member {openvk.v1.Gift.$Properties|null|undefined} gift
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.gift = null;
+
+            /**
+             * UserGift sender_id.
+             * @member {number|Long} sender_id
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.sender_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * UserGift sender.
+             * @member {openvk.v1.User.$Properties|null|undefined} sender
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.sender = null;
+
+            /**
+             * UserGift receiver_id.
+             * @member {number|Long} receiver_id
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.receiver_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * UserGift caption.
+             * @member {string|null|undefined} caption
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.caption = null;
+
+            /**
+             * UserGift anonymous.
+             * @member {boolean} anonymous
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.anonymous = false;
+
+            /**
+             * UserGift created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.UserGift
+             * @instance
+             */
+            UserGift.prototype.created_at = "";
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(UserGift.prototype, "_sender", {
+                get: $util.oneOfGetter($oneOfFields = ["sender"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(UserGift.prototype, "_caption", {
+                get: $util.oneOfGetter($oneOfFields = ["caption"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new UserGift instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {openvk.v1.UserGift.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.UserGift} UserGift instance
+             * @type {{
+             *   (properties: openvk.v1.UserGift.$Shape): openvk.v1.UserGift & openvk.v1.UserGift.$Shape;
+             *   (properties?: openvk.v1.UserGift.$Properties): openvk.v1.UserGift;
+             * }}
+             */
+            UserGift.create = function(properties) {
+                return new UserGift(properties);
+            };
+
+            /**
+             * Encodes the specified UserGift message. Does not implicitly {@link openvk.v1.UserGift.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {openvk.v1.UserGift.$Properties} message UserGift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UserGift.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id") && (typeof message.gift_id === "object" ? message.gift_id.low || message.gift_id.high : message.gift_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.gift_id);
+                if (message.gift != null && $Object.hasOwnProperty.call(message, "gift"))
+                    $root.openvk.v1.Gift.encode(message.gift, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.sender_id != null && $Object.hasOwnProperty.call(message, "sender_id") && (typeof message.sender_id === "object" ? message.sender_id.low || message.sender_id.high : message.sender_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.sender_id);
+                if (message.sender != null && $Object.hasOwnProperty.call(message, "sender"))
+                    $root.openvk.v1.User.encode(message.sender, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id") && (typeof message.receiver_id === "object" ? message.receiver_id.low || message.receiver_id.high : message.receiver_id !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.receiver_id);
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption"))
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.caption);
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous") && message.anonymous !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.anonymous);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 9, wireType 2 =*/74).string(message.created_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified UserGift message, length delimited. Does not implicitly {@link openvk.v1.UserGift.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {openvk.v1.UserGift.$Properties} message UserGift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UserGift.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a UserGift message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.UserGift & openvk.v1.UserGift.$Shape} UserGift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UserGift.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.UserGift();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gift_id = value;
+                            else
+                                delete message.gift_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.gift = $root.openvk.v1.Gift.decode(reader, reader.uint32(), $undefined, _depth + 1, message.gift);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.sender_id = value;
+                            else
+                                delete message.sender_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.sender = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.sender);
+                            message._sender = "sender";
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.receiver_id = value;
+                            else
+                                delete message.receiver_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.caption = reader.stringVerify();
+                            message._caption = "caption";
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.anonymous = value;
+                            else
+                                delete message.anonymous;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a UserGift message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.UserGift & openvk.v1.UserGift.$Shape} UserGift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UserGift.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a UserGift message.
+             * @function verify
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            UserGift.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id"))
+                    if (!$util.isInteger(message.gift_id) && !(message.gift_id && $util.isInteger(message.gift_id.low) && $util.isInteger(message.gift_id.high)))
+                        return "gift_id: integer|Long expected";
+                if (message.gift != null && $Object.hasOwnProperty.call(message, "gift")) {
+                    let error = $root.openvk.v1.Gift.verify(message.gift, _depth + 1);
+                    if (error)
+                        return "gift." + error;
+                }
+                if (message.sender_id != null && $Object.hasOwnProperty.call(message, "sender_id"))
+                    if (!$util.isInteger(message.sender_id) && !(message.sender_id && $util.isInteger(message.sender_id.low) && $util.isInteger(message.sender_id.high)))
+                        return "sender_id: integer|Long expected";
+                if (message.sender != null && $Object.hasOwnProperty.call(message, "sender")) {
+                    properties._sender = 1;
+                    {
+                        let error = $root.openvk.v1.User.verify(message.sender, _depth + 1);
+                        if (error)
+                            return "sender." + error;
+                    }
+                }
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (!$util.isInteger(message.receiver_id) && !(message.receiver_id && $util.isInteger(message.receiver_id.low) && $util.isInteger(message.receiver_id.high)))
+                        return "receiver_id: integer|Long expected";
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption")) {
+                    properties._caption = 1;
+                    if (!$util.isString(message.caption))
+                        return "caption: string expected";
+                }
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous"))
+                    if (typeof message.anonymous !== "boolean")
+                        return "anonymous: boolean expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a UserGift message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.UserGift} UserGift
+             */
+            UserGift.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.UserGift)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.UserGift: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.UserGift();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.gift_id != null)
+                    if (typeof object.gift_id === "object" ? object.gift_id.low || object.gift_id.high : $Number(object.gift_id) !== 0)
+                        if ($util.Long)
+                            message.gift_id = $util.Long.fromValue(object.gift_id, false);
+                        else if (typeof object.gift_id === "string")
+                            message.gift_id = $parseInt(object.gift_id, 10);
+                        else if (typeof object.gift_id === "number")
+                            message.gift_id = object.gift_id;
+                        else if (typeof object.gift_id === "object")
+                            message.gift_id = new $util.LongBits(object.gift_id.low >>> 0, object.gift_id.high >>> 0).toNumber();
+                if (object.gift != null) {
+                    if (!$util.isObject(object.gift))
+                        throw $TypeError(".openvk.v1.UserGift.gift: object expected");
+                    message.gift = $root.openvk.v1.Gift.fromObject(object.gift, _depth + 1);
+                }
+                if (object.sender_id != null)
+                    if (typeof object.sender_id === "object" ? object.sender_id.low || object.sender_id.high : $Number(object.sender_id) !== 0)
+                        if ($util.Long)
+                            message.sender_id = $util.Long.fromValue(object.sender_id, false);
+                        else if (typeof object.sender_id === "string")
+                            message.sender_id = $parseInt(object.sender_id, 10);
+                        else if (typeof object.sender_id === "number")
+                            message.sender_id = object.sender_id;
+                        else if (typeof object.sender_id === "object")
+                            message.sender_id = new $util.LongBits(object.sender_id.low >>> 0, object.sender_id.high >>> 0).toNumber();
+                if (object.sender != null) {
+                    if (!$util.isObject(object.sender))
+                        throw $TypeError(".openvk.v1.UserGift.sender: object expected");
+                    message.sender = $root.openvk.v1.User.fromObject(object.sender, _depth + 1);
+                }
+                if (object.receiver_id != null)
+                    if (typeof object.receiver_id === "object" ? object.receiver_id.low || object.receiver_id.high : $Number(object.receiver_id) !== 0)
+                        if ($util.Long)
+                            message.receiver_id = $util.Long.fromValue(object.receiver_id, false);
+                        else if (typeof object.receiver_id === "string")
+                            message.receiver_id = $parseInt(object.receiver_id, 10);
+                        else if (typeof object.receiver_id === "number")
+                            message.receiver_id = object.receiver_id;
+                        else if (typeof object.receiver_id === "object")
+                            message.receiver_id = new $util.LongBits(object.receiver_id.low >>> 0, object.receiver_id.high >>> 0).toNumber();
+                if (object.caption != null)
+                    message.caption = $String(object.caption);
+                if (object.anonymous != null)
+                    if (object.anonymous)
+                        message.anonymous = $Boolean(object.anonymous);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a UserGift message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {openvk.v1.UserGift} message UserGift
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            UserGift.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.gift_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.gift_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.gift = null;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.sender_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.sender_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.receiver_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.receiver_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.anonymous = false;
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.gift_id = typeof message.gift_id === "number" ? $BigInt(message.gift_id) : $util.Long.fromBits(message.gift_id.low >>> 0, message.gift_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.gift_id === "number")
+                        object.gift_id = options.longs === $String ? $String(message.gift_id) : message.gift_id;
+                    else
+                        object.gift_id = options.longs === $String ? $util.Long.prototype.toString.call(message.gift_id) : options.longs === $Number ? new $util.LongBits(message.gift_id.low >>> 0, message.gift_id.high >>> 0).toNumber() : message.gift_id;
+                if (message.gift != null && $Object.hasOwnProperty.call(message, "gift"))
+                    object.gift = $root.openvk.v1.Gift.toObject(message.gift, options, _depth + 1);
+                if (message.sender_id != null && $Object.hasOwnProperty.call(message, "sender_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.sender_id = typeof message.sender_id === "number" ? $BigInt(message.sender_id) : $util.Long.fromBits(message.sender_id.low >>> 0, message.sender_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.sender_id === "number")
+                        object.sender_id = options.longs === $String ? $String(message.sender_id) : message.sender_id;
+                    else
+                        object.sender_id = options.longs === $String ? $util.Long.prototype.toString.call(message.sender_id) : options.longs === $Number ? new $util.LongBits(message.sender_id.low >>> 0, message.sender_id.high >>> 0).toNumber() : message.sender_id;
+                if (message.sender != null && $Object.hasOwnProperty.call(message, "sender"))
+                    object.sender = $root.openvk.v1.User.toObject(message.sender, options, _depth + 1);
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.receiver_id = typeof message.receiver_id === "number" ? $BigInt(message.receiver_id) : $util.Long.fromBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.receiver_id === "number")
+                        object.receiver_id = options.longs === $String ? $String(message.receiver_id) : message.receiver_id;
+                    else
+                        object.receiver_id = options.longs === $String ? $util.Long.prototype.toString.call(message.receiver_id) : options.longs === $Number ? new $util.LongBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0).toNumber() : message.receiver_id;
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption"))
+                    object.caption = message.caption;
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous"))
+                    object.anonymous = message.anonymous;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                return object;
+            };
+
+            /**
+             * Converts this UserGift to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.UserGift
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            UserGift.prototype.toJSON = function() {
+                return UserGift.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for UserGift
+             * @function getTypeUrl
+             * @memberof openvk.v1.UserGift
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            UserGift.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.UserGift";
+            };
+
+            return UserGift;
+        })();
+
+        v1.UserGiftList = (function() {
+
+            /**
+             * Properties of a UserGiftList.
+             * @typedef {Object} openvk.v1.UserGiftList.$Properties
+             * @property {Array.<openvk.v1.UserGift.$Properties>|null} [gifts] UserGiftList gifts
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a UserGiftList.
+             * @memberof openvk.v1
+             * @interface IUserGiftList
+             * @augments openvk.v1.UserGiftList.$Properties
+             * @deprecated Use openvk.v1.UserGiftList.$Properties instead.
+             */
+
+            /**
+             * Shape of a UserGiftList.
+             * @typedef {openvk.v1.UserGiftList.$Properties} openvk.v1.UserGiftList.$Shape
+             */
+
+            /**
+             * Constructs a new UserGiftList.
+             * @memberof openvk.v1
+             * @classdesc Represents a UserGiftList.
+             * @constructor
+             * @param {openvk.v1.UserGiftList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const UserGiftList = function (properties) {
+                this.gifts = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * UserGiftList gifts.
+             * @member {Array.<openvk.v1.UserGift.$Properties>} gifts
+             * @memberof openvk.v1.UserGiftList
+             * @instance
+             */
+            UserGiftList.prototype.gifts = $util.emptyArray;
+
+            /**
+             * Creates a new UserGiftList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {openvk.v1.UserGiftList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.UserGiftList} UserGiftList instance
+             * @type {{
+             *   (properties: openvk.v1.UserGiftList.$Shape): openvk.v1.UserGiftList & openvk.v1.UserGiftList.$Shape;
+             *   (properties?: openvk.v1.UserGiftList.$Properties): openvk.v1.UserGiftList;
+             * }}
+             */
+            UserGiftList.create = function(properties) {
+                return new UserGiftList(properties);
+            };
+
+            /**
+             * Encodes the specified UserGiftList message. Does not implicitly {@link openvk.v1.UserGiftList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {openvk.v1.UserGiftList.$Properties} message UserGiftList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UserGiftList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.gifts != null && message.gifts.length)
+                    for (let i = 0; i < message.gifts.length; ++i)
+                        $root.openvk.v1.UserGift.encode(message.gifts[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified UserGiftList message, length delimited. Does not implicitly {@link openvk.v1.UserGiftList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {openvk.v1.UserGiftList.$Properties} message UserGiftList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UserGiftList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a UserGiftList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.UserGiftList & openvk.v1.UserGiftList.$Shape} UserGiftList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UserGiftList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.UserGiftList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.gifts && message.gifts.length))
+                                message.gifts = [];
+                            message.gifts.push($root.openvk.v1.UserGift.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a UserGiftList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.UserGiftList & openvk.v1.UserGiftList.$Shape} UserGiftList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UserGiftList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a UserGiftList message.
+             * @function verify
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            UserGiftList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.gifts != null && $Object.hasOwnProperty.call(message, "gifts")) {
+                    if (!$Array.isArray(message.gifts))
+                        return "gifts: array expected";
+                    for (let i = 0; i < message.gifts.length; ++i) {
+                        let error = $root.openvk.v1.UserGift.verify(message.gifts[i], _depth + 1);
+                        if (error)
+                            return "gifts." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a UserGiftList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.UserGiftList} UserGiftList
+             */
+            UserGiftList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.UserGiftList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.UserGiftList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.UserGiftList();
+                if (object.gifts) {
+                    if (!$Array.isArray(object.gifts))
+                        throw $TypeError(".openvk.v1.UserGiftList.gifts: array expected");
+                    message.gifts = $Array(object.gifts.length);
+                    for (let i = 0; i < object.gifts.length; ++i) {
+                        if (!$util.isObject(object.gifts[i]))
+                            throw $TypeError(".openvk.v1.UserGiftList.gifts: object expected");
+                        message.gifts[i] = $root.openvk.v1.UserGift.fromObject(object.gifts[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a UserGiftList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {openvk.v1.UserGiftList} message UserGiftList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            UserGiftList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.gifts = [];
+                if (message.gifts && message.gifts.length) {
+                    object.gifts = $Array(message.gifts.length);
+                    for (let j = 0; j < message.gifts.length; ++j)
+                        object.gifts[j] = $root.openvk.v1.UserGift.toObject(message.gifts[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this UserGiftList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.UserGiftList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            UserGiftList.prototype.toJSON = function() {
+                return UserGiftList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for UserGiftList
+             * @function getTypeUrl
+             * @memberof openvk.v1.UserGiftList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            UserGiftList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.UserGiftList";
+            };
+
+            return UserGiftList;
+        })();
+
+        v1.SendGift = (function() {
+
+            /**
+             * Properties of a SendGift.
+             * @typedef {Object} openvk.v1.SendGift.$Properties
+             * @property {number|Long|null} [gift_id] SendGift gift_id
+             * @property {number|Long|null} [receiver_id] SendGift receiver_id
+             * @property {string|null} [caption] SendGift caption
+             * @property {boolean|null} [anonymous] SendGift anonymous
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SendGift.
+             * @memberof openvk.v1
+             * @interface ISendGift
+             * @augments openvk.v1.SendGift.$Properties
+             * @deprecated Use openvk.v1.SendGift.$Properties instead.
+             */
+
+            /**
+             * Shape of a SendGift.
+             * @typedef {openvk.v1.SendGift.$Properties} openvk.v1.SendGift.$Shape
+             */
+
+            /**
+             * Constructs a new SendGift.
+             * @memberof openvk.v1
+             * @classdesc Represents a SendGift.
+             * @constructor
+             * @param {openvk.v1.SendGift.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const SendGift = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SendGift gift_id.
+             * @member {number|Long} gift_id
+             * @memberof openvk.v1.SendGift
+             * @instance
+             */
+            SendGift.prototype.gift_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SendGift receiver_id.
+             * @member {number|Long} receiver_id
+             * @memberof openvk.v1.SendGift
+             * @instance
+             */
+            SendGift.prototype.receiver_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SendGift caption.
+             * @member {string|null|undefined} caption
+             * @memberof openvk.v1.SendGift
+             * @instance
+             */
+            SendGift.prototype.caption = null;
+
+            /**
+             * SendGift anonymous.
+             * @member {boolean} anonymous
+             * @memberof openvk.v1.SendGift
+             * @instance
+             */
+            SendGift.prototype.anonymous = false;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(SendGift.prototype, "_caption", {
+                get: $util.oneOfGetter($oneOfFields = ["caption"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new SendGift instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {openvk.v1.SendGift.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.SendGift} SendGift instance
+             * @type {{
+             *   (properties: openvk.v1.SendGift.$Shape): openvk.v1.SendGift & openvk.v1.SendGift.$Shape;
+             *   (properties?: openvk.v1.SendGift.$Properties): openvk.v1.SendGift;
+             * }}
+             */
+            SendGift.create = function(properties) {
+                return new SendGift(properties);
+            };
+
+            /**
+             * Encodes the specified SendGift message. Does not implicitly {@link openvk.v1.SendGift.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {openvk.v1.SendGift.$Properties} message SendGift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SendGift.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id") && (typeof message.gift_id === "object" ? message.gift_id.low || message.gift_id.high : message.gift_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.gift_id);
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id") && (typeof message.receiver_id === "object" ? message.receiver_id.low || message.receiver_id.high : message.receiver_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.receiver_id);
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.caption);
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous") && message.anonymous !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.anonymous);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SendGift message, length delimited. Does not implicitly {@link openvk.v1.SendGift.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {openvk.v1.SendGift.$Properties} message SendGift message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SendGift.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SendGift message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.SendGift & openvk.v1.SendGift.$Shape} SendGift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SendGift.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.SendGift();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gift_id = value;
+                            else
+                                delete message.gift_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.receiver_id = value;
+                            else
+                                delete message.receiver_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.caption = reader.stringVerify();
+                            message._caption = "caption";
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.anonymous = value;
+                            else
+                                delete message.anonymous;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SendGift message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.SendGift & openvk.v1.SendGift.$Shape} SendGift
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SendGift.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a SendGift message.
+             * @function verify
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SendGift.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id"))
+                    if (!$util.isInteger(message.gift_id) && !(message.gift_id && $util.isInteger(message.gift_id.low) && $util.isInteger(message.gift_id.high)))
+                        return "gift_id: integer|Long expected";
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (!$util.isInteger(message.receiver_id) && !(message.receiver_id && $util.isInteger(message.receiver_id.low) && $util.isInteger(message.receiver_id.high)))
+                        return "receiver_id: integer|Long expected";
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption")) {
+                    properties._caption = 1;
+                    if (!$util.isString(message.caption))
+                        return "caption: string expected";
+                }
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous"))
+                    if (typeof message.anonymous !== "boolean")
+                        return "anonymous: boolean expected";
+                return null;
+            };
+
+            /**
+             * Creates a SendGift message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.SendGift} SendGift
+             */
+            SendGift.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.SendGift)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.SendGift: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.SendGift();
+                if (object.gift_id != null)
+                    if (typeof object.gift_id === "object" ? object.gift_id.low || object.gift_id.high : $Number(object.gift_id) !== 0)
+                        if ($util.Long)
+                            message.gift_id = $util.Long.fromValue(object.gift_id, false);
+                        else if (typeof object.gift_id === "string")
+                            message.gift_id = $parseInt(object.gift_id, 10);
+                        else if (typeof object.gift_id === "number")
+                            message.gift_id = object.gift_id;
+                        else if (typeof object.gift_id === "object")
+                            message.gift_id = new $util.LongBits(object.gift_id.low >>> 0, object.gift_id.high >>> 0).toNumber();
+                if (object.receiver_id != null)
+                    if (typeof object.receiver_id === "object" ? object.receiver_id.low || object.receiver_id.high : $Number(object.receiver_id) !== 0)
+                        if ($util.Long)
+                            message.receiver_id = $util.Long.fromValue(object.receiver_id, false);
+                        else if (typeof object.receiver_id === "string")
+                            message.receiver_id = $parseInt(object.receiver_id, 10);
+                        else if (typeof object.receiver_id === "number")
+                            message.receiver_id = object.receiver_id;
+                        else if (typeof object.receiver_id === "object")
+                            message.receiver_id = new $util.LongBits(object.receiver_id.low >>> 0, object.receiver_id.high >>> 0).toNumber();
+                if (object.caption != null)
+                    message.caption = $String(object.caption);
+                if (object.anonymous != null)
+                    if (object.anonymous)
+                        message.anonymous = $Boolean(object.anonymous);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a SendGift message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {openvk.v1.SendGift} message SendGift
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            SendGift.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.gift_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.gift_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.receiver_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.receiver_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.anonymous = false;
+                }
+                if (message.gift_id != null && $Object.hasOwnProperty.call(message, "gift_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.gift_id = typeof message.gift_id === "number" ? $BigInt(message.gift_id) : $util.Long.fromBits(message.gift_id.low >>> 0, message.gift_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.gift_id === "number")
+                        object.gift_id = options.longs === $String ? $String(message.gift_id) : message.gift_id;
+                    else
+                        object.gift_id = options.longs === $String ? $util.Long.prototype.toString.call(message.gift_id) : options.longs === $Number ? new $util.LongBits(message.gift_id.low >>> 0, message.gift_id.high >>> 0).toNumber() : message.gift_id;
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.receiver_id = typeof message.receiver_id === "number" ? $BigInt(message.receiver_id) : $util.Long.fromBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.receiver_id === "number")
+                        object.receiver_id = options.longs === $String ? $String(message.receiver_id) : message.receiver_id;
+                    else
+                        object.receiver_id = options.longs === $String ? $util.Long.prototype.toString.call(message.receiver_id) : options.longs === $Number ? new $util.LongBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0).toNumber() : message.receiver_id;
+                if (message.caption != null && $Object.hasOwnProperty.call(message, "caption"))
+                    object.caption = message.caption;
+                if (message.anonymous != null && $Object.hasOwnProperty.call(message, "anonymous"))
+                    object.anonymous = message.anonymous;
+                return object;
+            };
+
+            /**
+             * Converts this SendGift to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.SendGift
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            SendGift.prototype.toJSON = function() {
+                return SendGift.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for SendGift
+             * @function getTypeUrl
+             * @memberof openvk.v1.SendGift
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SendGift.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.SendGift";
+            };
+
+            return SendGift;
+        })();
+
+        v1.TicketReply = (function() {
+
+            /**
+             * Properties of a TicketReply.
+             * @typedef {Object} openvk.v1.TicketReply.$Properties
+             * @property {number|Long|null} [id] TicketReply id
+             * @property {number|Long|null} [ticket_id] TicketReply ticket_id
+             * @property {number|Long|null} [author_id] TicketReply author_id
+             * @property {openvk.v1.User.$Properties|null} [author] TicketReply author
+             * @property {string|null} [content] TicketReply content
+             * @property {boolean|null} [from_agent] TicketReply from_agent
+             * @property {string|null} [created_at] TicketReply created_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TicketReply.
+             * @memberof openvk.v1
+             * @interface ITicketReply
+             * @augments openvk.v1.TicketReply.$Properties
+             * @deprecated Use openvk.v1.TicketReply.$Properties instead.
+             */
+
+            /**
+             * Shape of a TicketReply.
+             * @typedef {openvk.v1.TicketReply.$Properties} openvk.v1.TicketReply.$Shape
+             */
+
+            /**
+             * Constructs a new TicketReply.
+             * @memberof openvk.v1
+             * @classdesc Represents a TicketReply.
+             * @constructor
+             * @param {openvk.v1.TicketReply.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const TicketReply = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TicketReply id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TicketReply ticket_id.
+             * @member {number|Long} ticket_id
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.ticket_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TicketReply author_id.
+             * @member {number|Long} author_id
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.author_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TicketReply author.
+             * @member {openvk.v1.User.$Properties|null|undefined} author
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.author = null;
+
+            /**
+             * TicketReply content.
+             * @member {string} content
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.content = "";
+
+            /**
+             * TicketReply from_agent.
+             * @member {boolean} from_agent
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.from_agent = false;
+
+            /**
+             * TicketReply created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             */
+            TicketReply.prototype.created_at = "";
+
+            /**
+             * Creates a new TicketReply instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {openvk.v1.TicketReply.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.TicketReply} TicketReply instance
+             * @type {{
+             *   (properties: openvk.v1.TicketReply.$Shape): openvk.v1.TicketReply & openvk.v1.TicketReply.$Shape;
+             *   (properties?: openvk.v1.TicketReply.$Properties): openvk.v1.TicketReply;
+             * }}
+             */
+            TicketReply.create = function(properties) {
+                return new TicketReply(properties);
+            };
+
+            /**
+             * Encodes the specified TicketReply message. Does not implicitly {@link openvk.v1.TicketReply.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {openvk.v1.TicketReply.$Properties} message TicketReply message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TicketReply.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.ticket_id != null && $Object.hasOwnProperty.call(message, "ticket_id") && (typeof message.ticket_id === "object" ? message.ticket_id.low || message.ticket_id.high : message.ticket_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.ticket_id);
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id") && (typeof message.author_id === "object" ? message.author_id.low || message.author_id.high : message.author_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.author_id);
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    $root.openvk.v1.User.encode(message.author, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.content);
+                if (message.from_agent != null && $Object.hasOwnProperty.call(message, "from_agent") && message.from_agent !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.from_agent);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.created_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TicketReply message, length delimited. Does not implicitly {@link openvk.v1.TicketReply.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {openvk.v1.TicketReply.$Properties} message TicketReply message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TicketReply.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TicketReply message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.TicketReply & openvk.v1.TicketReply.$Shape} TicketReply
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TicketReply.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.TicketReply();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.ticket_id = value;
+                            else
+                                delete message.ticket_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.author_id = value;
+                            else
+                                delete message.author_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.author = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.author);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.from_agent = value;
+                            else
+                                delete message.from_agent;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TicketReply message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.TicketReply & openvk.v1.TicketReply.$Shape} TicketReply
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TicketReply.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a TicketReply message.
+             * @function verify
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TicketReply.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.ticket_id != null && $Object.hasOwnProperty.call(message, "ticket_id"))
+                    if (!$util.isInteger(message.ticket_id) && !(message.ticket_id && $util.isInteger(message.ticket_id.low) && $util.isInteger(message.ticket_id.high)))
+                        return "ticket_id: integer|Long expected";
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (!$util.isInteger(message.author_id) && !(message.author_id && $util.isInteger(message.author_id.low) && $util.isInteger(message.author_id.high)))
+                        return "author_id: integer|Long expected";
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author")) {
+                    let error = $root.openvk.v1.User.verify(message.author, _depth + 1);
+                    if (error)
+                        return "author." + error;
+                }
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                if (message.from_agent != null && $Object.hasOwnProperty.call(message, "from_agent"))
+                    if (typeof message.from_agent !== "boolean")
+                        return "from_agent: boolean expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a TicketReply message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.TicketReply} TicketReply
+             */
+            TicketReply.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.TicketReply)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.TicketReply: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.TicketReply();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.ticket_id != null)
+                    if (typeof object.ticket_id === "object" ? object.ticket_id.low || object.ticket_id.high : $Number(object.ticket_id) !== 0)
+                        if ($util.Long)
+                            message.ticket_id = $util.Long.fromValue(object.ticket_id, false);
+                        else if (typeof object.ticket_id === "string")
+                            message.ticket_id = $parseInt(object.ticket_id, 10);
+                        else if (typeof object.ticket_id === "number")
+                            message.ticket_id = object.ticket_id;
+                        else if (typeof object.ticket_id === "object")
+                            message.ticket_id = new $util.LongBits(object.ticket_id.low >>> 0, object.ticket_id.high >>> 0).toNumber();
+                if (object.author_id != null)
+                    if (typeof object.author_id === "object" ? object.author_id.low || object.author_id.high : $Number(object.author_id) !== 0)
+                        if ($util.Long)
+                            message.author_id = $util.Long.fromValue(object.author_id, false);
+                        else if (typeof object.author_id === "string")
+                            message.author_id = $parseInt(object.author_id, 10);
+                        else if (typeof object.author_id === "number")
+                            message.author_id = object.author_id;
+                        else if (typeof object.author_id === "object")
+                            message.author_id = new $util.LongBits(object.author_id.low >>> 0, object.author_id.high >>> 0).toNumber();
+                if (object.author != null) {
+                    if (!$util.isObject(object.author))
+                        throw $TypeError(".openvk.v1.TicketReply.author: object expected");
+                    message.author = $root.openvk.v1.User.fromObject(object.author, _depth + 1);
+                }
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                if (object.from_agent != null)
+                    if (object.from_agent)
+                        message.from_agent = $Boolean(object.from_agent);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a TicketReply message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {openvk.v1.TicketReply} message TicketReply
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            TicketReply.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.ticket_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.ticket_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.author_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.author_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.author = null;
+                    object.content = "";
+                    object.from_agent = false;
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.ticket_id != null && $Object.hasOwnProperty.call(message, "ticket_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.ticket_id = typeof message.ticket_id === "number" ? $BigInt(message.ticket_id) : $util.Long.fromBits(message.ticket_id.low >>> 0, message.ticket_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.ticket_id === "number")
+                        object.ticket_id = options.longs === $String ? $String(message.ticket_id) : message.ticket_id;
+                    else
+                        object.ticket_id = options.longs === $String ? $util.Long.prototype.toString.call(message.ticket_id) : options.longs === $Number ? new $util.LongBits(message.ticket_id.low >>> 0, message.ticket_id.high >>> 0).toNumber() : message.ticket_id;
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.author_id = typeof message.author_id === "number" ? $BigInt(message.author_id) : $util.Long.fromBits(message.author_id.low >>> 0, message.author_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.author_id === "number")
+                        object.author_id = options.longs === $String ? $String(message.author_id) : message.author_id;
+                    else
+                        object.author_id = options.longs === $String ? $util.Long.prototype.toString.call(message.author_id) : options.longs === $Number ? new $util.LongBits(message.author_id.low >>> 0, message.author_id.high >>> 0).toNumber() : message.author_id;
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    object.author = $root.openvk.v1.User.toObject(message.author, options, _depth + 1);
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                if (message.from_agent != null && $Object.hasOwnProperty.call(message, "from_agent"))
+                    object.from_agent = message.from_agent;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                return object;
+            };
+
+            /**
+             * Converts this TicketReply to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.TicketReply
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            TicketReply.prototype.toJSON = function() {
+                return TicketReply.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for TicketReply
+             * @function getTypeUrl
+             * @memberof openvk.v1.TicketReply
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TicketReply.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.TicketReply";
+            };
+
+            return TicketReply;
+        })();
+
+        v1.Ticket = (function() {
+
+            /**
+             * Properties of a Ticket.
+             * @typedef {Object} openvk.v1.Ticket.$Properties
+             * @property {number|Long|null} [id] Ticket id
+             * @property {number|Long|null} [author_id] Ticket author_id
+             * @property {openvk.v1.User.$Properties|null} [author] Ticket author
+             * @property {string|null} [subject] Ticket subject
+             * @property {string|null} [content] Ticket content
+             * @property {string|null} [status] Ticket status
+             * @property {string|null} [created_at] Ticket created_at
+             * @property {Array.<openvk.v1.TicketReply.$Properties>|null} [replies] Ticket replies
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Ticket.
+             * @memberof openvk.v1
+             * @interface ITicket
+             * @augments openvk.v1.Ticket.$Properties
+             * @deprecated Use openvk.v1.Ticket.$Properties instead.
+             */
+
+            /**
+             * Shape of a Ticket.
+             * @typedef {openvk.v1.Ticket.$Properties} openvk.v1.Ticket.$Shape
+             */
+
+            /**
+             * Constructs a new Ticket.
+             * @memberof openvk.v1
+             * @classdesc Represents a Ticket.
+             * @constructor
+             * @param {openvk.v1.Ticket.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Ticket = function (properties) {
+                this.replies = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Ticket id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Ticket author_id.
+             * @member {number|Long} author_id
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.author_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Ticket author.
+             * @member {openvk.v1.User.$Properties|null|undefined} author
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.author = null;
+
+            /**
+             * Ticket subject.
+             * @member {string} subject
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.subject = "";
+
+            /**
+             * Ticket content.
+             * @member {string} content
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.content = "";
+
+            /**
+             * Ticket status.
+             * @member {string} status
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.status = "";
+
+            /**
+             * Ticket created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.created_at = "";
+
+            /**
+             * Ticket replies.
+             * @member {Array.<openvk.v1.TicketReply.$Properties>} replies
+             * @memberof openvk.v1.Ticket
+             * @instance
+             */
+            Ticket.prototype.replies = $util.emptyArray;
+
+            /**
+             * Creates a new Ticket instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {openvk.v1.Ticket.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Ticket} Ticket instance
+             * @type {{
+             *   (properties: openvk.v1.Ticket.$Shape): openvk.v1.Ticket & openvk.v1.Ticket.$Shape;
+             *   (properties?: openvk.v1.Ticket.$Properties): openvk.v1.Ticket;
+             * }}
+             */
+            Ticket.create = function(properties) {
+                return new Ticket(properties);
+            };
+
+            /**
+             * Encodes the specified Ticket message. Does not implicitly {@link openvk.v1.Ticket.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {openvk.v1.Ticket.$Properties} message Ticket message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Ticket.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id") && (typeof message.author_id === "object" ? message.author_id.low || message.author_id.high : message.author_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.author_id);
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    $root.openvk.v1.User.encode(message.author, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject") && message.subject !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.subject);
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.content);
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status") && message.status !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.status);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.created_at);
+                if (message.replies != null && message.replies.length)
+                    for (let i = 0; i < message.replies.length; ++i)
+                        $root.openvk.v1.TicketReply.encode(message.replies[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Ticket message, length delimited. Does not implicitly {@link openvk.v1.Ticket.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {openvk.v1.Ticket.$Properties} message Ticket message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Ticket.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Ticket message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Ticket & openvk.v1.Ticket.$Shape} Ticket
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Ticket.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Ticket();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.author_id = value;
+                            else
+                                delete message.author_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.author = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.author);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.subject = value;
+                            else
+                                delete message.subject;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.status = value;
+                            else
+                                delete message.status;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.replies && message.replies.length))
+                                message.replies = [];
+                            message.replies.push($root.openvk.v1.TicketReply.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Ticket message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Ticket & openvk.v1.Ticket.$Shape} Ticket
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Ticket.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Ticket message.
+             * @function verify
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Ticket.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (!$util.isInteger(message.author_id) && !(message.author_id && $util.isInteger(message.author_id.low) && $util.isInteger(message.author_id.high)))
+                        return "author_id: integer|Long expected";
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author")) {
+                    let error = $root.openvk.v1.User.verify(message.author, _depth + 1);
+                    if (error)
+                        return "author." + error;
+                }
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject"))
+                    if (!$util.isString(message.subject))
+                        return "subject: string expected";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    if (!$util.isString(message.status))
+                        return "status: string expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                if (message.replies != null && $Object.hasOwnProperty.call(message, "replies")) {
+                    if (!$Array.isArray(message.replies))
+                        return "replies: array expected";
+                    for (let i = 0; i < message.replies.length; ++i) {
+                        let error = $root.openvk.v1.TicketReply.verify(message.replies[i], _depth + 1);
+                        if (error)
+                            return "replies." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a Ticket message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Ticket} Ticket
+             */
+            Ticket.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Ticket)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Ticket: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Ticket();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.author_id != null)
+                    if (typeof object.author_id === "object" ? object.author_id.low || object.author_id.high : $Number(object.author_id) !== 0)
+                        if ($util.Long)
+                            message.author_id = $util.Long.fromValue(object.author_id, false);
+                        else if (typeof object.author_id === "string")
+                            message.author_id = $parseInt(object.author_id, 10);
+                        else if (typeof object.author_id === "number")
+                            message.author_id = object.author_id;
+                        else if (typeof object.author_id === "object")
+                            message.author_id = new $util.LongBits(object.author_id.low >>> 0, object.author_id.high >>> 0).toNumber();
+                if (object.author != null) {
+                    if (!$util.isObject(object.author))
+                        throw $TypeError(".openvk.v1.Ticket.author: object expected");
+                    message.author = $root.openvk.v1.User.fromObject(object.author, _depth + 1);
+                }
+                if (object.subject != null)
+                    if (typeof object.subject !== "string" || object.subject.length)
+                        message.subject = $String(object.subject);
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                if (object.status != null)
+                    if (typeof object.status !== "string" || object.status.length)
+                        message.status = $String(object.status);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                if (object.replies) {
+                    if (!$Array.isArray(object.replies))
+                        throw $TypeError(".openvk.v1.Ticket.replies: array expected");
+                    message.replies = $Array(object.replies.length);
+                    for (let i = 0; i < object.replies.length; ++i) {
+                        if (!$util.isObject(object.replies[i]))
+                            throw $TypeError(".openvk.v1.Ticket.replies: object expected");
+                        message.replies[i] = $root.openvk.v1.TicketReply.fromObject(object.replies[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Ticket message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {openvk.v1.Ticket} message Ticket
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Ticket.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.replies = [];
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.author_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.author_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.author = null;
+                    object.subject = "";
+                    object.content = "";
+                    object.status = "";
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.author_id = typeof message.author_id === "number" ? $BigInt(message.author_id) : $util.Long.fromBits(message.author_id.low >>> 0, message.author_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.author_id === "number")
+                        object.author_id = options.longs === $String ? $String(message.author_id) : message.author_id;
+                    else
+                        object.author_id = options.longs === $String ? $util.Long.prototype.toString.call(message.author_id) : options.longs === $Number ? new $util.LongBits(message.author_id.low >>> 0, message.author_id.high >>> 0).toNumber() : message.author_id;
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    object.author = $root.openvk.v1.User.toObject(message.author, options, _depth + 1);
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject"))
+                    object.subject = message.subject;
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    object.status = message.status;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                if (message.replies && message.replies.length) {
+                    object.replies = $Array(message.replies.length);
+                    for (let j = 0; j < message.replies.length; ++j)
+                        object.replies[j] = $root.openvk.v1.TicketReply.toObject(message.replies[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this Ticket to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Ticket
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Ticket.prototype.toJSON = function() {
+                return Ticket.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Ticket
+             * @function getTypeUrl
+             * @memberof openvk.v1.Ticket
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Ticket.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Ticket";
+            };
+
+            return Ticket;
+        })();
+
+        v1.TicketList = (function() {
+
+            /**
+             * Properties of a TicketList.
+             * @typedef {Object} openvk.v1.TicketList.$Properties
+             * @property {Array.<openvk.v1.Ticket.$Properties>|null} [tickets] TicketList tickets
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TicketList.
+             * @memberof openvk.v1
+             * @interface ITicketList
+             * @augments openvk.v1.TicketList.$Properties
+             * @deprecated Use openvk.v1.TicketList.$Properties instead.
+             */
+
+            /**
+             * Shape of a TicketList.
+             * @typedef {openvk.v1.TicketList.$Properties} openvk.v1.TicketList.$Shape
+             */
+
+            /**
+             * Constructs a new TicketList.
+             * @memberof openvk.v1
+             * @classdesc Represents a TicketList.
+             * @constructor
+             * @param {openvk.v1.TicketList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const TicketList = function (properties) {
+                this.tickets = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TicketList tickets.
+             * @member {Array.<openvk.v1.Ticket.$Properties>} tickets
+             * @memberof openvk.v1.TicketList
+             * @instance
+             */
+            TicketList.prototype.tickets = $util.emptyArray;
+
+            /**
+             * Creates a new TicketList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {openvk.v1.TicketList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.TicketList} TicketList instance
+             * @type {{
+             *   (properties: openvk.v1.TicketList.$Shape): openvk.v1.TicketList & openvk.v1.TicketList.$Shape;
+             *   (properties?: openvk.v1.TicketList.$Properties): openvk.v1.TicketList;
+             * }}
+             */
+            TicketList.create = function(properties) {
+                return new TicketList(properties);
+            };
+
+            /**
+             * Encodes the specified TicketList message. Does not implicitly {@link openvk.v1.TicketList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {openvk.v1.TicketList.$Properties} message TicketList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TicketList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.tickets != null && message.tickets.length)
+                    for (let i = 0; i < message.tickets.length; ++i)
+                        $root.openvk.v1.Ticket.encode(message.tickets[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TicketList message, length delimited. Does not implicitly {@link openvk.v1.TicketList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {openvk.v1.TicketList.$Properties} message TicketList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TicketList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TicketList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.TicketList & openvk.v1.TicketList.$Shape} TicketList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TicketList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.TicketList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.tickets && message.tickets.length))
+                                message.tickets = [];
+                            message.tickets.push($root.openvk.v1.Ticket.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TicketList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.TicketList & openvk.v1.TicketList.$Shape} TicketList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TicketList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a TicketList message.
+             * @function verify
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TicketList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.tickets != null && $Object.hasOwnProperty.call(message, "tickets")) {
+                    if (!$Array.isArray(message.tickets))
+                        return "tickets: array expected";
+                    for (let i = 0; i < message.tickets.length; ++i) {
+                        let error = $root.openvk.v1.Ticket.verify(message.tickets[i], _depth + 1);
+                        if (error)
+                            return "tickets." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a TicketList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.TicketList} TicketList
+             */
+            TicketList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.TicketList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.TicketList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.TicketList();
+                if (object.tickets) {
+                    if (!$Array.isArray(object.tickets))
+                        throw $TypeError(".openvk.v1.TicketList.tickets: array expected");
+                    message.tickets = $Array(object.tickets.length);
+                    for (let i = 0; i < object.tickets.length; ++i) {
+                        if (!$util.isObject(object.tickets[i]))
+                            throw $TypeError(".openvk.v1.TicketList.tickets: object expected");
+                        message.tickets[i] = $root.openvk.v1.Ticket.fromObject(object.tickets[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a TicketList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {openvk.v1.TicketList} message TicketList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            TicketList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.tickets = [];
+                if (message.tickets && message.tickets.length) {
+                    object.tickets = $Array(message.tickets.length);
+                    for (let j = 0; j < message.tickets.length; ++j)
+                        object.tickets[j] = $root.openvk.v1.Ticket.toObject(message.tickets[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this TicketList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.TicketList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            TicketList.prototype.toJSON = function() {
+                return TicketList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for TicketList
+             * @function getTypeUrl
+             * @memberof openvk.v1.TicketList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TicketList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.TicketList";
+            };
+
+            return TicketList;
+        })();
+
+        v1.WriteTicket = (function() {
+
+            /**
+             * Properties of a WriteTicket.
+             * @typedef {Object} openvk.v1.WriteTicket.$Properties
+             * @property {string|null} [subject] WriteTicket subject
+             * @property {string|null} [content] WriteTicket content
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WriteTicket.
+             * @memberof openvk.v1
+             * @interface IWriteTicket
+             * @augments openvk.v1.WriteTicket.$Properties
+             * @deprecated Use openvk.v1.WriteTicket.$Properties instead.
+             */
+
+            /**
+             * Shape of a WriteTicket.
+             * @typedef {openvk.v1.WriteTicket.$Properties} openvk.v1.WriteTicket.$Shape
+             */
+
+            /**
+             * Constructs a new WriteTicket.
+             * @memberof openvk.v1
+             * @classdesc Represents a WriteTicket.
+             * @constructor
+             * @param {openvk.v1.WriteTicket.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WriteTicket = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WriteTicket subject.
+             * @member {string} subject
+             * @memberof openvk.v1.WriteTicket
+             * @instance
+             */
+            WriteTicket.prototype.subject = "";
+
+            /**
+             * WriteTicket content.
+             * @member {string} content
+             * @memberof openvk.v1.WriteTicket
+             * @instance
+             */
+            WriteTicket.prototype.content = "";
+
+            /**
+             * Creates a new WriteTicket instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {openvk.v1.WriteTicket.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WriteTicket} WriteTicket instance
+             * @type {{
+             *   (properties: openvk.v1.WriteTicket.$Shape): openvk.v1.WriteTicket & openvk.v1.WriteTicket.$Shape;
+             *   (properties?: openvk.v1.WriteTicket.$Properties): openvk.v1.WriteTicket;
+             * }}
+             */
+            WriteTicket.create = function(properties) {
+                return new WriteTicket(properties);
+            };
+
+            /**
+             * Encodes the specified WriteTicket message. Does not implicitly {@link openvk.v1.WriteTicket.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {openvk.v1.WriteTicket.$Properties} message WriteTicket message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteTicket.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject") && message.subject !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.subject);
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.content);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WriteTicket message, length delimited. Does not implicitly {@link openvk.v1.WriteTicket.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {openvk.v1.WriteTicket.$Properties} message WriteTicket message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteTicket.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WriteTicket message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WriteTicket & openvk.v1.WriteTicket.$Shape} WriteTicket
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteTicket.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WriteTicket();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.subject = value;
+                            else
+                                delete message.subject;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WriteTicket message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WriteTicket & openvk.v1.WriteTicket.$Shape} WriteTicket
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteTicket.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WriteTicket message.
+             * @function verify
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WriteTicket.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject"))
+                    if (!$util.isString(message.subject))
+                        return "subject: string expected";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WriteTicket message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WriteTicket} WriteTicket
+             */
+            WriteTicket.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WriteTicket)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WriteTicket: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WriteTicket();
+                if (object.subject != null)
+                    if (typeof object.subject !== "string" || object.subject.length)
+                        message.subject = $String(object.subject);
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WriteTicket message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {openvk.v1.WriteTicket} message WriteTicket
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WriteTicket.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.subject = "";
+                    object.content = "";
+                }
+                if (message.subject != null && $Object.hasOwnProperty.call(message, "subject"))
+                    object.subject = message.subject;
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                return object;
+            };
+
+            /**
+             * Converts this WriteTicket to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WriteTicket
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WriteTicket.prototype.toJSON = function() {
+                return WriteTicket.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WriteTicket
+             * @function getTypeUrl
+             * @memberof openvk.v1.WriteTicket
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WriteTicket.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WriteTicket";
+            };
+
+            return WriteTicket;
+        })();
+
+        v1.WriteTicketReply = (function() {
+
+            /**
+             * Properties of a WriteTicketReply.
+             * @typedef {Object} openvk.v1.WriteTicketReply.$Properties
+             * @property {string|null} [content] WriteTicketReply content
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WriteTicketReply.
+             * @memberof openvk.v1
+             * @interface IWriteTicketReply
+             * @augments openvk.v1.WriteTicketReply.$Properties
+             * @deprecated Use openvk.v1.WriteTicketReply.$Properties instead.
+             */
+
+            /**
+             * Shape of a WriteTicketReply.
+             * @typedef {openvk.v1.WriteTicketReply.$Properties} openvk.v1.WriteTicketReply.$Shape
+             */
+
+            /**
+             * Constructs a new WriteTicketReply.
+             * @memberof openvk.v1
+             * @classdesc Represents a WriteTicketReply.
+             * @constructor
+             * @param {openvk.v1.WriteTicketReply.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WriteTicketReply = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WriteTicketReply content.
+             * @member {string} content
+             * @memberof openvk.v1.WriteTicketReply
+             * @instance
+             */
+            WriteTicketReply.prototype.content = "";
+
+            /**
+             * Creates a new WriteTicketReply instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {openvk.v1.WriteTicketReply.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WriteTicketReply} WriteTicketReply instance
+             * @type {{
+             *   (properties: openvk.v1.WriteTicketReply.$Shape): openvk.v1.WriteTicketReply & openvk.v1.WriteTicketReply.$Shape;
+             *   (properties?: openvk.v1.WriteTicketReply.$Properties): openvk.v1.WriteTicketReply;
+             * }}
+             */
+            WriteTicketReply.create = function(properties) {
+                return new WriteTicketReply(properties);
+            };
+
+            /**
+             * Encodes the specified WriteTicketReply message. Does not implicitly {@link openvk.v1.WriteTicketReply.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {openvk.v1.WriteTicketReply.$Properties} message WriteTicketReply message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteTicketReply.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.content);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WriteTicketReply message, length delimited. Does not implicitly {@link openvk.v1.WriteTicketReply.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {openvk.v1.WriteTicketReply.$Properties} message WriteTicketReply message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteTicketReply.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WriteTicketReply message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WriteTicketReply & openvk.v1.WriteTicketReply.$Shape} WriteTicketReply
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteTicketReply.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WriteTicketReply();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WriteTicketReply message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WriteTicketReply & openvk.v1.WriteTicketReply.$Shape} WriteTicketReply
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteTicketReply.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WriteTicketReply message.
+             * @function verify
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WriteTicketReply.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WriteTicketReply message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WriteTicketReply} WriteTicketReply
+             */
+            WriteTicketReply.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WriteTicketReply)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WriteTicketReply: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WriteTicketReply();
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WriteTicketReply message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {openvk.v1.WriteTicketReply} message WriteTicketReply
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WriteTicketReply.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.content = "";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                return object;
+            };
+
+            /**
+             * Converts this WriteTicketReply to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WriteTicketReply
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WriteTicketReply.prototype.toJSON = function() {
+                return WriteTicketReply.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WriteTicketReply
+             * @function getTypeUrl
+             * @memberof openvk.v1.WriteTicketReply
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WriteTicketReply.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WriteTicketReply";
+            };
+
+            return WriteTicketReply;
+        })();
+
+        v1.Report = (function() {
+
+            /**
+             * Properties of a Report.
+             * @typedef {Object} openvk.v1.Report.$Properties
+             * @property {number|Long|null} [id] Report id
+             * @property {number|Long|null} [author_id] Report author_id
+             * @property {openvk.v1.User.$Properties|null} [author] Report author
+             * @property {string|null} [target_type] Report target_type
+             * @property {number|Long|null} [target_id] Report target_id
+             * @property {string|null} [reason] Report reason
+             * @property {string|null} [status] Report status
+             * @property {string|null} [created_at] Report created_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Report.
+             * @memberof openvk.v1
+             * @interface IReport
+             * @augments openvk.v1.Report.$Properties
+             * @deprecated Use openvk.v1.Report.$Properties instead.
+             */
+
+            /**
+             * Shape of a Report.
+             * @typedef {openvk.v1.Report.$Properties} openvk.v1.Report.$Shape
+             */
+
+            /**
+             * Constructs a new Report.
+             * @memberof openvk.v1
+             * @classdesc Represents a Report.
+             * @constructor
+             * @param {openvk.v1.Report.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Report = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Report id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Report author_id.
+             * @member {number|Long} author_id
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.author_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Report author.
+             * @member {openvk.v1.User.$Properties|null|undefined} author
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.author = null;
+
+            /**
+             * Report target_type.
+             * @member {string} target_type
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.target_type = "";
+
+            /**
+             * Report target_id.
+             * @member {number|Long} target_id
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.target_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Report reason.
+             * @member {string} reason
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.reason = "";
+
+            /**
+             * Report status.
+             * @member {string} status
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.status = "";
+
+            /**
+             * Report created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.Report
+             * @instance
+             */
+            Report.prototype.created_at = "";
+
+            /**
+             * Creates a new Report instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {openvk.v1.Report.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Report} Report instance
+             * @type {{
+             *   (properties: openvk.v1.Report.$Shape): openvk.v1.Report & openvk.v1.Report.$Shape;
+             *   (properties?: openvk.v1.Report.$Properties): openvk.v1.Report;
+             * }}
+             */
+            Report.create = function(properties) {
+                return new Report(properties);
+            };
+
+            /**
+             * Encodes the specified Report message. Does not implicitly {@link openvk.v1.Report.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {openvk.v1.Report.$Properties} message Report message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Report.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id") && (typeof message.author_id === "object" ? message.author_id.low || message.author_id.high : message.author_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.author_id);
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    $root.openvk.v1.User.encode(message.author, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type") && message.target_type !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.target_type);
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id") && (typeof message.target_id === "object" ? message.target_id.low || message.target_id.high : message.target_id !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.target_id);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.reason);
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status") && message.status !== "")
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.status);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 8, wireType 2 =*/66).string(message.created_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Report message, length delimited. Does not implicitly {@link openvk.v1.Report.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {openvk.v1.Report.$Properties} message Report message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Report.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Report message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Report & openvk.v1.Report.$Shape} Report
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Report.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Report();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.author_id = value;
+                            else
+                                delete message.author_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.author = $root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1, message.author);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.target_type = value;
+                            else
+                                delete message.target_type;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_id = value;
+                            else
+                                delete message.target_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.status = value;
+                            else
+                                delete message.status;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Report message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Report & openvk.v1.Report.$Shape} Report
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Report.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Report message.
+             * @function verify
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Report.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (!$util.isInteger(message.author_id) && !(message.author_id && $util.isInteger(message.author_id.low) && $util.isInteger(message.author_id.high)))
+                        return "author_id: integer|Long expected";
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author")) {
+                    let error = $root.openvk.v1.User.verify(message.author, _depth + 1);
+                    if (error)
+                        return "author." + error;
+                }
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type"))
+                    if (!$util.isString(message.target_type))
+                        return "target_type: string expected";
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (!$util.isInteger(message.target_id) && !(message.target_id && $util.isInteger(message.target_id.low) && $util.isInteger(message.target_id.high)))
+                        return "target_id: integer|Long expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    if (!$util.isString(message.status))
+                        return "status: string expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a Report message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Report} Report
+             */
+            Report.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Report)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Report: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Report();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.author_id != null)
+                    if (typeof object.author_id === "object" ? object.author_id.low || object.author_id.high : $Number(object.author_id) !== 0)
+                        if ($util.Long)
+                            message.author_id = $util.Long.fromValue(object.author_id, false);
+                        else if (typeof object.author_id === "string")
+                            message.author_id = $parseInt(object.author_id, 10);
+                        else if (typeof object.author_id === "number")
+                            message.author_id = object.author_id;
+                        else if (typeof object.author_id === "object")
+                            message.author_id = new $util.LongBits(object.author_id.low >>> 0, object.author_id.high >>> 0).toNumber();
+                if (object.author != null) {
+                    if (!$util.isObject(object.author))
+                        throw $TypeError(".openvk.v1.Report.author: object expected");
+                    message.author = $root.openvk.v1.User.fromObject(object.author, _depth + 1);
+                }
+                if (object.target_type != null)
+                    if (typeof object.target_type !== "string" || object.target_type.length)
+                        message.target_type = $String(object.target_type);
+                if (object.target_id != null)
+                    if (typeof object.target_id === "object" ? object.target_id.low || object.target_id.high : $Number(object.target_id) !== 0)
+                        if ($util.Long)
+                            message.target_id = $util.Long.fromValue(object.target_id, false);
+                        else if (typeof object.target_id === "string")
+                            message.target_id = $parseInt(object.target_id, 10);
+                        else if (typeof object.target_id === "number")
+                            message.target_id = object.target_id;
+                        else if (typeof object.target_id === "object")
+                            message.target_id = new $util.LongBits(object.target_id.low >>> 0, object.target_id.high >>> 0).toNumber();
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                if (object.status != null)
+                    if (typeof object.status !== "string" || object.status.length)
+                        message.status = $String(object.status);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Report message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {openvk.v1.Report} message Report
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Report.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.author_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.author_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.author = null;
+                    object.target_type = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.target_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.target_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.reason = "";
+                    object.status = "";
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.author_id = typeof message.author_id === "number" ? $BigInt(message.author_id) : $util.Long.fromBits(message.author_id.low >>> 0, message.author_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.author_id === "number")
+                        object.author_id = options.longs === $String ? $String(message.author_id) : message.author_id;
+                    else
+                        object.author_id = options.longs === $String ? $util.Long.prototype.toString.call(message.author_id) : options.longs === $Number ? new $util.LongBits(message.author_id.low >>> 0, message.author_id.high >>> 0).toNumber() : message.author_id;
+                if (message.author != null && $Object.hasOwnProperty.call(message, "author"))
+                    object.author = $root.openvk.v1.User.toObject(message.author, options, _depth + 1);
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type"))
+                    object.target_type = message.target_type;
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.target_id = typeof message.target_id === "number" ? $BigInt(message.target_id) : $util.Long.fromBits(message.target_id.low >>> 0, message.target_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.target_id === "number")
+                        object.target_id = options.longs === $String ? $String(message.target_id) : message.target_id;
+                    else
+                        object.target_id = options.longs === $String ? $util.Long.prototype.toString.call(message.target_id) : options.longs === $Number ? new $util.LongBits(message.target_id.low >>> 0, message.target_id.high >>> 0).toNumber() : message.target_id;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    object.status = message.status;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                return object;
+            };
+
+            /**
+             * Converts this Report to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Report
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Report.prototype.toJSON = function() {
+                return Report.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Report
+             * @function getTypeUrl
+             * @memberof openvk.v1.Report
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Report.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Report";
+            };
+
+            return Report;
+        })();
+
+        v1.ReportList = (function() {
+
+            /**
+             * Properties of a ReportList.
+             * @typedef {Object} openvk.v1.ReportList.$Properties
+             * @property {Array.<openvk.v1.Report.$Properties>|null} [reports] ReportList reports
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ReportList.
+             * @memberof openvk.v1
+             * @interface IReportList
+             * @augments openvk.v1.ReportList.$Properties
+             * @deprecated Use openvk.v1.ReportList.$Properties instead.
+             */
+
+            /**
+             * Shape of a ReportList.
+             * @typedef {openvk.v1.ReportList.$Properties} openvk.v1.ReportList.$Shape
+             */
+
+            /**
+             * Constructs a new ReportList.
+             * @memberof openvk.v1
+             * @classdesc Represents a ReportList.
+             * @constructor
+             * @param {openvk.v1.ReportList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const ReportList = function (properties) {
+                this.reports = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ReportList reports.
+             * @member {Array.<openvk.v1.Report.$Properties>} reports
+             * @memberof openvk.v1.ReportList
+             * @instance
+             */
+            ReportList.prototype.reports = $util.emptyArray;
+
+            /**
+             * Creates a new ReportList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {openvk.v1.ReportList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.ReportList} ReportList instance
+             * @type {{
+             *   (properties: openvk.v1.ReportList.$Shape): openvk.v1.ReportList & openvk.v1.ReportList.$Shape;
+             *   (properties?: openvk.v1.ReportList.$Properties): openvk.v1.ReportList;
+             * }}
+             */
+            ReportList.create = function(properties) {
+                return new ReportList(properties);
+            };
+
+            /**
+             * Encodes the specified ReportList message. Does not implicitly {@link openvk.v1.ReportList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {openvk.v1.ReportList.$Properties} message ReportList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ReportList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.reports != null && message.reports.length)
+                    for (let i = 0; i < message.reports.length; ++i)
+                        $root.openvk.v1.Report.encode(message.reports[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ReportList message, length delimited. Does not implicitly {@link openvk.v1.ReportList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {openvk.v1.ReportList.$Properties} message ReportList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ReportList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ReportList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.ReportList & openvk.v1.ReportList.$Shape} ReportList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ReportList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.ReportList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.reports && message.reports.length))
+                                message.reports = [];
+                            message.reports.push($root.openvk.v1.Report.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ReportList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.ReportList & openvk.v1.ReportList.$Shape} ReportList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ReportList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a ReportList message.
+             * @function verify
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ReportList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.reports != null && $Object.hasOwnProperty.call(message, "reports")) {
+                    if (!$Array.isArray(message.reports))
+                        return "reports: array expected";
+                    for (let i = 0; i < message.reports.length; ++i) {
+                        let error = $root.openvk.v1.Report.verify(message.reports[i], _depth + 1);
+                        if (error)
+                            return "reports." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a ReportList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.ReportList} ReportList
+             */
+            ReportList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.ReportList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.ReportList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.ReportList();
+                if (object.reports) {
+                    if (!$Array.isArray(object.reports))
+                        throw $TypeError(".openvk.v1.ReportList.reports: array expected");
+                    message.reports = $Array(object.reports.length);
+                    for (let i = 0; i < object.reports.length; ++i) {
+                        if (!$util.isObject(object.reports[i]))
+                            throw $TypeError(".openvk.v1.ReportList.reports: object expected");
+                        message.reports[i] = $root.openvk.v1.Report.fromObject(object.reports[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a ReportList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {openvk.v1.ReportList} message ReportList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            ReportList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.reports = [];
+                if (message.reports && message.reports.length) {
+                    object.reports = $Array(message.reports.length);
+                    for (let j = 0; j < message.reports.length; ++j)
+                        object.reports[j] = $root.openvk.v1.Report.toObject(message.reports[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this ReportList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.ReportList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            ReportList.prototype.toJSON = function() {
+                return ReportList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for ReportList
+             * @function getTypeUrl
+             * @memberof openvk.v1.ReportList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ReportList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.ReportList";
+            };
+
+            return ReportList;
+        })();
+
+        v1.WriteReport = (function() {
+
+            /**
+             * Properties of a WriteReport.
+             * @typedef {Object} openvk.v1.WriteReport.$Properties
+             * @property {string|null} [target_type] WriteReport target_type
+             * @property {number|Long|null} [target_id] WriteReport target_id
+             * @property {string|null} [reason] WriteReport reason
+             * @property {number|Long|null} [owner_id] WriteReport owner_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WriteReport.
+             * @memberof openvk.v1
+             * @interface IWriteReport
+             * @augments openvk.v1.WriteReport.$Properties
+             * @deprecated Use openvk.v1.WriteReport.$Properties instead.
+             */
+
+            /**
+             * Shape of a WriteReport.
+             * @typedef {openvk.v1.WriteReport.$Properties} openvk.v1.WriteReport.$Shape
+             */
+
+            /**
+             * Constructs a new WriteReport.
+             * @memberof openvk.v1
+             * @classdesc Represents a WriteReport.
+             * @constructor
+             * @param {openvk.v1.WriteReport.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WriteReport = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WriteReport target_type.
+             * @member {string} target_type
+             * @memberof openvk.v1.WriteReport
+             * @instance
+             */
+            WriteReport.prototype.target_type = "";
+
+            /**
+             * WriteReport target_id.
+             * @member {number|Long} target_id
+             * @memberof openvk.v1.WriteReport
+             * @instance
+             */
+            WriteReport.prototype.target_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WriteReport reason.
+             * @member {string} reason
+             * @memberof openvk.v1.WriteReport
+             * @instance
+             */
+            WriteReport.prototype.reason = "";
+
+            /**
+             * WriteReport owner_id.
+             * @member {number|Long|null|undefined} owner_id
+             * @memberof openvk.v1.WriteReport
+             * @instance
+             */
+            WriteReport.prototype.owner_id = null;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(WriteReport.prototype, "_owner_id", {
+                get: $util.oneOfGetter($oneOfFields = ["owner_id"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new WriteReport instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {openvk.v1.WriteReport.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WriteReport} WriteReport instance
+             * @type {{
+             *   (properties: openvk.v1.WriteReport.$Shape): openvk.v1.WriteReport & openvk.v1.WriteReport.$Shape;
+             *   (properties?: openvk.v1.WriteReport.$Properties): openvk.v1.WriteReport;
+             * }}
+             */
+            WriteReport.create = function(properties) {
+                return new WriteReport(properties);
+            };
+
+            /**
+             * Encodes the specified WriteReport message. Does not implicitly {@link openvk.v1.WriteReport.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {openvk.v1.WriteReport.$Properties} message WriteReport message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteReport.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type") && message.target_type !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.target_type);
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id") && (typeof message.target_id === "object" ? message.target_id.low || message.target_id.high : message.target_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.target_id);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.reason);
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.owner_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WriteReport message, length delimited. Does not implicitly {@link openvk.v1.WriteReport.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {openvk.v1.WriteReport.$Properties} message WriteReport message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteReport.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WriteReport message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WriteReport & openvk.v1.WriteReport.$Shape} WriteReport
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteReport.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WriteReport();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.target_type = value;
+                            else
+                                delete message.target_type;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_id = value;
+                            else
+                                delete message.target_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            message.owner_id = reader.int64();
+                            message._owner_id = "owner_id";
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WriteReport message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WriteReport & openvk.v1.WriteReport.$Shape} WriteReport
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteReport.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WriteReport message.
+             * @function verify
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WriteReport.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type"))
+                    if (!$util.isString(message.target_type))
+                        return "target_type: string expected";
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (!$util.isInteger(message.target_id) && !(message.target_id && $util.isInteger(message.target_id.low) && $util.isInteger(message.target_id.high)))
+                        return "target_id: integer|Long expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id")) {
+                    properties._owner_id = 1;
+                    if (!$util.isInteger(message.owner_id) && !(message.owner_id && $util.isInteger(message.owner_id.low) && $util.isInteger(message.owner_id.high)))
+                        return "owner_id: integer|Long expected";
+                }
+                return null;
+            };
+
+            /**
+             * Creates a WriteReport message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WriteReport} WriteReport
+             */
+            WriteReport.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WriteReport)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WriteReport: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WriteReport();
+                if (object.target_type != null)
+                    if (typeof object.target_type !== "string" || object.target_type.length)
+                        message.target_type = $String(object.target_type);
+                if (object.target_id != null)
+                    if (typeof object.target_id === "object" ? object.target_id.low || object.target_id.high : $Number(object.target_id) !== 0)
+                        if ($util.Long)
+                            message.target_id = $util.Long.fromValue(object.target_id, false);
+                        else if (typeof object.target_id === "string")
+                            message.target_id = $parseInt(object.target_id, 10);
+                        else if (typeof object.target_id === "number")
+                            message.target_id = object.target_id;
+                        else if (typeof object.target_id === "object")
+                            message.target_id = new $util.LongBits(object.target_id.low >>> 0, object.target_id.high >>> 0).toNumber();
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                if (object.owner_id != null)
+                    if ($util.Long)
+                        message.owner_id = $util.Long.fromValue(object.owner_id, false);
+                    else if (typeof object.owner_id === "string")
+                        message.owner_id = $parseInt(object.owner_id, 10);
+                    else if (typeof object.owner_id === "number")
+                        message.owner_id = object.owner_id;
+                    else if (typeof object.owner_id === "object")
+                        message.owner_id = new $util.LongBits(object.owner_id.low >>> 0, object.owner_id.high >>> 0).toNumber();
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WriteReport message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {openvk.v1.WriteReport} message WriteReport
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WriteReport.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.target_type = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.target_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.target_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.reason = "";
+                }
+                if (message.target_type != null && $Object.hasOwnProperty.call(message, "target_type"))
+                    object.target_type = message.target_type;
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.target_id = typeof message.target_id === "number" ? $BigInt(message.target_id) : $util.Long.fromBits(message.target_id.low >>> 0, message.target_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.target_id === "number")
+                        object.target_id = options.longs === $String ? $String(message.target_id) : message.target_id;
+                    else
+                        object.target_id = options.longs === $String ? $util.Long.prototype.toString.call(message.target_id) : options.longs === $Number ? new $util.LongBits(message.target_id.low >>> 0, message.target_id.high >>> 0).toNumber() : message.target_id;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                if (message.owner_id != null && $Object.hasOwnProperty.call(message, "owner_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.owner_id = typeof message.owner_id === "number" ? $BigInt(message.owner_id) : $util.Long.fromBits(message.owner_id.low >>> 0, message.owner_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.owner_id === "number")
+                        object.owner_id = options.longs === $String ? $String(message.owner_id) : message.owner_id;
+                    else
+                        object.owner_id = options.longs === $String ? $util.Long.prototype.toString.call(message.owner_id) : options.longs === $Number ? new $util.LongBits(message.owner_id.low >>> 0, message.owner_id.high >>> 0).toNumber() : message.owner_id;
+                return object;
+            };
+
+            /**
+             * Converts this WriteReport to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WriteReport
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WriteReport.prototype.toJSON = function() {
+                return WriteReport.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WriteReport
+             * @function getTypeUrl
+             * @memberof openvk.v1.WriteReport
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WriteReport.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WriteReport";
+            };
+
+            return WriteReport;
+        })();
+
+        v1.ReportAction = (function() {
+
+            /**
+             * Properties of a ReportAction.
+             * @typedef {Object} openvk.v1.ReportAction.$Properties
+             * @property {string|null} [action] ReportAction action
+             * @property {string|null} [reason] ReportAction reason
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ReportAction.
+             * @memberof openvk.v1
+             * @interface IReportAction
+             * @augments openvk.v1.ReportAction.$Properties
+             * @deprecated Use openvk.v1.ReportAction.$Properties instead.
+             */
+
+            /**
+             * Shape of a ReportAction.
+             * @typedef {openvk.v1.ReportAction.$Properties} openvk.v1.ReportAction.$Shape
+             */
+
+            /**
+             * Constructs a new ReportAction.
+             * @memberof openvk.v1
+             * @classdesc Represents a ReportAction.
+             * @constructor
+             * @param {openvk.v1.ReportAction.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const ReportAction = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ReportAction action.
+             * @member {string} action
+             * @memberof openvk.v1.ReportAction
+             * @instance
+             */
+            ReportAction.prototype.action = "";
+
+            /**
+             * ReportAction reason.
+             * @member {string|null|undefined} reason
+             * @memberof openvk.v1.ReportAction
+             * @instance
+             */
+            ReportAction.prototype.reason = null;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(ReportAction.prototype, "_reason", {
+                get: $util.oneOfGetter($oneOfFields = ["reason"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new ReportAction instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {openvk.v1.ReportAction.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.ReportAction} ReportAction instance
+             * @type {{
+             *   (properties: openvk.v1.ReportAction.$Shape): openvk.v1.ReportAction & openvk.v1.ReportAction.$Shape;
+             *   (properties?: openvk.v1.ReportAction.$Properties): openvk.v1.ReportAction;
+             * }}
+             */
+            ReportAction.create = function(properties) {
+                return new ReportAction(properties);
+            };
+
+            /**
+             * Encodes the specified ReportAction message. Does not implicitly {@link openvk.v1.ReportAction.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {openvk.v1.ReportAction.$Properties} message ReportAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ReportAction.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.action);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ReportAction message, length delimited. Does not implicitly {@link openvk.v1.ReportAction.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {openvk.v1.ReportAction.$Properties} message ReportAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ReportAction.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ReportAction message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.ReportAction & openvk.v1.ReportAction.$Shape} ReportAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ReportAction.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.ReportAction();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.reason = reader.stringVerify();
+                            message._reason = "reason";
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ReportAction message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.ReportAction & openvk.v1.ReportAction.$Shape} ReportAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ReportAction.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a ReportAction message.
+             * @function verify
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ReportAction.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isString(message.action))
+                        return "action: string expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason")) {
+                    properties._reason = 1;
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                }
+                return null;
+            };
+
+            /**
+             * Creates a ReportAction message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.ReportAction} ReportAction
+             */
+            ReportAction.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.ReportAction)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.ReportAction: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.ReportAction();
+                if (object.action != null)
+                    if (typeof object.action !== "string" || object.action.length)
+                        message.action = $String(object.action);
+                if (object.reason != null)
+                    message.reason = $String(object.reason);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a ReportAction message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {openvk.v1.ReportAction} message ReportAction
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            ReportAction.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.action = "";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    object.action = message.action;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                return object;
+            };
+
+            /**
+             * Converts this ReportAction to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.ReportAction
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            ReportAction.prototype.toJSON = function() {
+                return ReportAction.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for ReportAction
+             * @function getTypeUrl
+             * @memberof openvk.v1.ReportAction
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ReportAction.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.ReportAction";
+            };
+
+            return ReportAction;
+        })();
+
+        v1.Voucher = (function() {
+
+            /**
+             * Properties of a Voucher.
+             * @typedef {Object} openvk.v1.Voucher.$Properties
+             * @property {number|Long|null} [id] Voucher id
+             * @property {string|null} [serial] Voucher serial
+             * @property {number|Long|null} [coins] Voucher coins
+             * @property {number|null} [remaining] Voucher remaining
+             * @property {number|null} [total] Voucher total
+             * @property {string|null} [expires_at] Voucher expires_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Voucher.
+             * @memberof openvk.v1
+             * @interface IVoucher
+             * @augments openvk.v1.Voucher.$Properties
+             * @deprecated Use openvk.v1.Voucher.$Properties instead.
+             */
+
+            /**
+             * Shape of a Voucher.
+             * @typedef {openvk.v1.Voucher.$Properties} openvk.v1.Voucher.$Shape
+             */
+
+            /**
+             * Constructs a new Voucher.
+             * @memberof openvk.v1
+             * @classdesc Represents a Voucher.
+             * @constructor
+             * @param {openvk.v1.Voucher.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Voucher = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Voucher id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Voucher serial.
+             * @member {string} serial
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.serial = "";
+
+            /**
+             * Voucher coins.
+             * @member {number|Long} coins
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.coins = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Voucher remaining.
+             * @member {number} remaining
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.remaining = 0;
+
+            /**
+             * Voucher total.
+             * @member {number} total
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.total = 0;
+
+            /**
+             * Voucher expires_at.
+             * @member {string|null|undefined} expires_at
+             * @memberof openvk.v1.Voucher
+             * @instance
+             */
+            Voucher.prototype.expires_at = null;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(Voucher.prototype, "_expires_at", {
+                get: $util.oneOfGetter($oneOfFields = ["expires_at"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new Voucher instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {openvk.v1.Voucher.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Voucher} Voucher instance
+             * @type {{
+             *   (properties: openvk.v1.Voucher.$Shape): openvk.v1.Voucher & openvk.v1.Voucher.$Shape;
+             *   (properties?: openvk.v1.Voucher.$Properties): openvk.v1.Voucher;
+             * }}
+             */
+            Voucher.create = function(properties) {
+                return new Voucher(properties);
+            };
+
+            /**
+             * Encodes the specified Voucher message. Does not implicitly {@link openvk.v1.Voucher.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {openvk.v1.Voucher.$Properties} message Voucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Voucher.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial") && message.serial !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.serial);
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins") && (typeof message.coins === "object" ? message.coins.low || message.coins.high : message.coins !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.coins);
+                if (message.remaining != null && $Object.hasOwnProperty.call(message, "remaining") && message.remaining !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).int32(message.remaining);
+                if (message.total != null && $Object.hasOwnProperty.call(message, "total") && message.total !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).int32(message.total);
+                if (message.expires_at != null && $Object.hasOwnProperty.call(message, "expires_at"))
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.expires_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Voucher message, length delimited. Does not implicitly {@link openvk.v1.Voucher.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {openvk.v1.Voucher.$Properties} message Voucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Voucher.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Voucher message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Voucher & openvk.v1.Voucher.$Shape} Voucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Voucher.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Voucher();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.serial = value;
+                            else
+                                delete message.serial;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.coins = value;
+                            else
+                                delete message.coins;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.remaining = value;
+                            else
+                                delete message.remaining;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.total = value;
+                            else
+                                delete message.total;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.expires_at = reader.stringVerify();
+                            message._expires_at = "expires_at";
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Voucher message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Voucher & openvk.v1.Voucher.$Shape} Voucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Voucher.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Voucher message.
+             * @function verify
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Voucher.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial"))
+                    if (!$util.isString(message.serial))
+                        return "serial: string expected";
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (!$util.isInteger(message.coins) && !(message.coins && $util.isInteger(message.coins.low) && $util.isInteger(message.coins.high)))
+                        return "coins: integer|Long expected";
+                if (message.remaining != null && $Object.hasOwnProperty.call(message, "remaining"))
+                    if (!$util.isInteger(message.remaining))
+                        return "remaining: integer expected";
+                if (message.total != null && $Object.hasOwnProperty.call(message, "total"))
+                    if (!$util.isInteger(message.total))
+                        return "total: integer expected";
+                if (message.expires_at != null && $Object.hasOwnProperty.call(message, "expires_at")) {
+                    properties._expires_at = 1;
+                    if (!$util.isString(message.expires_at))
+                        return "expires_at: string expected";
+                }
+                return null;
+            };
+
+            /**
+             * Creates a Voucher message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Voucher} Voucher
+             */
+            Voucher.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Voucher)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Voucher: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Voucher();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.serial != null)
+                    if (typeof object.serial !== "string" || object.serial.length)
+                        message.serial = $String(object.serial);
+                if (object.coins != null)
+                    if (typeof object.coins === "object" ? object.coins.low || object.coins.high : $Number(object.coins) !== 0)
+                        if ($util.Long)
+                            message.coins = $util.Long.fromValue(object.coins, false);
+                        else if (typeof object.coins === "string")
+                            message.coins = $parseInt(object.coins, 10);
+                        else if (typeof object.coins === "number")
+                            message.coins = object.coins;
+                        else if (typeof object.coins === "object")
+                            message.coins = new $util.LongBits(object.coins.low >>> 0, object.coins.high >>> 0).toNumber();
+                if (object.remaining != null)
+                    if ($Number(object.remaining) !== 0)
+                        message.remaining = object.remaining | 0;
+                if (object.total != null)
+                    if ($Number(object.total) !== 0)
+                        message.total = object.total | 0;
+                if (object.expires_at != null)
+                    message.expires_at = $String(object.expires_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Voucher message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {openvk.v1.Voucher} message Voucher
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Voucher.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.serial = "";
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.coins = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.coins = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.remaining = 0;
+                    object.total = 0;
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial"))
+                    object.serial = message.serial;
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.coins = typeof message.coins === "number" ? $BigInt(message.coins) : $util.Long.fromBits(message.coins.low >>> 0, message.coins.high >>> 0, false).toBigInt();
+                    else if (typeof message.coins === "number")
+                        object.coins = options.longs === $String ? $String(message.coins) : message.coins;
+                    else
+                        object.coins = options.longs === $String ? $util.Long.prototype.toString.call(message.coins) : options.longs === $Number ? new $util.LongBits(message.coins.low >>> 0, message.coins.high >>> 0).toNumber() : message.coins;
+                if (message.remaining != null && $Object.hasOwnProperty.call(message, "remaining"))
+                    object.remaining = message.remaining;
+                if (message.total != null && $Object.hasOwnProperty.call(message, "total"))
+                    object.total = message.total;
+                if (message.expires_at != null && $Object.hasOwnProperty.call(message, "expires_at"))
+                    object.expires_at = message.expires_at;
+                return object;
+            };
+
+            /**
+             * Converts this Voucher to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Voucher
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Voucher.prototype.toJSON = function() {
+                return Voucher.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Voucher
+             * @function getTypeUrl
+             * @memberof openvk.v1.Voucher
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Voucher.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Voucher";
+            };
+
+            return Voucher;
+        })();
+
+        v1.VoucherList = (function() {
+
+            /**
+             * Properties of a VoucherList.
+             * @typedef {Object} openvk.v1.VoucherList.$Properties
+             * @property {Array.<openvk.v1.Voucher.$Properties>|null} [vouchers] VoucherList vouchers
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a VoucherList.
+             * @memberof openvk.v1
+             * @interface IVoucherList
+             * @augments openvk.v1.VoucherList.$Properties
+             * @deprecated Use openvk.v1.VoucherList.$Properties instead.
+             */
+
+            /**
+             * Shape of a VoucherList.
+             * @typedef {openvk.v1.VoucherList.$Properties} openvk.v1.VoucherList.$Shape
+             */
+
+            /**
+             * Constructs a new VoucherList.
+             * @memberof openvk.v1
+             * @classdesc Represents a VoucherList.
+             * @constructor
+             * @param {openvk.v1.VoucherList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const VoucherList = function (properties) {
+                this.vouchers = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * VoucherList vouchers.
+             * @member {Array.<openvk.v1.Voucher.$Properties>} vouchers
+             * @memberof openvk.v1.VoucherList
+             * @instance
+             */
+            VoucherList.prototype.vouchers = $util.emptyArray;
+
+            /**
+             * Creates a new VoucherList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {openvk.v1.VoucherList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.VoucherList} VoucherList instance
+             * @type {{
+             *   (properties: openvk.v1.VoucherList.$Shape): openvk.v1.VoucherList & openvk.v1.VoucherList.$Shape;
+             *   (properties?: openvk.v1.VoucherList.$Properties): openvk.v1.VoucherList;
+             * }}
+             */
+            VoucherList.create = function(properties) {
+                return new VoucherList(properties);
+            };
+
+            /**
+             * Encodes the specified VoucherList message. Does not implicitly {@link openvk.v1.VoucherList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {openvk.v1.VoucherList.$Properties} message VoucherList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VoucherList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.vouchers != null && message.vouchers.length)
+                    for (let i = 0; i < message.vouchers.length; ++i)
+                        $root.openvk.v1.Voucher.encode(message.vouchers[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified VoucherList message, length delimited. Does not implicitly {@link openvk.v1.VoucherList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {openvk.v1.VoucherList.$Properties} message VoucherList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VoucherList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a VoucherList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.VoucherList & openvk.v1.VoucherList.$Shape} VoucherList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VoucherList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.VoucherList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.vouchers && message.vouchers.length))
+                                message.vouchers = [];
+                            message.vouchers.push($root.openvk.v1.Voucher.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a VoucherList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.VoucherList & openvk.v1.VoucherList.$Shape} VoucherList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VoucherList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a VoucherList message.
+             * @function verify
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            VoucherList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.vouchers != null && $Object.hasOwnProperty.call(message, "vouchers")) {
+                    if (!$Array.isArray(message.vouchers))
+                        return "vouchers: array expected";
+                    for (let i = 0; i < message.vouchers.length; ++i) {
+                        let error = $root.openvk.v1.Voucher.verify(message.vouchers[i], _depth + 1);
+                        if (error)
+                            return "vouchers." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a VoucherList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.VoucherList} VoucherList
+             */
+            VoucherList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.VoucherList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.VoucherList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.VoucherList();
+                if (object.vouchers) {
+                    if (!$Array.isArray(object.vouchers))
+                        throw $TypeError(".openvk.v1.VoucherList.vouchers: array expected");
+                    message.vouchers = $Array(object.vouchers.length);
+                    for (let i = 0; i < object.vouchers.length; ++i) {
+                        if (!$util.isObject(object.vouchers[i]))
+                            throw $TypeError(".openvk.v1.VoucherList.vouchers: object expected");
+                        message.vouchers[i] = $root.openvk.v1.Voucher.fromObject(object.vouchers[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a VoucherList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {openvk.v1.VoucherList} message VoucherList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            VoucherList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.vouchers = [];
+                if (message.vouchers && message.vouchers.length) {
+                    object.vouchers = $Array(message.vouchers.length);
+                    for (let j = 0; j < message.vouchers.length; ++j)
+                        object.vouchers[j] = $root.openvk.v1.Voucher.toObject(message.vouchers[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this VoucherList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.VoucherList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            VoucherList.prototype.toJSON = function() {
+                return VoucherList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for VoucherList
+             * @function getTypeUrl
+             * @memberof openvk.v1.VoucherList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            VoucherList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.VoucherList";
+            };
+
+            return VoucherList;
+        })();
+
+        v1.RedeemVoucher = (function() {
+
+            /**
+             * Properties of a RedeemVoucher.
+             * @typedef {Object} openvk.v1.RedeemVoucher.$Properties
+             * @property {string|null} [serial] RedeemVoucher serial
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RedeemVoucher.
+             * @memberof openvk.v1
+             * @interface IRedeemVoucher
+             * @augments openvk.v1.RedeemVoucher.$Properties
+             * @deprecated Use openvk.v1.RedeemVoucher.$Properties instead.
+             */
+
+            /**
+             * Shape of a RedeemVoucher.
+             * @typedef {openvk.v1.RedeemVoucher.$Properties} openvk.v1.RedeemVoucher.$Shape
+             */
+
+            /**
+             * Constructs a new RedeemVoucher.
+             * @memberof openvk.v1
+             * @classdesc Represents a RedeemVoucher.
+             * @constructor
+             * @param {openvk.v1.RedeemVoucher.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const RedeemVoucher = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RedeemVoucher serial.
+             * @member {string} serial
+             * @memberof openvk.v1.RedeemVoucher
+             * @instance
+             */
+            RedeemVoucher.prototype.serial = "";
+
+            /**
+             * Creates a new RedeemVoucher instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {openvk.v1.RedeemVoucher.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.RedeemVoucher} RedeemVoucher instance
+             * @type {{
+             *   (properties: openvk.v1.RedeemVoucher.$Shape): openvk.v1.RedeemVoucher & openvk.v1.RedeemVoucher.$Shape;
+             *   (properties?: openvk.v1.RedeemVoucher.$Properties): openvk.v1.RedeemVoucher;
+             * }}
+             */
+            RedeemVoucher.create = function(properties) {
+                return new RedeemVoucher(properties);
+            };
+
+            /**
+             * Encodes the specified RedeemVoucher message. Does not implicitly {@link openvk.v1.RedeemVoucher.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {openvk.v1.RedeemVoucher.$Properties} message RedeemVoucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RedeemVoucher.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial") && message.serial !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.serial);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RedeemVoucher message, length delimited. Does not implicitly {@link openvk.v1.RedeemVoucher.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {openvk.v1.RedeemVoucher.$Properties} message RedeemVoucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RedeemVoucher.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RedeemVoucher message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.RedeemVoucher & openvk.v1.RedeemVoucher.$Shape} RedeemVoucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RedeemVoucher.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.RedeemVoucher();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.serial = value;
+                            else
+                                delete message.serial;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RedeemVoucher message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.RedeemVoucher & openvk.v1.RedeemVoucher.$Shape} RedeemVoucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RedeemVoucher.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a RedeemVoucher message.
+             * @function verify
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RedeemVoucher.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial"))
+                    if (!$util.isString(message.serial))
+                        return "serial: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a RedeemVoucher message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.RedeemVoucher} RedeemVoucher
+             */
+            RedeemVoucher.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.RedeemVoucher)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.RedeemVoucher: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.RedeemVoucher();
+                if (object.serial != null)
+                    if (typeof object.serial !== "string" || object.serial.length)
+                        message.serial = $String(object.serial);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a RedeemVoucher message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {openvk.v1.RedeemVoucher} message RedeemVoucher
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            RedeemVoucher.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.serial = "";
+                if (message.serial != null && $Object.hasOwnProperty.call(message, "serial"))
+                    object.serial = message.serial;
+                return object;
+            };
+
+            /**
+             * Converts this RedeemVoucher to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.RedeemVoucher
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            RedeemVoucher.prototype.toJSON = function() {
+                return RedeemVoucher.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for RedeemVoucher
+             * @function getTypeUrl
+             * @memberof openvk.v1.RedeemVoucher
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RedeemVoucher.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.RedeemVoucher";
+            };
+
+            return RedeemVoucher;
+        })();
+
+        v1.CreateVoucher = (function() {
+
+            /**
+             * Properties of a CreateVoucher.
+             * @typedef {Object} openvk.v1.CreateVoucher.$Properties
+             * @property {number|Long|null} [coins] CreateVoucher coins
+             * @property {number|null} [uses] CreateVoucher uses
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CreateVoucher.
+             * @memberof openvk.v1
+             * @interface ICreateVoucher
+             * @augments openvk.v1.CreateVoucher.$Properties
+             * @deprecated Use openvk.v1.CreateVoucher.$Properties instead.
+             */
+
+            /**
+             * Shape of a CreateVoucher.
+             * @typedef {openvk.v1.CreateVoucher.$Properties} openvk.v1.CreateVoucher.$Shape
+             */
+
+            /**
+             * Constructs a new CreateVoucher.
+             * @memberof openvk.v1
+             * @classdesc Represents a CreateVoucher.
+             * @constructor
+             * @param {openvk.v1.CreateVoucher.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const CreateVoucher = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CreateVoucher coins.
+             * @member {number|Long} coins
+             * @memberof openvk.v1.CreateVoucher
+             * @instance
+             */
+            CreateVoucher.prototype.coins = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CreateVoucher uses.
+             * @member {number} uses
+             * @memberof openvk.v1.CreateVoucher
+             * @instance
+             */
+            CreateVoucher.prototype.uses = 0;
+
+            /**
+             * Creates a new CreateVoucher instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {openvk.v1.CreateVoucher.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.CreateVoucher} CreateVoucher instance
+             * @type {{
+             *   (properties: openvk.v1.CreateVoucher.$Shape): openvk.v1.CreateVoucher & openvk.v1.CreateVoucher.$Shape;
+             *   (properties?: openvk.v1.CreateVoucher.$Properties): openvk.v1.CreateVoucher;
+             * }}
+             */
+            CreateVoucher.create = function(properties) {
+                return new CreateVoucher(properties);
+            };
+
+            /**
+             * Encodes the specified CreateVoucher message. Does not implicitly {@link openvk.v1.CreateVoucher.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {openvk.v1.CreateVoucher.$Properties} message CreateVoucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CreateVoucher.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins") && (typeof message.coins === "object" ? message.coins.low || message.coins.high : message.coins !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.coins);
+                if (message.uses != null && $Object.hasOwnProperty.call(message, "uses") && message.uses !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).int32(message.uses);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CreateVoucher message, length delimited. Does not implicitly {@link openvk.v1.CreateVoucher.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {openvk.v1.CreateVoucher.$Properties} message CreateVoucher message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CreateVoucher.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CreateVoucher message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.CreateVoucher & openvk.v1.CreateVoucher.$Shape} CreateVoucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CreateVoucher.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.CreateVoucher();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.coins = value;
+                            else
+                                delete message.coins;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.uses = value;
+                            else
+                                delete message.uses;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CreateVoucher message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.CreateVoucher & openvk.v1.CreateVoucher.$Shape} CreateVoucher
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CreateVoucher.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a CreateVoucher message.
+             * @function verify
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CreateVoucher.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (!$util.isInteger(message.coins) && !(message.coins && $util.isInteger(message.coins.low) && $util.isInteger(message.coins.high)))
+                        return "coins: integer|Long expected";
+                if (message.uses != null && $Object.hasOwnProperty.call(message, "uses"))
+                    if (!$util.isInteger(message.uses))
+                        return "uses: integer expected";
+                return null;
+            };
+
+            /**
+             * Creates a CreateVoucher message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.CreateVoucher} CreateVoucher
+             */
+            CreateVoucher.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.CreateVoucher)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.CreateVoucher: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.CreateVoucher();
+                if (object.coins != null)
+                    if (typeof object.coins === "object" ? object.coins.low || object.coins.high : $Number(object.coins) !== 0)
+                        if ($util.Long)
+                            message.coins = $util.Long.fromValue(object.coins, false);
+                        else if (typeof object.coins === "string")
+                            message.coins = $parseInt(object.coins, 10);
+                        else if (typeof object.coins === "number")
+                            message.coins = object.coins;
+                        else if (typeof object.coins === "object")
+                            message.coins = new $util.LongBits(object.coins.low >>> 0, object.coins.high >>> 0).toNumber();
+                if (object.uses != null)
+                    if ($Number(object.uses) !== 0)
+                        message.uses = object.uses | 0;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a CreateVoucher message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {openvk.v1.CreateVoucher} message CreateVoucher
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            CreateVoucher.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.coins = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.coins = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.uses = 0;
+                }
+                if (message.coins != null && $Object.hasOwnProperty.call(message, "coins"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.coins = typeof message.coins === "number" ? $BigInt(message.coins) : $util.Long.fromBits(message.coins.low >>> 0, message.coins.high >>> 0, false).toBigInt();
+                    else if (typeof message.coins === "number")
+                        object.coins = options.longs === $String ? $String(message.coins) : message.coins;
+                    else
+                        object.coins = options.longs === $String ? $util.Long.prototype.toString.call(message.coins) : options.longs === $Number ? new $util.LongBits(message.coins.low >>> 0, message.coins.high >>> 0).toNumber() : message.coins;
+                if (message.uses != null && $Object.hasOwnProperty.call(message, "uses"))
+                    object.uses = message.uses;
+                return object;
+            };
+
+            /**
+             * Converts this CreateVoucher to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.CreateVoucher
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            CreateVoucher.prototype.toJSON = function() {
+                return CreateVoucher.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for CreateVoucher
+             * @function getTypeUrl
+             * @memberof openvk.v1.CreateVoucher
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CreateVoucher.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.CreateVoucher";
+            };
+
+            return CreateVoucher;
+        })();
+
+        v1.TransferCoins = (function() {
+
+            /**
+             * Properties of a TransferCoins.
+             * @typedef {Object} openvk.v1.TransferCoins.$Properties
+             * @property {number|Long|null} [receiver_id] TransferCoins receiver_id
+             * @property {number|Long|null} [amount] TransferCoins amount
+             * @property {string|null} [message] TransferCoins message
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TransferCoins.
+             * @memberof openvk.v1
+             * @interface ITransferCoins
+             * @augments openvk.v1.TransferCoins.$Properties
+             * @deprecated Use openvk.v1.TransferCoins.$Properties instead.
+             */
+
+            /**
+             * Shape of a TransferCoins.
+             * @typedef {openvk.v1.TransferCoins.$Properties} openvk.v1.TransferCoins.$Shape
+             */
+
+            /**
+             * Constructs a new TransferCoins.
+             * @memberof openvk.v1
+             * @classdesc Represents a TransferCoins.
+             * @constructor
+             * @param {openvk.v1.TransferCoins.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const TransferCoins = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TransferCoins receiver_id.
+             * @member {number|Long} receiver_id
+             * @memberof openvk.v1.TransferCoins
+             * @instance
+             */
+            TransferCoins.prototype.receiver_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TransferCoins amount.
+             * @member {number|Long} amount
+             * @memberof openvk.v1.TransferCoins
+             * @instance
+             */
+            TransferCoins.prototype.amount = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TransferCoins message.
+             * @member {string|null|undefined} message
+             * @memberof openvk.v1.TransferCoins
+             * @instance
+             */
+            TransferCoins.prototype.message = null;
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(TransferCoins.prototype, "_message", {
+                get: $util.oneOfGetter($oneOfFields = ["message"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new TransferCoins instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {openvk.v1.TransferCoins.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.TransferCoins} TransferCoins instance
+             * @type {{
+             *   (properties: openvk.v1.TransferCoins.$Shape): openvk.v1.TransferCoins & openvk.v1.TransferCoins.$Shape;
+             *   (properties?: openvk.v1.TransferCoins.$Properties): openvk.v1.TransferCoins;
+             * }}
+             */
+            TransferCoins.create = function(properties) {
+                return new TransferCoins(properties);
+            };
+
+            /**
+             * Encodes the specified TransferCoins message. Does not implicitly {@link openvk.v1.TransferCoins.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {openvk.v1.TransferCoins.$Properties} message TransferCoins message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TransferCoins.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id") && (typeof message.receiver_id === "object" ? message.receiver_id.low || message.receiver_id.high : message.receiver_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.receiver_id);
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount") && (typeof message.amount === "object" ? message.amount.low || message.amount.high : message.amount !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.amount);
+                if (message.message != null && $Object.hasOwnProperty.call(message, "message"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TransferCoins message, length delimited. Does not implicitly {@link openvk.v1.TransferCoins.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {openvk.v1.TransferCoins.$Properties} message TransferCoins message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TransferCoins.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TransferCoins message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.TransferCoins & openvk.v1.TransferCoins.$Shape} TransferCoins
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TransferCoins.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.TransferCoins();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.receiver_id = value;
+                            else
+                                delete message.receiver_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.amount = value;
+                            else
+                                delete message.amount;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.message = reader.stringVerify();
+                            message._message = "message";
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TransferCoins message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.TransferCoins & openvk.v1.TransferCoins.$Shape} TransferCoins
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TransferCoins.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a TransferCoins message.
+             * @function verify
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TransferCoins.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (!$util.isInteger(message.receiver_id) && !(message.receiver_id && $util.isInteger(message.receiver_id.low) && $util.isInteger(message.receiver_id.high)))
+                        return "receiver_id: integer|Long expected";
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount"))
+                    if (!$util.isInteger(message.amount) && !(message.amount && $util.isInteger(message.amount.low) && $util.isInteger(message.amount.high)))
+                        return "amount: integer|Long expected";
+                if (message.message != null && $Object.hasOwnProperty.call(message, "message")) {
+                    properties._message = 1;
+                    if (!$util.isString(message.message))
+                        return "message: string expected";
+                }
+                return null;
+            };
+
+            /**
+             * Creates a TransferCoins message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.TransferCoins} TransferCoins
+             */
+            TransferCoins.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.TransferCoins)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.TransferCoins: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.TransferCoins();
+                if (object.receiver_id != null)
+                    if (typeof object.receiver_id === "object" ? object.receiver_id.low || object.receiver_id.high : $Number(object.receiver_id) !== 0)
+                        if ($util.Long)
+                            message.receiver_id = $util.Long.fromValue(object.receiver_id, false);
+                        else if (typeof object.receiver_id === "string")
+                            message.receiver_id = $parseInt(object.receiver_id, 10);
+                        else if (typeof object.receiver_id === "number")
+                            message.receiver_id = object.receiver_id;
+                        else if (typeof object.receiver_id === "object")
+                            message.receiver_id = new $util.LongBits(object.receiver_id.low >>> 0, object.receiver_id.high >>> 0).toNumber();
+                if (object.amount != null)
+                    if (typeof object.amount === "object" ? object.amount.low || object.amount.high : $Number(object.amount) !== 0)
+                        if ($util.Long)
+                            message.amount = $util.Long.fromValue(object.amount, false);
+                        else if (typeof object.amount === "string")
+                            message.amount = $parseInt(object.amount, 10);
+                        else if (typeof object.amount === "number")
+                            message.amount = object.amount;
+                        else if (typeof object.amount === "object")
+                            message.amount = new $util.LongBits(object.amount.low >>> 0, object.amount.high >>> 0).toNumber();
+                if (object.message != null)
+                    message.message = $String(object.message);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a TransferCoins message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {openvk.v1.TransferCoins} message TransferCoins
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            TransferCoins.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.receiver_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.receiver_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.amount = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.amount = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                }
+                if (message.receiver_id != null && $Object.hasOwnProperty.call(message, "receiver_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.receiver_id = typeof message.receiver_id === "number" ? $BigInt(message.receiver_id) : $util.Long.fromBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.receiver_id === "number")
+                        object.receiver_id = options.longs === $String ? $String(message.receiver_id) : message.receiver_id;
+                    else
+                        object.receiver_id = options.longs === $String ? $util.Long.prototype.toString.call(message.receiver_id) : options.longs === $Number ? new $util.LongBits(message.receiver_id.low >>> 0, message.receiver_id.high >>> 0).toNumber() : message.receiver_id;
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.amount = typeof message.amount === "number" ? $BigInt(message.amount) : $util.Long.fromBits(message.amount.low >>> 0, message.amount.high >>> 0, false).toBigInt();
+                    else if (typeof message.amount === "number")
+                        object.amount = options.longs === $String ? $String(message.amount) : message.amount;
+                    else
+                        object.amount = options.longs === $String ? $util.Long.prototype.toString.call(message.amount) : options.longs === $Number ? new $util.LongBits(message.amount.low >>> 0, message.amount.high >>> 0).toNumber() : message.amount;
+                if (message.message != null && $Object.hasOwnProperty.call(message, "message"))
+                    object.message = message.message;
+                return object;
+            };
+
+            /**
+             * Converts this TransferCoins to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.TransferCoins
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            TransferCoins.prototype.toJSON = function() {
+                return TransferCoins.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for TransferCoins
+             * @function getTypeUrl
+             * @memberof openvk.v1.TransferCoins
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TransferCoins.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.TransferCoins";
+            };
+
+            return TransferCoins;
+        })();
+
+        v1.BannedLink = (function() {
+
+            /**
+             * Properties of a BannedLink.
+             * @typedef {Object} openvk.v1.BannedLink.$Properties
+             * @property {number|Long|null} [id] BannedLink id
+             * @property {string|null} [url] BannedLink url
+             * @property {string|null} [reason] BannedLink reason
+             * @property {string|null} [created_at] BannedLink created_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BannedLink.
+             * @memberof openvk.v1
+             * @interface IBannedLink
+             * @augments openvk.v1.BannedLink.$Properties
+             * @deprecated Use openvk.v1.BannedLink.$Properties instead.
+             */
+
+            /**
+             * Shape of a BannedLink.
+             * @typedef {openvk.v1.BannedLink.$Properties} openvk.v1.BannedLink.$Shape
+             */
+
+            /**
+             * Constructs a new BannedLink.
+             * @memberof openvk.v1
+             * @classdesc Represents a BannedLink.
+             * @constructor
+             * @param {openvk.v1.BannedLink.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const BannedLink = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BannedLink id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.BannedLink
+             * @instance
+             */
+            BannedLink.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BannedLink url.
+             * @member {string} url
+             * @memberof openvk.v1.BannedLink
+             * @instance
+             */
+            BannedLink.prototype.url = "";
+
+            /**
+             * BannedLink reason.
+             * @member {string} reason
+             * @memberof openvk.v1.BannedLink
+             * @instance
+             */
+            BannedLink.prototype.reason = "";
+
+            /**
+             * BannedLink created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.BannedLink
+             * @instance
+             */
+            BannedLink.prototype.created_at = "";
+
+            /**
+             * Creates a new BannedLink instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {openvk.v1.BannedLink.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.BannedLink} BannedLink instance
+             * @type {{
+             *   (properties: openvk.v1.BannedLink.$Shape): openvk.v1.BannedLink & openvk.v1.BannedLink.$Shape;
+             *   (properties?: openvk.v1.BannedLink.$Properties): openvk.v1.BannedLink;
+             * }}
+             */
+            BannedLink.create = function(properties) {
+                return new BannedLink(properties);
+            };
+
+            /**
+             * Encodes the specified BannedLink message. Does not implicitly {@link openvk.v1.BannedLink.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {openvk.v1.BannedLink.$Properties} message BannedLink message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BannedLink.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url") && message.url !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.url);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.reason);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.created_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BannedLink message, length delimited. Does not implicitly {@link openvk.v1.BannedLink.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {openvk.v1.BannedLink.$Properties} message BannedLink message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BannedLink.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BannedLink message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.BannedLink & openvk.v1.BannedLink.$Shape} BannedLink
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BannedLink.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.BannedLink();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.url = value;
+                            else
+                                delete message.url;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BannedLink message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.BannedLink & openvk.v1.BannedLink.$Shape} BannedLink
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BannedLink.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a BannedLink message.
+             * @function verify
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BannedLink.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    if (!$util.isString(message.url))
+                        return "url: string expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a BannedLink message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.BannedLink} BannedLink
+             */
+            BannedLink.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.BannedLink)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.BannedLink: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.BannedLink();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.url != null)
+                    if (typeof object.url !== "string" || object.url.length)
+                        message.url = $String(object.url);
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a BannedLink message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {openvk.v1.BannedLink} message BannedLink
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            BannedLink.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.url = "";
+                    object.reason = "";
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    object.url = message.url;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                return object;
+            };
+
+            /**
+             * Converts this BannedLink to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.BannedLink
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            BannedLink.prototype.toJSON = function() {
+                return BannedLink.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for BannedLink
+             * @function getTypeUrl
+             * @memberof openvk.v1.BannedLink
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BannedLink.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.BannedLink";
+            };
+
+            return BannedLink;
+        })();
+
+        v1.BannedLinkList = (function() {
+
+            /**
+             * Properties of a BannedLinkList.
+             * @typedef {Object} openvk.v1.BannedLinkList.$Properties
+             * @property {Array.<openvk.v1.BannedLink.$Properties>|null} [links] BannedLinkList links
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BannedLinkList.
+             * @memberof openvk.v1
+             * @interface IBannedLinkList
+             * @augments openvk.v1.BannedLinkList.$Properties
+             * @deprecated Use openvk.v1.BannedLinkList.$Properties instead.
+             */
+
+            /**
+             * Shape of a BannedLinkList.
+             * @typedef {openvk.v1.BannedLinkList.$Properties} openvk.v1.BannedLinkList.$Shape
+             */
+
+            /**
+             * Constructs a new BannedLinkList.
+             * @memberof openvk.v1
+             * @classdesc Represents a BannedLinkList.
+             * @constructor
+             * @param {openvk.v1.BannedLinkList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const BannedLinkList = function (properties) {
+                this.links = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BannedLinkList links.
+             * @member {Array.<openvk.v1.BannedLink.$Properties>} links
+             * @memberof openvk.v1.BannedLinkList
+             * @instance
+             */
+            BannedLinkList.prototype.links = $util.emptyArray;
+
+            /**
+             * Creates a new BannedLinkList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {openvk.v1.BannedLinkList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.BannedLinkList} BannedLinkList instance
+             * @type {{
+             *   (properties: openvk.v1.BannedLinkList.$Shape): openvk.v1.BannedLinkList & openvk.v1.BannedLinkList.$Shape;
+             *   (properties?: openvk.v1.BannedLinkList.$Properties): openvk.v1.BannedLinkList;
+             * }}
+             */
+            BannedLinkList.create = function(properties) {
+                return new BannedLinkList(properties);
+            };
+
+            /**
+             * Encodes the specified BannedLinkList message. Does not implicitly {@link openvk.v1.BannedLinkList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {openvk.v1.BannedLinkList.$Properties} message BannedLinkList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BannedLinkList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.links != null && message.links.length)
+                    for (let i = 0; i < message.links.length; ++i)
+                        $root.openvk.v1.BannedLink.encode(message.links[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BannedLinkList message, length delimited. Does not implicitly {@link openvk.v1.BannedLinkList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {openvk.v1.BannedLinkList.$Properties} message BannedLinkList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BannedLinkList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BannedLinkList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.BannedLinkList & openvk.v1.BannedLinkList.$Shape} BannedLinkList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BannedLinkList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.BannedLinkList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.links && message.links.length))
+                                message.links = [];
+                            message.links.push($root.openvk.v1.BannedLink.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BannedLinkList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.BannedLinkList & openvk.v1.BannedLinkList.$Shape} BannedLinkList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BannedLinkList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a BannedLinkList message.
+             * @function verify
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BannedLinkList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.links != null && $Object.hasOwnProperty.call(message, "links")) {
+                    if (!$Array.isArray(message.links))
+                        return "links: array expected";
+                    for (let i = 0; i < message.links.length; ++i) {
+                        let error = $root.openvk.v1.BannedLink.verify(message.links[i], _depth + 1);
+                        if (error)
+                            return "links." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a BannedLinkList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.BannedLinkList} BannedLinkList
+             */
+            BannedLinkList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.BannedLinkList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.BannedLinkList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.BannedLinkList();
+                if (object.links) {
+                    if (!$Array.isArray(object.links))
+                        throw $TypeError(".openvk.v1.BannedLinkList.links: array expected");
+                    message.links = $Array(object.links.length);
+                    for (let i = 0; i < object.links.length; ++i) {
+                        if (!$util.isObject(object.links[i]))
+                            throw $TypeError(".openvk.v1.BannedLinkList.links: object expected");
+                        message.links[i] = $root.openvk.v1.BannedLink.fromObject(object.links[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a BannedLinkList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {openvk.v1.BannedLinkList} message BannedLinkList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            BannedLinkList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.links = [];
+                if (message.links && message.links.length) {
+                    object.links = $Array(message.links.length);
+                    for (let j = 0; j < message.links.length; ++j)
+                        object.links[j] = $root.openvk.v1.BannedLink.toObject(message.links[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this BannedLinkList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.BannedLinkList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            BannedLinkList.prototype.toJSON = function() {
+                return BannedLinkList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for BannedLinkList
+             * @function getTypeUrl
+             * @memberof openvk.v1.BannedLinkList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BannedLinkList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.BannedLinkList";
+            };
+
+            return BannedLinkList;
+        })();
+
+        v1.WriteBannedLink = (function() {
+
+            /**
+             * Properties of a WriteBannedLink.
+             * @typedef {Object} openvk.v1.WriteBannedLink.$Properties
+             * @property {string|null} [url] WriteBannedLink url
+             * @property {string|null} [reason] WriteBannedLink reason
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WriteBannedLink.
+             * @memberof openvk.v1
+             * @interface IWriteBannedLink
+             * @augments openvk.v1.WriteBannedLink.$Properties
+             * @deprecated Use openvk.v1.WriteBannedLink.$Properties instead.
+             */
+
+            /**
+             * Shape of a WriteBannedLink.
+             * @typedef {openvk.v1.WriteBannedLink.$Properties} openvk.v1.WriteBannedLink.$Shape
+             */
+
+            /**
+             * Constructs a new WriteBannedLink.
+             * @memberof openvk.v1
+             * @classdesc Represents a WriteBannedLink.
+             * @constructor
+             * @param {openvk.v1.WriteBannedLink.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WriteBannedLink = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WriteBannedLink url.
+             * @member {string} url
+             * @memberof openvk.v1.WriteBannedLink
+             * @instance
+             */
+            WriteBannedLink.prototype.url = "";
+
+            /**
+             * WriteBannedLink reason.
+             * @member {string} reason
+             * @memberof openvk.v1.WriteBannedLink
+             * @instance
+             */
+            WriteBannedLink.prototype.reason = "";
+
+            /**
+             * Creates a new WriteBannedLink instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {openvk.v1.WriteBannedLink.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WriteBannedLink} WriteBannedLink instance
+             * @type {{
+             *   (properties: openvk.v1.WriteBannedLink.$Shape): openvk.v1.WriteBannedLink & openvk.v1.WriteBannedLink.$Shape;
+             *   (properties?: openvk.v1.WriteBannedLink.$Properties): openvk.v1.WriteBannedLink;
+             * }}
+             */
+            WriteBannedLink.create = function(properties) {
+                return new WriteBannedLink(properties);
+            };
+
+            /**
+             * Encodes the specified WriteBannedLink message. Does not implicitly {@link openvk.v1.WriteBannedLink.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {openvk.v1.WriteBannedLink.$Properties} message WriteBannedLink message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteBannedLink.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url") && message.url !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WriteBannedLink message, length delimited. Does not implicitly {@link openvk.v1.WriteBannedLink.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {openvk.v1.WriteBannedLink.$Properties} message WriteBannedLink message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WriteBannedLink.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WriteBannedLink message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WriteBannedLink & openvk.v1.WriteBannedLink.$Shape} WriteBannedLink
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteBannedLink.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WriteBannedLink();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.url = value;
+                            else
+                                delete message.url;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WriteBannedLink message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WriteBannedLink & openvk.v1.WriteBannedLink.$Shape} WriteBannedLink
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WriteBannedLink.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WriteBannedLink message.
+             * @function verify
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WriteBannedLink.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    if (!$util.isString(message.url))
+                        return "url: string expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WriteBannedLink message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WriteBannedLink} WriteBannedLink
+             */
+            WriteBannedLink.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WriteBannedLink)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WriteBannedLink: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WriteBannedLink();
+                if (object.url != null)
+                    if (typeof object.url !== "string" || object.url.length)
+                        message.url = $String(object.url);
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WriteBannedLink message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {openvk.v1.WriteBannedLink} message WriteBannedLink
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WriteBannedLink.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.url = "";
+                    object.reason = "";
+                }
+                if (message.url != null && $Object.hasOwnProperty.call(message, "url"))
+                    object.url = message.url;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                return object;
+            };
+
+            /**
+             * Converts this WriteBannedLink to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WriteBannedLink
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WriteBannedLink.prototype.toJSON = function() {
+                return WriteBannedLink.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WriteBannedLink
+             * @function getTypeUrl
+             * @memberof openvk.v1.WriteBannedLink
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WriteBannedLink.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WriteBannedLink";
+            };
+
+            return WriteBannedLink;
+        })();
+
+        v1.BanUser = (function() {
+
+            /**
+             * Properties of a BanUser.
+             * @typedef {Object} openvk.v1.BanUser.$Properties
+             * @property {string|null} [until] BanUser until
+             * @property {string|null} [reason] BanUser reason
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BanUser.
+             * @memberof openvk.v1
+             * @interface IBanUser
+             * @augments openvk.v1.BanUser.$Properties
+             * @deprecated Use openvk.v1.BanUser.$Properties instead.
+             */
+
+            /**
+             * Shape of a BanUser.
+             * @typedef {openvk.v1.BanUser.$Properties} openvk.v1.BanUser.$Shape
+             */
+
+            /**
+             * Constructs a new BanUser.
+             * @memberof openvk.v1
+             * @classdesc Represents a BanUser.
+             * @constructor
+             * @param {openvk.v1.BanUser.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const BanUser = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BanUser until.
+             * @member {string|null|undefined} until
+             * @memberof openvk.v1.BanUser
+             * @instance
+             */
+            BanUser.prototype.until = null;
+
+            /**
+             * BanUser reason.
+             * @member {string} reason
+             * @memberof openvk.v1.BanUser
+             * @instance
+             */
+            BanUser.prototype.reason = "";
+
+            // OneOf field names bound to virtual getters and setters
+            let $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(BanUser.prototype, "_until", {
+                get: $util.oneOfGetter($oneOfFields = ["until"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
+             * Creates a new BanUser instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {openvk.v1.BanUser.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.BanUser} BanUser instance
+             * @type {{
+             *   (properties: openvk.v1.BanUser.$Shape): openvk.v1.BanUser & openvk.v1.BanUser.$Shape;
+             *   (properties?: openvk.v1.BanUser.$Properties): openvk.v1.BanUser;
+             * }}
+             */
+            BanUser.create = function(properties) {
+                return new BanUser(properties);
+            };
+
+            /**
+             * Encodes the specified BanUser message. Does not implicitly {@link openvk.v1.BanUser.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {openvk.v1.BanUser.$Properties} message BanUser message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BanUser.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.until != null && $Object.hasOwnProperty.call(message, "until"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.until);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BanUser message, length delimited. Does not implicitly {@link openvk.v1.BanUser.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {openvk.v1.BanUser.$Properties} message BanUser message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BanUser.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BanUser message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.BanUser & openvk.v1.BanUser.$Shape} BanUser
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BanUser.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.BanUser();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.until = reader.stringVerify();
+                            message._until = "until";
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BanUser message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.BanUser & openvk.v1.BanUser.$Shape} BanUser
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BanUser.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a BanUser message.
+             * @function verify
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BanUser.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                let properties = {};
+                if (message.until != null && $Object.hasOwnProperty.call(message, "until")) {
+                    properties._until = 1;
+                    if (!$util.isString(message.until))
+                        return "until: string expected";
+                }
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a BanUser message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.BanUser} BanUser
+             */
+            BanUser.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.BanUser)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.BanUser: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.BanUser();
+                if (object.until != null)
+                    message.until = $String(object.until);
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a BanUser message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {openvk.v1.BanUser} message BanUser
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            BanUser.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.reason = "";
+                if (message.until != null && $Object.hasOwnProperty.call(message, "until"))
+                    object.until = message.until;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                return object;
+            };
+
+            /**
+             * Converts this BanUser to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.BanUser
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            BanUser.prototype.toJSON = function() {
+                return BanUser.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for BanUser
+             * @function getTypeUrl
+             * @memberof openvk.v1.BanUser
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BanUser.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.BanUser";
+            };
+
+            return BanUser;
+        })();
+
+        v1.WarnUser = (function() {
+
+            /**
+             * Properties of a WarnUser.
+             * @typedef {Object} openvk.v1.WarnUser.$Properties
+             * @property {string|null} [reason] WarnUser reason
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarnUser.
+             * @memberof openvk.v1
+             * @interface IWarnUser
+             * @augments openvk.v1.WarnUser.$Properties
+             * @deprecated Use openvk.v1.WarnUser.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarnUser.
+             * @typedef {openvk.v1.WarnUser.$Properties} openvk.v1.WarnUser.$Shape
+             */
+
+            /**
+             * Constructs a new WarnUser.
+             * @memberof openvk.v1
+             * @classdesc Represents a WarnUser.
+             * @constructor
+             * @param {openvk.v1.WarnUser.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WarnUser = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarnUser reason.
+             * @member {string} reason
+             * @memberof openvk.v1.WarnUser
+             * @instance
+             */
+            WarnUser.prototype.reason = "";
+
+            /**
+             * Creates a new WarnUser instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {openvk.v1.WarnUser.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WarnUser} WarnUser instance
+             * @type {{
+             *   (properties: openvk.v1.WarnUser.$Shape): openvk.v1.WarnUser & openvk.v1.WarnUser.$Shape;
+             *   (properties?: openvk.v1.WarnUser.$Properties): openvk.v1.WarnUser;
+             * }}
+             */
+            WarnUser.create = function(properties) {
+                return new WarnUser(properties);
+            };
+
+            /**
+             * Encodes the specified WarnUser message. Does not implicitly {@link openvk.v1.WarnUser.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {openvk.v1.WarnUser.$Properties} message WarnUser message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarnUser.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.reason);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarnUser message, length delimited. Does not implicitly {@link openvk.v1.WarnUser.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {openvk.v1.WarnUser.$Properties} message WarnUser message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarnUser.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarnUser message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WarnUser & openvk.v1.WarnUser.$Shape} WarnUser
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarnUser.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WarnUser();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarnUser message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WarnUser & openvk.v1.WarnUser.$Shape} WarnUser
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarnUser.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WarnUser message.
+             * @function verify
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarnUser.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a WarnUser message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WarnUser} WarnUser
+             */
+            WarnUser.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WarnUser)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WarnUser: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WarnUser();
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WarnUser message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {openvk.v1.WarnUser} message WarnUser
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WarnUser.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults)
+                    object.reason = "";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                return object;
+            };
+
+            /**
+             * Converts this WarnUser to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WarnUser
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WarnUser.prototype.toJSON = function() {
+                return WarnUser.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WarnUser
+             * @function getTypeUrl
+             * @memberof openvk.v1.WarnUser
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarnUser.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WarnUser";
+            };
+
+            return WarnUser;
+        })();
+
+        v1.Warning = (function() {
+
+            /**
+             * Properties of a Warning.
+             * @typedef {Object} openvk.v1.Warning.$Properties
+             * @property {number|Long|null} [id] Warning id
+             * @property {number|Long|null} [user_id] Warning user_id
+             * @property {number|Long|null} [actor_id] Warning actor_id
+             * @property {string|null} [reason] Warning reason
+             * @property {string|null} [created_at] Warning created_at
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a Warning.
+             * @memberof openvk.v1
+             * @interface IWarning
+             * @augments openvk.v1.Warning.$Properties
+             * @deprecated Use openvk.v1.Warning.$Properties instead.
+             */
+
+            /**
+             * Shape of a Warning.
+             * @typedef {openvk.v1.Warning.$Properties} openvk.v1.Warning.$Shape
+             */
+
+            /**
+             * Constructs a new Warning.
+             * @memberof openvk.v1
+             * @classdesc Represents a Warning.
+             * @constructor
+             * @param {openvk.v1.Warning.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const Warning = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Warning id.
+             * @member {number|Long} id
+             * @memberof openvk.v1.Warning
+             * @instance
+             */
+            Warning.prototype.id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Warning user_id.
+             * @member {number|Long} user_id
+             * @memberof openvk.v1.Warning
+             * @instance
+             */
+            Warning.prototype.user_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Warning actor_id.
+             * @member {number|Long} actor_id
+             * @memberof openvk.v1.Warning
+             * @instance
+             */
+            Warning.prototype.actor_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Warning reason.
+             * @member {string} reason
+             * @memberof openvk.v1.Warning
+             * @instance
+             */
+            Warning.prototype.reason = "";
+
+            /**
+             * Warning created_at.
+             * @member {string} created_at
+             * @memberof openvk.v1.Warning
+             * @instance
+             */
+            Warning.prototype.created_at = "";
+
+            /**
+             * Creates a new Warning instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {openvk.v1.Warning.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.Warning} Warning instance
+             * @type {{
+             *   (properties: openvk.v1.Warning.$Shape): openvk.v1.Warning & openvk.v1.Warning.$Shape;
+             *   (properties?: openvk.v1.Warning.$Properties): openvk.v1.Warning;
+             * }}
+             */
+            Warning.create = function(properties) {
+                return new Warning(properties);
+            };
+
+            /**
+             * Encodes the specified Warning message. Does not implicitly {@link openvk.v1.Warning.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {openvk.v1.Warning.$Properties} message Warning message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Warning.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && (typeof message.id === "object" ? message.id.low || message.id.high : message.id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.id);
+                if (message.user_id != null && $Object.hasOwnProperty.call(message, "user_id") && (typeof message.user_id === "object" ? message.user_id.low || message.user_id.high : message.user_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.user_id);
+                if (message.actor_id != null && $Object.hasOwnProperty.call(message, "actor_id") && (typeof message.actor_id === "object" ? message.actor_id.low || message.actor_id.high : message.actor_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.actor_id);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.reason);
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at") && message.created_at !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.created_at);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Warning message, length delimited. Does not implicitly {@link openvk.v1.Warning.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {openvk.v1.Warning.$Properties} message Warning message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Warning.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a Warning message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.Warning & openvk.v1.Warning.$Shape} Warning
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Warning.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.Warning();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.user_id = value;
+                            else
+                                delete message.user_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.actor_id = value;
+                            else
+                                delete message.actor_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.created_at = value;
+                            else
+                                delete message.created_at;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a Warning message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.Warning & openvk.v1.Warning.$Shape} Warning
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Warning.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a Warning message.
+             * @function verify
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Warning.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high)))
+                        return "id: integer|Long expected";
+                if (message.user_id != null && $Object.hasOwnProperty.call(message, "user_id"))
+                    if (!$util.isInteger(message.user_id) && !(message.user_id && $util.isInteger(message.user_id.low) && $util.isInteger(message.user_id.high)))
+                        return "user_id: integer|Long expected";
+                if (message.actor_id != null && $Object.hasOwnProperty.call(message, "actor_id"))
+                    if (!$util.isInteger(message.actor_id) && !(message.actor_id && $util.isInteger(message.actor_id.low) && $util.isInteger(message.actor_id.high)))
+                        return "actor_id: integer|Long expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    if (!$util.isString(message.created_at))
+                        return "created_at: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a Warning message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.Warning} Warning
+             */
+            Warning.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.Warning)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.Warning: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.Warning();
+                if (object.id != null)
+                    if (typeof object.id === "object" ? object.id.low || object.id.high : $Number(object.id) !== 0)
+                        if ($util.Long)
+                            message.id = $util.Long.fromValue(object.id, false);
+                        else if (typeof object.id === "string")
+                            message.id = $parseInt(object.id, 10);
+                        else if (typeof object.id === "number")
+                            message.id = object.id;
+                        else if (typeof object.id === "object")
+                            message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber();
+                if (object.user_id != null)
+                    if (typeof object.user_id === "object" ? object.user_id.low || object.user_id.high : $Number(object.user_id) !== 0)
+                        if ($util.Long)
+                            message.user_id = $util.Long.fromValue(object.user_id, false);
+                        else if (typeof object.user_id === "string")
+                            message.user_id = $parseInt(object.user_id, 10);
+                        else if (typeof object.user_id === "number")
+                            message.user_id = object.user_id;
+                        else if (typeof object.user_id === "object")
+                            message.user_id = new $util.LongBits(object.user_id.low >>> 0, object.user_id.high >>> 0).toNumber();
+                if (object.actor_id != null)
+                    if (typeof object.actor_id === "object" ? object.actor_id.low || object.actor_id.high : $Number(object.actor_id) !== 0)
+                        if ($util.Long)
+                            message.actor_id = $util.Long.fromValue(object.actor_id, false);
+                        else if (typeof object.actor_id === "string")
+                            message.actor_id = $parseInt(object.actor_id, 10);
+                        else if (typeof object.actor_id === "number")
+                            message.actor_id = object.actor_id;
+                        else if (typeof object.actor_id === "object")
+                            message.actor_id = new $util.LongBits(object.actor_id.low >>> 0, object.actor_id.high >>> 0).toNumber();
+                if (object.reason != null)
+                    if (typeof object.reason !== "string" || object.reason.length)
+                        message.reason = $String(object.reason);
+                if (object.created_at != null)
+                    if (typeof object.created_at !== "string" || object.created_at.length)
+                        message.created_at = $String(object.created_at);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a Warning message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {openvk.v1.Warning} message Warning
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Warning.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.user_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.user_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.actor_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.actor_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.reason = "";
+                    object.created_at = "";
+                }
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.id = typeof message.id === "number" ? $BigInt(message.id) : $util.Long.fromBits(message.id.low >>> 0, message.id.high >>> 0, false).toBigInt();
+                    else if (typeof message.id === "number")
+                        object.id = options.longs === $String ? $String(message.id) : message.id;
+                    else
+                        object.id = options.longs === $String ? $util.Long.prototype.toString.call(message.id) : options.longs === $Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber() : message.id;
+                if (message.user_id != null && $Object.hasOwnProperty.call(message, "user_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.user_id = typeof message.user_id === "number" ? $BigInt(message.user_id) : $util.Long.fromBits(message.user_id.low >>> 0, message.user_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.user_id === "number")
+                        object.user_id = options.longs === $String ? $String(message.user_id) : message.user_id;
+                    else
+                        object.user_id = options.longs === $String ? $util.Long.prototype.toString.call(message.user_id) : options.longs === $Number ? new $util.LongBits(message.user_id.low >>> 0, message.user_id.high >>> 0).toNumber() : message.user_id;
+                if (message.actor_id != null && $Object.hasOwnProperty.call(message, "actor_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.actor_id = typeof message.actor_id === "number" ? $BigInt(message.actor_id) : $util.Long.fromBits(message.actor_id.low >>> 0, message.actor_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.actor_id === "number")
+                        object.actor_id = options.longs === $String ? $String(message.actor_id) : message.actor_id;
+                    else
+                        object.actor_id = options.longs === $String ? $util.Long.prototype.toString.call(message.actor_id) : options.longs === $Number ? new $util.LongBits(message.actor_id.low >>> 0, message.actor_id.high >>> 0).toNumber() : message.actor_id;
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    object.reason = message.reason;
+                if (message.created_at != null && $Object.hasOwnProperty.call(message, "created_at"))
+                    object.created_at = message.created_at;
+                return object;
+            };
+
+            /**
+             * Converts this Warning to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.Warning
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Warning.prototype.toJSON = function() {
+                return Warning.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for Warning
+             * @function getTypeUrl
+             * @memberof openvk.v1.Warning
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            Warning.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.Warning";
+            };
+
+            return Warning;
+        })();
+
+        v1.WarningList = (function() {
+
+            /**
+             * Properties of a WarningList.
+             * @typedef {Object} openvk.v1.WarningList.$Properties
+             * @property {Array.<openvk.v1.Warning.$Properties>|null} [warnings] WarningList warnings
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarningList.
+             * @memberof openvk.v1
+             * @interface IWarningList
+             * @augments openvk.v1.WarningList.$Properties
+             * @deprecated Use openvk.v1.WarningList.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarningList.
+             * @typedef {openvk.v1.WarningList.$Properties} openvk.v1.WarningList.$Shape
+             */
+
+            /**
+             * Constructs a new WarningList.
+             * @memberof openvk.v1
+             * @classdesc Represents a WarningList.
+             * @constructor
+             * @param {openvk.v1.WarningList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const WarningList = function (properties) {
+                this.warnings = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarningList warnings.
+             * @member {Array.<openvk.v1.Warning.$Properties>} warnings
+             * @memberof openvk.v1.WarningList
+             * @instance
+             */
+            WarningList.prototype.warnings = $util.emptyArray;
+
+            /**
+             * Creates a new WarningList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {openvk.v1.WarningList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.WarningList} WarningList instance
+             * @type {{
+             *   (properties: openvk.v1.WarningList.$Shape): openvk.v1.WarningList & openvk.v1.WarningList.$Shape;
+             *   (properties?: openvk.v1.WarningList.$Properties): openvk.v1.WarningList;
+             * }}
+             */
+            WarningList.create = function(properties) {
+                return new WarningList(properties);
+            };
+
+            /**
+             * Encodes the specified WarningList message. Does not implicitly {@link openvk.v1.WarningList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {openvk.v1.WarningList.$Properties} message WarningList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarningList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.warnings != null && message.warnings.length)
+                    for (let i = 0; i < message.warnings.length; ++i)
+                        $root.openvk.v1.Warning.encode(message.warnings[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarningList message, length delimited. Does not implicitly {@link openvk.v1.WarningList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {openvk.v1.WarningList.$Properties} message WarningList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarningList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarningList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.WarningList & openvk.v1.WarningList.$Shape} WarningList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarningList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.WarningList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.warnings && message.warnings.length))
+                                message.warnings = [];
+                            message.warnings.push($root.openvk.v1.Warning.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarningList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.WarningList & openvk.v1.WarningList.$Shape} WarningList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarningList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a WarningList message.
+             * @function verify
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarningList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.warnings != null && $Object.hasOwnProperty.call(message, "warnings")) {
+                    if (!$Array.isArray(message.warnings))
+                        return "warnings: array expected";
+                    for (let i = 0; i < message.warnings.length; ++i) {
+                        let error = $root.openvk.v1.Warning.verify(message.warnings[i], _depth + 1);
+                        if (error)
+                            return "warnings." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates a WarningList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.WarningList} WarningList
+             */
+            WarningList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.WarningList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.WarningList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.WarningList();
+                if (object.warnings) {
+                    if (!$Array.isArray(object.warnings))
+                        throw $TypeError(".openvk.v1.WarningList.warnings: array expected");
+                    message.warnings = $Array(object.warnings.length);
+                    for (let i = 0; i < object.warnings.length; ++i) {
+                        if (!$util.isObject(object.warnings[i]))
+                            throw $TypeError(".openvk.v1.WarningList.warnings: object expected");
+                        message.warnings[i] = $root.openvk.v1.Warning.fromObject(object.warnings[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a WarningList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {openvk.v1.WarningList} message WarningList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            WarningList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.warnings = [];
+                if (message.warnings && message.warnings.length) {
+                    object.warnings = $Array(message.warnings.length);
+                    for (let j = 0; j < message.warnings.length; ++j)
+                        object.warnings[j] = $root.openvk.v1.Warning.toObject(message.warnings[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this WarningList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.WarningList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            WarningList.prototype.toJSON = function() {
+                return WarningList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for WarningList
+             * @function getTypeUrl
+             * @memberof openvk.v1.WarningList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarningList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.WarningList";
+            };
+
+            return WarningList;
+        })();
+
+        v1.SetLimits = (function() {
+
+            /**
+             * Properties of a SetLimits.
+             * @typedef {Object} openvk.v1.SetLimits.$Properties
+             * @property {boolean|null} [posting_allowed] SetLimits posting_allowed
+             * @property {boolean|null} [messaging_allowed] SetLimits messaging_allowed
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetLimits.
+             * @memberof openvk.v1
+             * @interface ISetLimits
+             * @augments openvk.v1.SetLimits.$Properties
+             * @deprecated Use openvk.v1.SetLimits.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetLimits.
+             * @typedef {openvk.v1.SetLimits.$Properties} openvk.v1.SetLimits.$Shape
+             */
+
+            /**
+             * Constructs a new SetLimits.
+             * @memberof openvk.v1
+             * @classdesc Represents a SetLimits.
+             * @constructor
+             * @param {openvk.v1.SetLimits.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const SetLimits = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetLimits posting_allowed.
+             * @member {boolean} posting_allowed
+             * @memberof openvk.v1.SetLimits
+             * @instance
+             */
+            SetLimits.prototype.posting_allowed = false;
+
+            /**
+             * SetLimits messaging_allowed.
+             * @member {boolean} messaging_allowed
+             * @memberof openvk.v1.SetLimits
+             * @instance
+             */
+            SetLimits.prototype.messaging_allowed = false;
+
+            /**
+             * Creates a new SetLimits instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {openvk.v1.SetLimits.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.SetLimits} SetLimits instance
+             * @type {{
+             *   (properties: openvk.v1.SetLimits.$Shape): openvk.v1.SetLimits & openvk.v1.SetLimits.$Shape;
+             *   (properties?: openvk.v1.SetLimits.$Properties): openvk.v1.SetLimits;
+             * }}
+             */
+            SetLimits.create = function(properties) {
+                return new SetLimits(properties);
+            };
+
+            /**
+             * Encodes the specified SetLimits message. Does not implicitly {@link openvk.v1.SetLimits.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {openvk.v1.SetLimits.$Properties} message SetLimits message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetLimits.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed") && message.posting_allowed !== false)
+                    writer.uint32(/* id 1, wireType 0 =*/8).bool(message.posting_allowed);
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed") && message.messaging_allowed !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.messaging_allowed);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetLimits message, length delimited. Does not implicitly {@link openvk.v1.SetLimits.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {openvk.v1.SetLimits.$Properties} message SetLimits message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetLimits.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetLimits message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.SetLimits & openvk.v1.SetLimits.$Shape} SetLimits
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetLimits.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.SetLimits();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.posting_allowed = value;
+                            else
+                                delete message.posting_allowed;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.messaging_allowed = value;
+                            else
+                                delete message.messaging_allowed;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetLimits message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.SetLimits & openvk.v1.SetLimits.$Shape} SetLimits
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetLimits.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a SetLimits message.
+             * @function verify
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetLimits.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed"))
+                    if (typeof message.posting_allowed !== "boolean")
+                        return "posting_allowed: boolean expected";
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed"))
+                    if (typeof message.messaging_allowed !== "boolean")
+                        return "messaging_allowed: boolean expected";
+                return null;
+            };
+
+            /**
+             * Creates a SetLimits message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.SetLimits} SetLimits
+             */
+            SetLimits.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.SetLimits)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.SetLimits: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.SetLimits();
+                if (object.posting_allowed != null)
+                    if (object.posting_allowed)
+                        message.posting_allowed = $Boolean(object.posting_allowed);
+                if (object.messaging_allowed != null)
+                    if (object.messaging_allowed)
+                        message.messaging_allowed = $Boolean(object.messaging_allowed);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a SetLimits message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {openvk.v1.SetLimits} message SetLimits
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            SetLimits.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.posting_allowed = false;
+                    object.messaging_allowed = false;
+                }
+                if (message.posting_allowed != null && $Object.hasOwnProperty.call(message, "posting_allowed"))
+                    object.posting_allowed = message.posting_allowed;
+                if (message.messaging_allowed != null && $Object.hasOwnProperty.call(message, "messaging_allowed"))
+                    object.messaging_allowed = message.messaging_allowed;
+                return object;
+            };
+
+            /**
+             * Converts this SetLimits to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.SetLimits
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            SetLimits.prototype.toJSON = function() {
+                return SetLimits.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for SetLimits
+             * @function getTypeUrl
+             * @memberof openvk.v1.SetLimits
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetLimits.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.SetLimits";
+            };
+
+            return SetLimits;
+        })();
+
+        v1.NospamQuery = (function() {
+
+            /**
+             * Properties of a NospamQuery.
+             * @typedef {Object} openvk.v1.NospamQuery.$Properties
+             * @property {string|null} [query] NospamQuery query
+             * @property {boolean|null} [delete_hits] NospamQuery delete_hits
+             * @property {boolean|null} [ban_authors] NospamQuery ban_authors
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a NospamQuery.
+             * @memberof openvk.v1
+             * @interface INospamQuery
+             * @augments openvk.v1.NospamQuery.$Properties
+             * @deprecated Use openvk.v1.NospamQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a NospamQuery.
+             * @typedef {openvk.v1.NospamQuery.$Properties} openvk.v1.NospamQuery.$Shape
+             */
+
+            /**
+             * Constructs a new NospamQuery.
+             * @memberof openvk.v1
+             * @classdesc Represents a NospamQuery.
+             * @constructor
+             * @param {openvk.v1.NospamQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const NospamQuery = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * NospamQuery query.
+             * @member {string} query
+             * @memberof openvk.v1.NospamQuery
+             * @instance
+             */
+            NospamQuery.prototype.query = "";
+
+            /**
+             * NospamQuery delete_hits.
+             * @member {boolean} delete_hits
+             * @memberof openvk.v1.NospamQuery
+             * @instance
+             */
+            NospamQuery.prototype.delete_hits = false;
+
+            /**
+             * NospamQuery ban_authors.
+             * @member {boolean} ban_authors
+             * @memberof openvk.v1.NospamQuery
+             * @instance
+             */
+            NospamQuery.prototype.ban_authors = false;
+
+            /**
+             * Creates a new NospamQuery instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {openvk.v1.NospamQuery.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.NospamQuery} NospamQuery instance
+             * @type {{
+             *   (properties: openvk.v1.NospamQuery.$Shape): openvk.v1.NospamQuery & openvk.v1.NospamQuery.$Shape;
+             *   (properties?: openvk.v1.NospamQuery.$Properties): openvk.v1.NospamQuery;
+             * }}
+             */
+            NospamQuery.create = function(properties) {
+                return new NospamQuery(properties);
+            };
+
+            /**
+             * Encodes the specified NospamQuery message. Does not implicitly {@link openvk.v1.NospamQuery.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {openvk.v1.NospamQuery.$Properties} message NospamQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.query != null && $Object.hasOwnProperty.call(message, "query") && message.query !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.query);
+                if (message.delete_hits != null && $Object.hasOwnProperty.call(message, "delete_hits") && message.delete_hits !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.delete_hits);
+                if (message.ban_authors != null && $Object.hasOwnProperty.call(message, "ban_authors") && message.ban_authors !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.ban_authors);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified NospamQuery message, length delimited. Does not implicitly {@link openvk.v1.NospamQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {openvk.v1.NospamQuery.$Properties} message NospamQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a NospamQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.NospamQuery & openvk.v1.NospamQuery.$Shape} NospamQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.NospamQuery();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.query = value;
+                            else
+                                delete message.query;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.delete_hits = value;
+                            else
+                                delete message.delete_hits;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.ban_authors = value;
+                            else
+                                delete message.ban_authors;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a NospamQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.NospamQuery & openvk.v1.NospamQuery.$Shape} NospamQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a NospamQuery message.
+             * @function verify
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            NospamQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.query != null && $Object.hasOwnProperty.call(message, "query"))
+                    if (!$util.isString(message.query))
+                        return "query: string expected";
+                if (message.delete_hits != null && $Object.hasOwnProperty.call(message, "delete_hits"))
+                    if (typeof message.delete_hits !== "boolean")
+                        return "delete_hits: boolean expected";
+                if (message.ban_authors != null && $Object.hasOwnProperty.call(message, "ban_authors"))
+                    if (typeof message.ban_authors !== "boolean")
+                        return "ban_authors: boolean expected";
+                return null;
+            };
+
+            /**
+             * Creates a NospamQuery message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.NospamQuery} NospamQuery
+             */
+            NospamQuery.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.NospamQuery)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.NospamQuery: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.NospamQuery();
+                if (object.query != null)
+                    if (typeof object.query !== "string" || object.query.length)
+                        message.query = $String(object.query);
+                if (object.delete_hits != null)
+                    if (object.delete_hits)
+                        message.delete_hits = $Boolean(object.delete_hits);
+                if (object.ban_authors != null)
+                    if (object.ban_authors)
+                        message.ban_authors = $Boolean(object.ban_authors);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a NospamQuery message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {openvk.v1.NospamQuery} message NospamQuery
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            NospamQuery.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    object.query = "";
+                    object.delete_hits = false;
+                    object.ban_authors = false;
+                }
+                if (message.query != null && $Object.hasOwnProperty.call(message, "query"))
+                    object.query = message.query;
+                if (message.delete_hits != null && $Object.hasOwnProperty.call(message, "delete_hits"))
+                    object.delete_hits = message.delete_hits;
+                if (message.ban_authors != null && $Object.hasOwnProperty.call(message, "ban_authors"))
+                    object.ban_authors = message.ban_authors;
+                return object;
+            };
+
+            /**
+             * Converts this NospamQuery to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.NospamQuery
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            NospamQuery.prototype.toJSON = function() {
+                return NospamQuery.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for NospamQuery
+             * @function getTypeUrl
+             * @memberof openvk.v1.NospamQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            NospamQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.NospamQuery";
+            };
+
+            return NospamQuery;
+        })();
+
+        v1.NospamHit = (function() {
+
+            /**
+             * Properties of a NospamHit.
+             * @typedef {Object} openvk.v1.NospamHit.$Properties
+             * @property {number|Long|null} [post_id] NospamHit post_id
+             * @property {number|Long|null} [target_id] NospamHit target_id
+             * @property {number|Long|null} [local_id] NospamHit local_id
+             * @property {number|Long|null} [author_id] NospamHit author_id
+             * @property {string|null} [content] NospamHit content
+             * @property {string|null} [permalink] NospamHit permalink
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a NospamHit.
+             * @memberof openvk.v1
+             * @interface INospamHit
+             * @augments openvk.v1.NospamHit.$Properties
+             * @deprecated Use openvk.v1.NospamHit.$Properties instead.
+             */
+
+            /**
+             * Shape of a NospamHit.
+             * @typedef {openvk.v1.NospamHit.$Properties} openvk.v1.NospamHit.$Shape
+             */
+
+            /**
+             * Constructs a new NospamHit.
+             * @memberof openvk.v1
+             * @classdesc Represents a NospamHit.
+             * @constructor
+             * @param {openvk.v1.NospamHit.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const NospamHit = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * NospamHit post_id.
+             * @member {number|Long} post_id
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.post_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * NospamHit target_id.
+             * @member {number|Long} target_id
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.target_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * NospamHit local_id.
+             * @member {number|Long} local_id
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.local_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * NospamHit author_id.
+             * @member {number|Long} author_id
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.author_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * NospamHit content.
+             * @member {string} content
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.content = "";
+
+            /**
+             * NospamHit permalink.
+             * @member {string} permalink
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             */
+            NospamHit.prototype.permalink = "";
+
+            /**
+             * Creates a new NospamHit instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {openvk.v1.NospamHit.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.NospamHit} NospamHit instance
+             * @type {{
+             *   (properties: openvk.v1.NospamHit.$Shape): openvk.v1.NospamHit & openvk.v1.NospamHit.$Shape;
+             *   (properties?: openvk.v1.NospamHit.$Properties): openvk.v1.NospamHit;
+             * }}
+             */
+            NospamHit.create = function(properties) {
+                return new NospamHit(properties);
+            };
+
+            /**
+             * Encodes the specified NospamHit message. Does not implicitly {@link openvk.v1.NospamHit.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {openvk.v1.NospamHit.$Properties} message NospamHit message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamHit.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.post_id != null && $Object.hasOwnProperty.call(message, "post_id") && (typeof message.post_id === "object" ? message.post_id.low || message.post_id.high : message.post_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.post_id);
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id") && (typeof message.target_id === "object" ? message.target_id.low || message.target_id.high : message.target_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.target_id);
+                if (message.local_id != null && $Object.hasOwnProperty.call(message, "local_id") && (typeof message.local_id === "object" ? message.local_id.low || message.local_id.high : message.local_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.local_id);
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id") && (typeof message.author_id === "object" ? message.author_id.low || message.author_id.high : message.author_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.author_id);
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content") && message.content !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.content);
+                if (message.permalink != null && $Object.hasOwnProperty.call(message, "permalink") && message.permalink !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.permalink);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified NospamHit message, length delimited. Does not implicitly {@link openvk.v1.NospamHit.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {openvk.v1.NospamHit.$Properties} message NospamHit message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamHit.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a NospamHit message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.NospamHit & openvk.v1.NospamHit.$Shape} NospamHit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamHit.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.NospamHit();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.post_id = value;
+                            else
+                                delete message.post_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_id = value;
+                            else
+                                delete message.target_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.local_id = value;
+                            else
+                                delete message.local_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.author_id = value;
+                            else
+                                delete message.author_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.content = value;
+                            else
+                                delete message.content;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.permalink = value;
+                            else
+                                delete message.permalink;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a NospamHit message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.NospamHit & openvk.v1.NospamHit.$Shape} NospamHit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamHit.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a NospamHit message.
+             * @function verify
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            NospamHit.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.post_id != null && $Object.hasOwnProperty.call(message, "post_id"))
+                    if (!$util.isInteger(message.post_id) && !(message.post_id && $util.isInteger(message.post_id.low) && $util.isInteger(message.post_id.high)))
+                        return "post_id: integer|Long expected";
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (!$util.isInteger(message.target_id) && !(message.target_id && $util.isInteger(message.target_id.low) && $util.isInteger(message.target_id.high)))
+                        return "target_id: integer|Long expected";
+                if (message.local_id != null && $Object.hasOwnProperty.call(message, "local_id"))
+                    if (!$util.isInteger(message.local_id) && !(message.local_id && $util.isInteger(message.local_id.low) && $util.isInteger(message.local_id.high)))
+                        return "local_id: integer|Long expected";
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (!$util.isInteger(message.author_id) && !(message.author_id && $util.isInteger(message.author_id.low) && $util.isInteger(message.author_id.high)))
+                        return "author_id: integer|Long expected";
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    if (!$util.isString(message.content))
+                        return "content: string expected";
+                if (message.permalink != null && $Object.hasOwnProperty.call(message, "permalink"))
+                    if (!$util.isString(message.permalink))
+                        return "permalink: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a NospamHit message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.NospamHit} NospamHit
+             */
+            NospamHit.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.NospamHit)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.NospamHit: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.NospamHit();
+                if (object.post_id != null)
+                    if (typeof object.post_id === "object" ? object.post_id.low || object.post_id.high : $Number(object.post_id) !== 0)
+                        if ($util.Long)
+                            message.post_id = $util.Long.fromValue(object.post_id, false);
+                        else if (typeof object.post_id === "string")
+                            message.post_id = $parseInt(object.post_id, 10);
+                        else if (typeof object.post_id === "number")
+                            message.post_id = object.post_id;
+                        else if (typeof object.post_id === "object")
+                            message.post_id = new $util.LongBits(object.post_id.low >>> 0, object.post_id.high >>> 0).toNumber();
+                if (object.target_id != null)
+                    if (typeof object.target_id === "object" ? object.target_id.low || object.target_id.high : $Number(object.target_id) !== 0)
+                        if ($util.Long)
+                            message.target_id = $util.Long.fromValue(object.target_id, false);
+                        else if (typeof object.target_id === "string")
+                            message.target_id = $parseInt(object.target_id, 10);
+                        else if (typeof object.target_id === "number")
+                            message.target_id = object.target_id;
+                        else if (typeof object.target_id === "object")
+                            message.target_id = new $util.LongBits(object.target_id.low >>> 0, object.target_id.high >>> 0).toNumber();
+                if (object.local_id != null)
+                    if (typeof object.local_id === "object" ? object.local_id.low || object.local_id.high : $Number(object.local_id) !== 0)
+                        if ($util.Long)
+                            message.local_id = $util.Long.fromValue(object.local_id, false);
+                        else if (typeof object.local_id === "string")
+                            message.local_id = $parseInt(object.local_id, 10);
+                        else if (typeof object.local_id === "number")
+                            message.local_id = object.local_id;
+                        else if (typeof object.local_id === "object")
+                            message.local_id = new $util.LongBits(object.local_id.low >>> 0, object.local_id.high >>> 0).toNumber();
+                if (object.author_id != null)
+                    if (typeof object.author_id === "object" ? object.author_id.low || object.author_id.high : $Number(object.author_id) !== 0)
+                        if ($util.Long)
+                            message.author_id = $util.Long.fromValue(object.author_id, false);
+                        else if (typeof object.author_id === "string")
+                            message.author_id = $parseInt(object.author_id, 10);
+                        else if (typeof object.author_id === "number")
+                            message.author_id = object.author_id;
+                        else if (typeof object.author_id === "object")
+                            message.author_id = new $util.LongBits(object.author_id.low >>> 0, object.author_id.high >>> 0).toNumber();
+                if (object.content != null)
+                    if (typeof object.content !== "string" || object.content.length)
+                        message.content = $String(object.content);
+                if (object.permalink != null)
+                    if (typeof object.permalink !== "string" || object.permalink.length)
+                        message.permalink = $String(object.permalink);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a NospamHit message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {openvk.v1.NospamHit} message NospamHit
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            NospamHit.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.post_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.post_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.target_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.target_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.local_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.local_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.author_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.author_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.content = "";
+                    object.permalink = "";
+                }
+                if (message.post_id != null && $Object.hasOwnProperty.call(message, "post_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.post_id = typeof message.post_id === "number" ? $BigInt(message.post_id) : $util.Long.fromBits(message.post_id.low >>> 0, message.post_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.post_id === "number")
+                        object.post_id = options.longs === $String ? $String(message.post_id) : message.post_id;
+                    else
+                        object.post_id = options.longs === $String ? $util.Long.prototype.toString.call(message.post_id) : options.longs === $Number ? new $util.LongBits(message.post_id.low >>> 0, message.post_id.high >>> 0).toNumber() : message.post_id;
+                if (message.target_id != null && $Object.hasOwnProperty.call(message, "target_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.target_id = typeof message.target_id === "number" ? $BigInt(message.target_id) : $util.Long.fromBits(message.target_id.low >>> 0, message.target_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.target_id === "number")
+                        object.target_id = options.longs === $String ? $String(message.target_id) : message.target_id;
+                    else
+                        object.target_id = options.longs === $String ? $util.Long.prototype.toString.call(message.target_id) : options.longs === $Number ? new $util.LongBits(message.target_id.low >>> 0, message.target_id.high >>> 0).toNumber() : message.target_id;
+                if (message.local_id != null && $Object.hasOwnProperty.call(message, "local_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.local_id = typeof message.local_id === "number" ? $BigInt(message.local_id) : $util.Long.fromBits(message.local_id.low >>> 0, message.local_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.local_id === "number")
+                        object.local_id = options.longs === $String ? $String(message.local_id) : message.local_id;
+                    else
+                        object.local_id = options.longs === $String ? $util.Long.prototype.toString.call(message.local_id) : options.longs === $Number ? new $util.LongBits(message.local_id.low >>> 0, message.local_id.high >>> 0).toNumber() : message.local_id;
+                if (message.author_id != null && $Object.hasOwnProperty.call(message, "author_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.author_id = typeof message.author_id === "number" ? $BigInt(message.author_id) : $util.Long.fromBits(message.author_id.low >>> 0, message.author_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.author_id === "number")
+                        object.author_id = options.longs === $String ? $String(message.author_id) : message.author_id;
+                    else
+                        object.author_id = options.longs === $String ? $util.Long.prototype.toString.call(message.author_id) : options.longs === $Number ? new $util.LongBits(message.author_id.low >>> 0, message.author_id.high >>> 0).toNumber() : message.author_id;
+                if (message.content != null && $Object.hasOwnProperty.call(message, "content"))
+                    object.content = message.content;
+                if (message.permalink != null && $Object.hasOwnProperty.call(message, "permalink"))
+                    object.permalink = message.permalink;
+                return object;
+            };
+
+            /**
+             * Converts this NospamHit to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.NospamHit
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            NospamHit.prototype.toJSON = function() {
+                return NospamHit.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for NospamHit
+             * @function getTypeUrl
+             * @memberof openvk.v1.NospamHit
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            NospamHit.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.NospamHit";
+            };
+
+            return NospamHit;
+        })();
+
+        v1.NospamResult = (function() {
+
+            /**
+             * Properties of a NospamResult.
+             * @typedef {Object} openvk.v1.NospamResult.$Properties
+             * @property {number|Long|null} [action_id] NospamResult action_id
+             * @property {Array.<openvk.v1.NospamHit.$Properties>|null} [hits] NospamResult hits
+             * @property {number|null} [deleted] NospamResult deleted
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a NospamResult.
+             * @memberof openvk.v1
+             * @interface INospamResult
+             * @augments openvk.v1.NospamResult.$Properties
+             * @deprecated Use openvk.v1.NospamResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a NospamResult.
+             * @typedef {openvk.v1.NospamResult.$Properties} openvk.v1.NospamResult.$Shape
+             */
+
+            /**
+             * Constructs a new NospamResult.
+             * @memberof openvk.v1
+             * @classdesc Represents a NospamResult.
+             * @constructor
+             * @param {openvk.v1.NospamResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const NospamResult = function (properties) {
+                this.hits = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * NospamResult action_id.
+             * @member {number|Long} action_id
+             * @memberof openvk.v1.NospamResult
+             * @instance
+             */
+            NospamResult.prototype.action_id = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * NospamResult hits.
+             * @member {Array.<openvk.v1.NospamHit.$Properties>} hits
+             * @memberof openvk.v1.NospamResult
+             * @instance
+             */
+            NospamResult.prototype.hits = $util.emptyArray;
+
+            /**
+             * NospamResult deleted.
+             * @member {number} deleted
+             * @memberof openvk.v1.NospamResult
+             * @instance
+             */
+            NospamResult.prototype.deleted = 0;
+
+            /**
+             * Creates a new NospamResult instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {openvk.v1.NospamResult.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.NospamResult} NospamResult instance
+             * @type {{
+             *   (properties: openvk.v1.NospamResult.$Shape): openvk.v1.NospamResult & openvk.v1.NospamResult.$Shape;
+             *   (properties?: openvk.v1.NospamResult.$Properties): openvk.v1.NospamResult;
+             * }}
+             */
+            NospamResult.create = function(properties) {
+                return new NospamResult(properties);
+            };
+
+            /**
+             * Encodes the specified NospamResult message. Does not implicitly {@link openvk.v1.NospamResult.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {openvk.v1.NospamResult.$Properties} message NospamResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action_id != null && $Object.hasOwnProperty.call(message, "action_id") && (typeof message.action_id === "object" ? message.action_id.low || message.action_id.high : message.action_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.action_id);
+                if (message.hits != null && message.hits.length)
+                    for (let i = 0; i < message.hits.length; ++i)
+                        $root.openvk.v1.NospamHit.encode(message.hits[i], writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.deleted != null && $Object.hasOwnProperty.call(message, "deleted") && message.deleted !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).int32(message.deleted);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified NospamResult message, length delimited. Does not implicitly {@link openvk.v1.NospamResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {openvk.v1.NospamResult.$Properties} message NospamResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NospamResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a NospamResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.NospamResult & openvk.v1.NospamResult.$Shape} NospamResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.NospamResult();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.action_id = value;
+                            else
+                                delete message.action_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.hits && message.hits.length))
+                                message.hits = [];
+                            message.hits.push($root.openvk.v1.NospamHit.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.int32())
+                                message.deleted = value;
+                            else
+                                delete message.deleted;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a NospamResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.NospamResult & openvk.v1.NospamResult.$Shape} NospamResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NospamResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a NospamResult message.
+             * @function verify
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            NospamResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action_id != null && $Object.hasOwnProperty.call(message, "action_id"))
+                    if (!$util.isInteger(message.action_id) && !(message.action_id && $util.isInteger(message.action_id.low) && $util.isInteger(message.action_id.high)))
+                        return "action_id: integer|Long expected";
+                if (message.hits != null && $Object.hasOwnProperty.call(message, "hits")) {
+                    if (!$Array.isArray(message.hits))
+                        return "hits: array expected";
+                    for (let i = 0; i < message.hits.length; ++i) {
+                        let error = $root.openvk.v1.NospamHit.verify(message.hits[i], _depth + 1);
+                        if (error)
+                            return "hits." + error;
+                    }
+                }
+                if (message.deleted != null && $Object.hasOwnProperty.call(message, "deleted"))
+                    if (!$util.isInteger(message.deleted))
+                        return "deleted: integer expected";
+                return null;
+            };
+
+            /**
+             * Creates a NospamResult message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.NospamResult} NospamResult
+             */
+            NospamResult.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.NospamResult)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.NospamResult: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.NospamResult();
+                if (object.action_id != null)
+                    if (typeof object.action_id === "object" ? object.action_id.low || object.action_id.high : $Number(object.action_id) !== 0)
+                        if ($util.Long)
+                            message.action_id = $util.Long.fromValue(object.action_id, false);
+                        else if (typeof object.action_id === "string")
+                            message.action_id = $parseInt(object.action_id, 10);
+                        else if (typeof object.action_id === "number")
+                            message.action_id = object.action_id;
+                        else if (typeof object.action_id === "object")
+                            message.action_id = new $util.LongBits(object.action_id.low >>> 0, object.action_id.high >>> 0).toNumber();
+                if (object.hits) {
+                    if (!$Array.isArray(object.hits))
+                        throw $TypeError(".openvk.v1.NospamResult.hits: array expected");
+                    message.hits = $Array(object.hits.length);
+                    for (let i = 0; i < object.hits.length; ++i) {
+                        if (!$util.isObject(object.hits[i]))
+                            throw $TypeError(".openvk.v1.NospamResult.hits: object expected");
+                        message.hits[i] = $root.openvk.v1.NospamHit.fromObject(object.hits[i], _depth + 1);
+                    }
+                }
+                if (object.deleted != null)
+                    if ($Number(object.deleted) !== 0)
+                        message.deleted = object.deleted | 0;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a NospamResult message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {openvk.v1.NospamResult} message NospamResult
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            NospamResult.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.hits = [];
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.action_id = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.action_id = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    object.deleted = 0;
+                }
+                if (message.action_id != null && $Object.hasOwnProperty.call(message, "action_id"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.action_id = typeof message.action_id === "number" ? $BigInt(message.action_id) : $util.Long.fromBits(message.action_id.low >>> 0, message.action_id.high >>> 0, false).toBigInt();
+                    else if (typeof message.action_id === "number")
+                        object.action_id = options.longs === $String ? $String(message.action_id) : message.action_id;
+                    else
+                        object.action_id = options.longs === $String ? $util.Long.prototype.toString.call(message.action_id) : options.longs === $Number ? new $util.LongBits(message.action_id.low >>> 0, message.action_id.high >>> 0).toNumber() : message.action_id;
+                if (message.hits && message.hits.length) {
+                    object.hits = $Array(message.hits.length);
+                    for (let j = 0; j < message.hits.length; ++j)
+                        object.hits[j] = $root.openvk.v1.NospamHit.toObject(message.hits[j], options, _depth + 1);
+                }
+                if (message.deleted != null && $Object.hasOwnProperty.call(message, "deleted"))
+                    object.deleted = message.deleted;
+                return object;
+            };
+
+            /**
+             * Converts this NospamResult to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.NospamResult
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            NospamResult.prototype.toJSON = function() {
+                return NospamResult.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for NospamResult
+             * @function getTypeUrl
+             * @memberof openvk.v1.NospamResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            NospamResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.NospamResult";
+            };
+
+            return NospamResult;
+        })();
+
+        v1.AdminOverview = (function() {
+
+            /**
+             * Properties of an AdminOverview.
+             * @typedef {Object} openvk.v1.AdminOverview.$Properties
+             * @property {number|Long|null} [users] AdminOverview users
+             * @property {number|Long|null} [groups] AdminOverview groups
+             * @property {number|Long|null} [wall_posts] AdminOverview wall_posts
+             * @property {number|Long|null} [tickets_open] AdminOverview tickets_open
+             * @property {number|Long|null} [reports_open] AdminOverview reports_open
+             * @property {number|Long|null} [banned_users] AdminOverview banned_users
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AdminOverview.
+             * @memberof openvk.v1
+             * @interface IAdminOverview
+             * @augments openvk.v1.AdminOverview.$Properties
+             * @deprecated Use openvk.v1.AdminOverview.$Properties instead.
+             */
+
+            /**
+             * Shape of an AdminOverview.
+             * @typedef {openvk.v1.AdminOverview.$Properties} openvk.v1.AdminOverview.$Shape
+             */
+
+            /**
+             * Constructs a new AdminOverview.
+             * @memberof openvk.v1
+             * @classdesc Represents an AdminOverview.
+             * @constructor
+             * @param {openvk.v1.AdminOverview.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const AdminOverview = function (properties) {
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AdminOverview users.
+             * @member {number|Long} users
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.users = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * AdminOverview groups.
+             * @member {number|Long} groups
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.groups = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * AdminOverview wall_posts.
+             * @member {number|Long} wall_posts
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.wall_posts = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * AdminOverview tickets_open.
+             * @member {number|Long} tickets_open
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.tickets_open = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * AdminOverview reports_open.
+             * @member {number|Long} reports_open
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.reports_open = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * AdminOverview banned_users.
+             * @member {number|Long} banned_users
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             */
+            AdminOverview.prototype.banned_users = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new AdminOverview instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {openvk.v1.AdminOverview.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.AdminOverview} AdminOverview instance
+             * @type {{
+             *   (properties: openvk.v1.AdminOverview.$Shape): openvk.v1.AdminOverview & openvk.v1.AdminOverview.$Shape;
+             *   (properties?: openvk.v1.AdminOverview.$Properties): openvk.v1.AdminOverview;
+             * }}
+             */
+            AdminOverview.create = function(properties) {
+                return new AdminOverview(properties);
+            };
+
+            /**
+             * Encodes the specified AdminOverview message. Does not implicitly {@link openvk.v1.AdminOverview.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {openvk.v1.AdminOverview.$Properties} message AdminOverview message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminOverview.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.users != null && $Object.hasOwnProperty.call(message, "users") && (typeof message.users === "object" ? message.users.low || message.users.high : message.users !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.users);
+                if (message.groups != null && $Object.hasOwnProperty.call(message, "groups") && (typeof message.groups === "object" ? message.groups.low || message.groups.high : message.groups !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.groups);
+                if (message.wall_posts != null && $Object.hasOwnProperty.call(message, "wall_posts") && (typeof message.wall_posts === "object" ? message.wall_posts.low || message.wall_posts.high : message.wall_posts !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.wall_posts);
+                if (message.tickets_open != null && $Object.hasOwnProperty.call(message, "tickets_open") && (typeof message.tickets_open === "object" ? message.tickets_open.low || message.tickets_open.high : message.tickets_open !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.tickets_open);
+                if (message.reports_open != null && $Object.hasOwnProperty.call(message, "reports_open") && (typeof message.reports_open === "object" ? message.reports_open.low || message.reports_open.high : message.reports_open !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.reports_open);
+                if (message.banned_users != null && $Object.hasOwnProperty.call(message, "banned_users") && (typeof message.banned_users === "object" ? message.banned_users.low || message.banned_users.high : message.banned_users !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.banned_users);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AdminOverview message, length delimited. Does not implicitly {@link openvk.v1.AdminOverview.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {openvk.v1.AdminOverview.$Properties} message AdminOverview message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminOverview.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AdminOverview message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.AdminOverview & openvk.v1.AdminOverview.$Shape} AdminOverview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminOverview.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.AdminOverview();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.users = value;
+                            else
+                                delete message.users;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.groups = value;
+                            else
+                                delete message.groups;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.wall_posts = value;
+                            else
+                                delete message.wall_posts;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.tickets_open = value;
+                            else
+                                delete message.tickets_open;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.reports_open = value;
+                            else
+                                delete message.reports_open;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.banned_users = value;
+                            else
+                                delete message.banned_users;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AdminOverview message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.AdminOverview & openvk.v1.AdminOverview.$Shape} AdminOverview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminOverview.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an AdminOverview message.
+             * @function verify
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AdminOverview.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.users != null && $Object.hasOwnProperty.call(message, "users"))
+                    if (!$util.isInteger(message.users) && !(message.users && $util.isInteger(message.users.low) && $util.isInteger(message.users.high)))
+                        return "users: integer|Long expected";
+                if (message.groups != null && $Object.hasOwnProperty.call(message, "groups"))
+                    if (!$util.isInteger(message.groups) && !(message.groups && $util.isInteger(message.groups.low) && $util.isInteger(message.groups.high)))
+                        return "groups: integer|Long expected";
+                if (message.wall_posts != null && $Object.hasOwnProperty.call(message, "wall_posts"))
+                    if (!$util.isInteger(message.wall_posts) && !(message.wall_posts && $util.isInteger(message.wall_posts.low) && $util.isInteger(message.wall_posts.high)))
+                        return "wall_posts: integer|Long expected";
+                if (message.tickets_open != null && $Object.hasOwnProperty.call(message, "tickets_open"))
+                    if (!$util.isInteger(message.tickets_open) && !(message.tickets_open && $util.isInteger(message.tickets_open.low) && $util.isInteger(message.tickets_open.high)))
+                        return "tickets_open: integer|Long expected";
+                if (message.reports_open != null && $Object.hasOwnProperty.call(message, "reports_open"))
+                    if (!$util.isInteger(message.reports_open) && !(message.reports_open && $util.isInteger(message.reports_open.low) && $util.isInteger(message.reports_open.high)))
+                        return "reports_open: integer|Long expected";
+                if (message.banned_users != null && $Object.hasOwnProperty.call(message, "banned_users"))
+                    if (!$util.isInteger(message.banned_users) && !(message.banned_users && $util.isInteger(message.banned_users.low) && $util.isInteger(message.banned_users.high)))
+                        return "banned_users: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Creates an AdminOverview message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.AdminOverview} AdminOverview
+             */
+            AdminOverview.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.AdminOverview)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.AdminOverview: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.AdminOverview();
+                if (object.users != null)
+                    if (typeof object.users === "object" ? object.users.low || object.users.high : $Number(object.users) !== 0)
+                        if ($util.Long)
+                            message.users = $util.Long.fromValue(object.users, false);
+                        else if (typeof object.users === "string")
+                            message.users = $parseInt(object.users, 10);
+                        else if (typeof object.users === "number")
+                            message.users = object.users;
+                        else if (typeof object.users === "object")
+                            message.users = new $util.LongBits(object.users.low >>> 0, object.users.high >>> 0).toNumber();
+                if (object.groups != null)
+                    if (typeof object.groups === "object" ? object.groups.low || object.groups.high : $Number(object.groups) !== 0)
+                        if ($util.Long)
+                            message.groups = $util.Long.fromValue(object.groups, false);
+                        else if (typeof object.groups === "string")
+                            message.groups = $parseInt(object.groups, 10);
+                        else if (typeof object.groups === "number")
+                            message.groups = object.groups;
+                        else if (typeof object.groups === "object")
+                            message.groups = new $util.LongBits(object.groups.low >>> 0, object.groups.high >>> 0).toNumber();
+                if (object.wall_posts != null)
+                    if (typeof object.wall_posts === "object" ? object.wall_posts.low || object.wall_posts.high : $Number(object.wall_posts) !== 0)
+                        if ($util.Long)
+                            message.wall_posts = $util.Long.fromValue(object.wall_posts, false);
+                        else if (typeof object.wall_posts === "string")
+                            message.wall_posts = $parseInt(object.wall_posts, 10);
+                        else if (typeof object.wall_posts === "number")
+                            message.wall_posts = object.wall_posts;
+                        else if (typeof object.wall_posts === "object")
+                            message.wall_posts = new $util.LongBits(object.wall_posts.low >>> 0, object.wall_posts.high >>> 0).toNumber();
+                if (object.tickets_open != null)
+                    if (typeof object.tickets_open === "object" ? object.tickets_open.low || object.tickets_open.high : $Number(object.tickets_open) !== 0)
+                        if ($util.Long)
+                            message.tickets_open = $util.Long.fromValue(object.tickets_open, false);
+                        else if (typeof object.tickets_open === "string")
+                            message.tickets_open = $parseInt(object.tickets_open, 10);
+                        else if (typeof object.tickets_open === "number")
+                            message.tickets_open = object.tickets_open;
+                        else if (typeof object.tickets_open === "object")
+                            message.tickets_open = new $util.LongBits(object.tickets_open.low >>> 0, object.tickets_open.high >>> 0).toNumber();
+                if (object.reports_open != null)
+                    if (typeof object.reports_open === "object" ? object.reports_open.low || object.reports_open.high : $Number(object.reports_open) !== 0)
+                        if ($util.Long)
+                            message.reports_open = $util.Long.fromValue(object.reports_open, false);
+                        else if (typeof object.reports_open === "string")
+                            message.reports_open = $parseInt(object.reports_open, 10);
+                        else if (typeof object.reports_open === "number")
+                            message.reports_open = object.reports_open;
+                        else if (typeof object.reports_open === "object")
+                            message.reports_open = new $util.LongBits(object.reports_open.low >>> 0, object.reports_open.high >>> 0).toNumber();
+                if (object.banned_users != null)
+                    if (typeof object.banned_users === "object" ? object.banned_users.low || object.banned_users.high : $Number(object.banned_users) !== 0)
+                        if ($util.Long)
+                            message.banned_users = $util.Long.fromValue(object.banned_users, false);
+                        else if (typeof object.banned_users === "string")
+                            message.banned_users = $parseInt(object.banned_users, 10);
+                        else if (typeof object.banned_users === "number")
+                            message.banned_users = object.banned_users;
+                        else if (typeof object.banned_users === "object")
+                            message.banned_users = new $util.LongBits(object.banned_users.low >>> 0, object.banned_users.high >>> 0).toNumber();
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an AdminOverview message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {openvk.v1.AdminOverview} message AdminOverview
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            AdminOverview.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.defaults) {
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.users = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.users = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.groups = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.groups = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.wall_posts = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.wall_posts = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.tickets_open = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.tickets_open = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.reports_open = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.reports_open = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                    if ($util.Long) {
+                        let long = new $util.Long(0, 0, false);
+                        object.banned_users = options.longs === $String ? long.toString() : options.longs === $Number ? long.toNumber() : typeof $BigInt !== "undefined" && options.longs === $BigInt ? long.toBigInt() : long;
+                    } else
+                        object.banned_users = options.longs === $String ? "0" : typeof $BigInt !== "undefined" && options.longs === $BigInt ? $BigInt("0") : 0;
+                }
+                if (message.users != null && $Object.hasOwnProperty.call(message, "users"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.users = typeof message.users === "number" ? $BigInt(message.users) : $util.Long.fromBits(message.users.low >>> 0, message.users.high >>> 0, false).toBigInt();
+                    else if (typeof message.users === "number")
+                        object.users = options.longs === $String ? $String(message.users) : message.users;
+                    else
+                        object.users = options.longs === $String ? $util.Long.prototype.toString.call(message.users) : options.longs === $Number ? new $util.LongBits(message.users.low >>> 0, message.users.high >>> 0).toNumber() : message.users;
+                if (message.groups != null && $Object.hasOwnProperty.call(message, "groups"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.groups = typeof message.groups === "number" ? $BigInt(message.groups) : $util.Long.fromBits(message.groups.low >>> 0, message.groups.high >>> 0, false).toBigInt();
+                    else if (typeof message.groups === "number")
+                        object.groups = options.longs === $String ? $String(message.groups) : message.groups;
+                    else
+                        object.groups = options.longs === $String ? $util.Long.prototype.toString.call(message.groups) : options.longs === $Number ? new $util.LongBits(message.groups.low >>> 0, message.groups.high >>> 0).toNumber() : message.groups;
+                if (message.wall_posts != null && $Object.hasOwnProperty.call(message, "wall_posts"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.wall_posts = typeof message.wall_posts === "number" ? $BigInt(message.wall_posts) : $util.Long.fromBits(message.wall_posts.low >>> 0, message.wall_posts.high >>> 0, false).toBigInt();
+                    else if (typeof message.wall_posts === "number")
+                        object.wall_posts = options.longs === $String ? $String(message.wall_posts) : message.wall_posts;
+                    else
+                        object.wall_posts = options.longs === $String ? $util.Long.prototype.toString.call(message.wall_posts) : options.longs === $Number ? new $util.LongBits(message.wall_posts.low >>> 0, message.wall_posts.high >>> 0).toNumber() : message.wall_posts;
+                if (message.tickets_open != null && $Object.hasOwnProperty.call(message, "tickets_open"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.tickets_open = typeof message.tickets_open === "number" ? $BigInt(message.tickets_open) : $util.Long.fromBits(message.tickets_open.low >>> 0, message.tickets_open.high >>> 0, false).toBigInt();
+                    else if (typeof message.tickets_open === "number")
+                        object.tickets_open = options.longs === $String ? $String(message.tickets_open) : message.tickets_open;
+                    else
+                        object.tickets_open = options.longs === $String ? $util.Long.prototype.toString.call(message.tickets_open) : options.longs === $Number ? new $util.LongBits(message.tickets_open.low >>> 0, message.tickets_open.high >>> 0).toNumber() : message.tickets_open;
+                if (message.reports_open != null && $Object.hasOwnProperty.call(message, "reports_open"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.reports_open = typeof message.reports_open === "number" ? $BigInt(message.reports_open) : $util.Long.fromBits(message.reports_open.low >>> 0, message.reports_open.high >>> 0, false).toBigInt();
+                    else if (typeof message.reports_open === "number")
+                        object.reports_open = options.longs === $String ? $String(message.reports_open) : message.reports_open;
+                    else
+                        object.reports_open = options.longs === $String ? $util.Long.prototype.toString.call(message.reports_open) : options.longs === $Number ? new $util.LongBits(message.reports_open.low >>> 0, message.reports_open.high >>> 0).toNumber() : message.reports_open;
+                if (message.banned_users != null && $Object.hasOwnProperty.call(message, "banned_users"))
+                    if (typeof $BigInt !== "undefined" && options.longs === $BigInt)
+                        object.banned_users = typeof message.banned_users === "number" ? $BigInt(message.banned_users) : $util.Long.fromBits(message.banned_users.low >>> 0, message.banned_users.high >>> 0, false).toBigInt();
+                    else if (typeof message.banned_users === "number")
+                        object.banned_users = options.longs === $String ? $String(message.banned_users) : message.banned_users;
+                    else
+                        object.banned_users = options.longs === $String ? $util.Long.prototype.toString.call(message.banned_users) : options.longs === $Number ? new $util.LongBits(message.banned_users.low >>> 0, message.banned_users.high >>> 0).toNumber() : message.banned_users;
+                return object;
+            };
+
+            /**
+             * Converts this AdminOverview to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.AdminOverview
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            AdminOverview.prototype.toJSON = function() {
+                return AdminOverview.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for AdminOverview
+             * @function getTypeUrl
+             * @memberof openvk.v1.AdminOverview
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AdminOverview.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.AdminOverview";
+            };
+
+            return AdminOverview;
+        })();
+
+        v1.AdminUserList = (function() {
+
+            /**
+             * Properties of an AdminUserList.
+             * @typedef {Object} openvk.v1.AdminUserList.$Properties
+             * @property {Array.<openvk.v1.User.$Properties>|null} [users] AdminUserList users
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AdminUserList.
+             * @memberof openvk.v1
+             * @interface IAdminUserList
+             * @augments openvk.v1.AdminUserList.$Properties
+             * @deprecated Use openvk.v1.AdminUserList.$Properties instead.
+             */
+
+            /**
+             * Shape of an AdminUserList.
+             * @typedef {openvk.v1.AdminUserList.$Properties} openvk.v1.AdminUserList.$Shape
+             */
+
+            /**
+             * Constructs a new AdminUserList.
+             * @memberof openvk.v1
+             * @classdesc Represents an AdminUserList.
+             * @constructor
+             * @param {openvk.v1.AdminUserList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const AdminUserList = function (properties) {
+                this.users = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AdminUserList users.
+             * @member {Array.<openvk.v1.User.$Properties>} users
+             * @memberof openvk.v1.AdminUserList
+             * @instance
+             */
+            AdminUserList.prototype.users = $util.emptyArray;
+
+            /**
+             * Creates a new AdminUserList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {openvk.v1.AdminUserList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.AdminUserList} AdminUserList instance
+             * @type {{
+             *   (properties: openvk.v1.AdminUserList.$Shape): openvk.v1.AdminUserList & openvk.v1.AdminUserList.$Shape;
+             *   (properties?: openvk.v1.AdminUserList.$Properties): openvk.v1.AdminUserList;
+             * }}
+             */
+            AdminUserList.create = function(properties) {
+                return new AdminUserList(properties);
+            };
+
+            /**
+             * Encodes the specified AdminUserList message. Does not implicitly {@link openvk.v1.AdminUserList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {openvk.v1.AdminUserList.$Properties} message AdminUserList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminUserList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.users != null && message.users.length)
+                    for (let i = 0; i < message.users.length; ++i)
+                        $root.openvk.v1.User.encode(message.users[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AdminUserList message, length delimited. Does not implicitly {@link openvk.v1.AdminUserList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {openvk.v1.AdminUserList.$Properties} message AdminUserList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminUserList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AdminUserList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.AdminUserList & openvk.v1.AdminUserList.$Shape} AdminUserList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminUserList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.AdminUserList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.users && message.users.length))
+                                message.users = [];
+                            message.users.push($root.openvk.v1.User.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AdminUserList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.AdminUserList & openvk.v1.AdminUserList.$Shape} AdminUserList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminUserList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an AdminUserList message.
+             * @function verify
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AdminUserList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.users != null && $Object.hasOwnProperty.call(message, "users")) {
+                    if (!$Array.isArray(message.users))
+                        return "users: array expected";
+                    for (let i = 0; i < message.users.length; ++i) {
+                        let error = $root.openvk.v1.User.verify(message.users[i], _depth + 1);
+                        if (error)
+                            return "users." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates an AdminUserList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.AdminUserList} AdminUserList
+             */
+            AdminUserList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.AdminUserList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.AdminUserList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.AdminUserList();
+                if (object.users) {
+                    if (!$Array.isArray(object.users))
+                        throw $TypeError(".openvk.v1.AdminUserList.users: array expected");
+                    message.users = $Array(object.users.length);
+                    for (let i = 0; i < object.users.length; ++i) {
+                        if (!$util.isObject(object.users[i]))
+                            throw $TypeError(".openvk.v1.AdminUserList.users: object expected");
+                        message.users[i] = $root.openvk.v1.User.fromObject(object.users[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an AdminUserList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {openvk.v1.AdminUserList} message AdminUserList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            AdminUserList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.users = [];
+                if (message.users && message.users.length) {
+                    object.users = $Array(message.users.length);
+                    for (let j = 0; j < message.users.length; ++j)
+                        object.users[j] = $root.openvk.v1.User.toObject(message.users[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this AdminUserList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.AdminUserList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            AdminUserList.prototype.toJSON = function() {
+                return AdminUserList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for AdminUserList
+             * @function getTypeUrl
+             * @memberof openvk.v1.AdminUserList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AdminUserList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.AdminUserList";
+            };
+
+            return AdminUserList;
+        })();
+
+        v1.AdminClubList = (function() {
+
+            /**
+             * Properties of an AdminClubList.
+             * @typedef {Object} openvk.v1.AdminClubList.$Properties
+             * @property {Array.<openvk.v1.Group.$Properties>|null} [groups] AdminClubList groups
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AdminClubList.
+             * @memberof openvk.v1
+             * @interface IAdminClubList
+             * @augments openvk.v1.AdminClubList.$Properties
+             * @deprecated Use openvk.v1.AdminClubList.$Properties instead.
+             */
+
+            /**
+             * Shape of an AdminClubList.
+             * @typedef {openvk.v1.AdminClubList.$Properties} openvk.v1.AdminClubList.$Shape
+             */
+
+            /**
+             * Constructs a new AdminClubList.
+             * @memberof openvk.v1
+             * @classdesc Represents an AdminClubList.
+             * @constructor
+             * @param {openvk.v1.AdminClubList.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            const AdminClubList = function (properties) {
+                this.groups = [];
+                if (properties)
+                    for (let keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AdminClubList groups.
+             * @member {Array.<openvk.v1.Group.$Properties>} groups
+             * @memberof openvk.v1.AdminClubList
+             * @instance
+             */
+            AdminClubList.prototype.groups = $util.emptyArray;
+
+            /**
+             * Creates a new AdminClubList instance using the specified properties.
+             * @function create
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {openvk.v1.AdminClubList.$Properties=} [properties] Properties to set
+             * @returns {openvk.v1.AdminClubList} AdminClubList instance
+             * @type {{
+             *   (properties: openvk.v1.AdminClubList.$Shape): openvk.v1.AdminClubList & openvk.v1.AdminClubList.$Shape;
+             *   (properties?: openvk.v1.AdminClubList.$Properties): openvk.v1.AdminClubList;
+             * }}
+             */
+            AdminClubList.create = function(properties) {
+                return new AdminClubList(properties);
+            };
+
+            /**
+             * Encodes the specified AdminClubList message. Does not implicitly {@link openvk.v1.AdminClubList.verify|verify} messages.
+             * @function encode
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {openvk.v1.AdminClubList.$Properties} message AdminClubList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminClubList.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.groups != null && message.groups.length)
+                    for (let i = 0; i < message.groups.length; ++i)
+                        $root.openvk.v1.Group.encode(message.groups[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (let i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AdminClubList message, length delimited. Does not implicitly {@link openvk.v1.AdminClubList.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {openvk.v1.AdminClubList.$Properties} message AdminClubList message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AdminClubList.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AdminClubList message from the specified reader or buffer.
+             * @function decode
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {openvk.v1.AdminClubList & openvk.v1.AdminClubList.$Shape} AdminClubList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminClubList.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.openvk.v1.AdminClubList();
+                while (reader.pos < end) {
+                    let start = reader.pos;
+                    let tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    let wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.groups && message.groups.length))
+                                message.groups = [];
+                            message.groups.push($root.openvk.v1.Group.decode(reader, reader.uint32(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AdminClubList message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {openvk.v1.AdminClubList & openvk.v1.AdminClubList.$Shape} AdminClubList
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AdminClubList.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an AdminClubList message.
+             * @function verify
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AdminClubList.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.groups != null && $Object.hasOwnProperty.call(message, "groups")) {
+                    if (!$Array.isArray(message.groups))
+                        return "groups: array expected";
+                    for (let i = 0; i < message.groups.length; ++i) {
+                        let error = $root.openvk.v1.Group.verify(message.groups[i], _depth + 1);
+                        if (error)
+                            return "groups." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Creates an AdminClubList message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {openvk.v1.AdminClubList} AdminClubList
+             */
+            AdminClubList.fromObject = function (object, _depth) {
+                if (object instanceof $root.openvk.v1.AdminClubList)
+                    return object;
+                if (!$util.isObject(object))
+                    throw $TypeError(".openvk.v1.AdminClubList: object expected");
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let message = new $root.openvk.v1.AdminClubList();
+                if (object.groups) {
+                    if (!$Array.isArray(object.groups))
+                        throw $TypeError(".openvk.v1.AdminClubList.groups: array expected");
+                    message.groups = $Array(object.groups.length);
+                    for (let i = 0; i < object.groups.length; ++i) {
+                        if (!$util.isObject(object.groups[i]))
+                            throw $TypeError(".openvk.v1.AdminClubList.groups: object expected");
+                        message.groups[i] = $root.openvk.v1.Group.fromObject(object.groups[i], _depth + 1);
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an AdminClubList message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {openvk.v1.AdminClubList} message AdminClubList
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            AdminClubList.toObject = function (message, options, _depth) {
+                if (!options)
+                    options = {};
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                let object = {};
+                if (options.arrays || options.defaults)
+                    object.groups = [];
+                if (message.groups && message.groups.length) {
+                    object.groups = $Array(message.groups.length);
+                    for (let j = 0; j < message.groups.length; ++j)
+                        object.groups[j] = $root.openvk.v1.Group.toObject(message.groups[j], options, _depth + 1);
+                }
+                return object;
+            };
+
+            /**
+             * Converts this AdminClubList to JSON.
+             * @function toJSON
+             * @memberof openvk.v1.AdminClubList
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            AdminClubList.prototype.toJSON = function() {
+                return AdminClubList.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the type url for AdminClubList
+             * @function getTypeUrl
+             * @memberof openvk.v1.AdminClubList
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AdminClubList.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/openvk.v1.AdminClubList";
+            };
+
+            return AdminClubList;
         })();
 
         return v1;

@@ -10,7 +10,7 @@ const FAQ_RU: FaqItem[] = [
   {
     title: 'Чем это отличается от современного ВКонтакте?',
     blocks: [
-      p('Стена — гостевая книга на странице, а не микроблог. Запись открывается по адресу /wall{владелец}_{номер}. Нет тематических оформлений, кабинета администратора и кабинета поддержки: 2007 год — это сам сайт.'),
+      p('Стена — гостевая книга на странице, а не микроблог. Запись открывается по адресу /wall{владелец}_{номер}. Нет тематических оформлений: обычная и ночная темы. Админка, поддержка, жалобы, монеты и VK API — отдельные адреса OpenVK, не «вторая тема сайта».'),
     ],
   },
   {
@@ -56,7 +56,13 @@ const FAQ_RU: FaqItem[] = [
   {
     title: 'Куда писать, если что-то сломалось?',
     blocks: [
-      p('Кабинета поддержки на этой инстанции нет. Сначала посмотрите эту страницу, правила и блог. Если ошибка на демо, опишите её тем, кто поднимает инстанцию.'),
+      p([
+        'Сначала посмотрите эту страницу, ',
+        { href: '/terms', text: 'правила' },
+        ' и ',
+        { href: '/blog', text: 'блог' },
+        '. Тикеты поддержки, жалобы и предупреждения живут своими адресами: /support, /report, /admin.',
+      ]),
     ],
   },
 ];
@@ -71,7 +77,7 @@ const FAQ_EN: FaqItem[] = [
   {
     title: 'How is this different from modern VKontakte?',
     blocks: [
-      p('The wall is a guestbook on the profile, not a microblog. A post lives at /wall{owner}_{local}. There are no themepacks, no admin desk, and no support tickets. 2007 is the site.'),
+      p('The wall is a guestbook on the profile, not a microblog. A post lives at /wall{owner}_{local}. There are no themepacks: default and night only. Admin, support, reports, coins, and the VK API are OpenVK URL families, not a second site theme.'),
     ],
   },
   {
@@ -117,7 +123,13 @@ const FAQ_EN: FaqItem[] = [
   {
     title: 'Where do I write if something is broken?',
     blocks: [
-      p('There is no support desk on this instance. Read this page, the rules, and the blog first. For a demo bug, tell whoever runs the instance.'),
+      p([
+        'Read this page, the ',
+        { href: '/terms', text: 'rules' },
+        ', and the ',
+        { href: '/blog', text: 'blog' },
+        ' first. Support tickets, reports, and warnings have their own addresses: /support, /report, /admin.',
+      ]),
     ],
   },
 ];

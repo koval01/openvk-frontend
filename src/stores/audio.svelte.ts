@@ -48,6 +48,13 @@ class AudioPlayerStore {
     this.index = (this.index - 1 + this.queue.length) % this.queue.length;
     this.playing = true;
   };
+
+  stop = () => {
+    this.playing = false;
+    this.index = -1;
+    this.currentTime = 0;
+    this.duration = 0;
+  };
 }
 
 export const audioPlayer = new AudioPlayerStore();

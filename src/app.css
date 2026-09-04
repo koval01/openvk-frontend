@@ -41,9 +41,35 @@
   transform: translateX(-50%);
 }
 
+#bigAvatar {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.avatar_controls .avatar_variants label._add_image {
+  opacity: 0.6;
+  display: flex;
+  user-select: none;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
 .navigation .link.is-active {
   background: var(--ovk-hover, #dae1e8);
   border-top: 1px solid var(--ovk-border, #cad1d9);
+}
+
+#page_status_text.page_status_edit_button {
+  display: block;
+  width: 380px;
+  border: 0;
+  background: transparent;
+  padding: 3px 1px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
 }
 
 .vk-empty {

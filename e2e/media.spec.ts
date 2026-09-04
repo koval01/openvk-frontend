@@ -12,7 +12,7 @@ test('photos, audio, video and avatar upload, display, then delete', async ({ pa
   await register(page);
 
   await openNav(page, 'My Photos');
-  await expect(page.getByTestId('photo-file')).toBeVisible();
+  await expect(page.getByTestId('photo-file')).toBeAttached();
   const photoPost = waitForPost(page, '/api/v1/photos');
   await page.getByTestId('photo-file').setInputFiles(tinyPng);
   await expectUploadCreated(photoPost);

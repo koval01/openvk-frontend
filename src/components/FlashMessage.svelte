@@ -11,7 +11,15 @@
   let { title, message, kind = 'err', testid }: Props = $props();
 </script>
 
-<div class="msg msg_{kind}" data-testid={testid}>
+<div
+  class={[
+    'msg',
+    kind === 'err' && 'msg_err',
+    kind === 'succ' && 'msg_succ',
+    kind === 'yellow' && 'msg_yellow',
+  ]}
+  data-testid={testid}
+>
   <b>{title}</b><br />
   <LocaleHtml html={message} />
 </div>

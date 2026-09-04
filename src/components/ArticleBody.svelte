@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Block, Inline } from '../content/blocks';
+  import { awayHref } from '../lib/away';
   import { router } from '../lib/router.svelte';
 
   let { blocks }: { blocks: Block[] } = $props();
@@ -22,8 +23,13 @@
 {#snippet inline(parts: Inline[])}
   {#each parts as part, partIndex (partIndex)}
     {@const href = hrefOf(part)}
-    {#if href}
-      <a {href} onclick={(event) => onclick(event, href)}>{textOf(part)}</a>
+    {@const gated = href ? awayHref(href) : undefined}
+    {#if gated}
+      <a
+        href={gated}
+        rel={gated.startsWith('/away.php') ? 'ugc nofollow' : undefined}
+        onclick={(event) => onclick(event, gated)}>{textOf(part)}</a
+      >
     {:else}
       {textOf(part)}
     {/if}

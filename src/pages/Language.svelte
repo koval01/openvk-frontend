@@ -1,5 +1,6 @@
 <script lang="ts">
   import PageChrome from '../components/PageChrome.svelte';
+  import { awayHref } from '../lib/away';
   import { LANGUAGES, flagSrc, splitNativeName } from '../lib/languages';
   import { router } from '../lib/router.svelte';
   import { auth } from '../stores/auth.svelte';
@@ -38,7 +39,11 @@
     {/each}
   </div>
   <div>
-    <a href="https://hosted.weblate.org/projects/openvk/" target="_blank" rel="noreferrer">
+    <a
+      href={awayHref('https://hosted.weblate.org/projects/openvk/')}
+      target="_blank"
+      rel="noreferrer"
+    >
       {locale.t('language_add_strings')}
     </a>
   </div>

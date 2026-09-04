@@ -14,6 +14,7 @@ import {
   encodeUpdateAccount,
   errorFromPb,
   groupsFromPb,
+  groupFromPb,
   messageFromPb,
   messagesFromPb,
   photoFromPb,
@@ -22,23 +23,61 @@ import {
   usersFromPb,
   videoFromPb,
   videosFromPb,
+  commentFromPb,
+  commentsFromPb,
+  likeStateFromPb,
+  encodeWriteWall,
+  notificationsFromPb,
   wallPostFromPb,
   wallPostsFromPb,
+  catalogFromPb,
+  userGiftsFromPb,
+  userGiftFromPb,
+  ticketsFromPb,
+  ticketFromPb,
+  reportsFromPb,
+  reportFromPb,
+  vouchersFromPb,
+  voucherFromPb,
+  bannedLinksFromPb,
+  bannedLinkFromPb,
+  warningFromPb,
+  warningsFromPb,
+  nospamFromPb,
+  overviewFromPb,
+  adminUsersFromPb,
+  adminClubsFromPb,
 } from '../proto/wire';
 import type {
   Album,
   AudioTrack,
+  Comment,
+  CommentTarget,
   Group,
   HealthResponse,
   InstanceAbout,
+  LikeKind,
+  LikeState,
   Message,
   Photo,
+  SiteNotification,
   TokenResponse,
   UpdateAccount,
   User,
   Video,
   WallPost,
+  WriteWallBody,
+  GiftCategory,
+  UserGift,
+  Ticket,
+  SiteReport,
+  Voucher,
+  BannedLink,
+  Warning,
+  NospamResult,
+  AdminOverview,
 } from './types';
+import { parsePrettyId } from './types';
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
@@ -53,13 +92,19 @@ function isUnsafe(method: string): boolean {
   return method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS';
 }
 
+function newTraceId(): string {
+  return crypto.randomUUID();
+}
+
 async function requestBytes(
   path: string,
   options: RequestOptions = {},
   retried = false,
+  traceId = newTraceId(),
 ): Promise<Uint8Array | undefined> {
   const method = options.method ?? 'GET';
   const headers = new Headers({ Accept: PROTOBUF_MIME });
+  headers.set('X-Trace-Id', traceId);
   if (options.form === undefined && options.body !== undefined) {
     headers.set('Content-Type', PROTOBUF_MIME);
   }
@@ -84,7 +129,7 @@ async function requestBytes(
     !path.startsWith('/api/v1/auth/')
   ) {
     clearCsrf();
-    return requestBytes(path, options, true);
+    return requestBytes(path, options, true, traceId);
   }
 
   if (!response.ok) {
@@ -108,22 +153,25 @@ async function requestMapped<T>(
 }
 
 async function readError(response: Response): Promise<ApiError> {
+  const headerTrace = response.headers.get('x-trace-id') ?? '';
   try {
     const bytes = new Uint8Array(await response.clone().arrayBuffer());
-    const { code, message } = errorFromPb(bytes);
-    return new ApiError(response.status, message ?? response.statusText, code);
+    const { code, message, traceId } = errorFromPb(bytes);
+    return new ApiError(response.status, message ?? response.statusText, code, traceId || headerTrace);
   } catch {
-    return new ApiError(response.status, response.statusText);
+    return new ApiError(response.status, response.statusText, '', headerTrace);
   }
 }
 
 export class ApiError extends Error {
   status: number;
   code: string;
-  constructor(status: number, message: string, code = '') {
+  traceId: string;
+  constructor(status: number, message: string, code = '', traceId = '') {
     super(message);
     this.status = status;
     this.code = code;
+    this.traceId = traceId;
   }
 }
 
@@ -139,14 +187,62 @@ function ownerQuery(ownerId?: number, photos?: boolean): string {
   return query ? `?${query}` : '';
 }
 
+function wallCollectionPath(ownerId: number): string {
+  return ownerId < 0 ? `/api/v1/groups/${-ownerId}/wall` : `/api/v1/users/${ownerId}/wall`;
+}
+
+function wallItemPath(ownerId: number, localId: number): string {
+  return `${wallCollectionPath(ownerId)}/${localId}`;
+}
+
+function commentPath(target: CommentTarget, ownerId: number, objectId: number): string {
+  if (target === 'photo') {
+    return `/api/v1/photos/${ownerId}/${objectId}/comments`;
+  }
+  if (target === 'video') {
+    return `/api/v1/videos/${ownerId}/${objectId}/comments`;
+  }
+  return `${wallItemPath(ownerId, objectId)}/comments`;
+}
+
+function likeCoords(kind: LikeKind, id: string): { ownerId: number; objectId: number } {
+  if (kind === 'comment') {
+    return { ownerId: 0, objectId: Number(id) };
+  }
+  const parsed = parsePrettyId(id);
+  if (!parsed) {
+    throw new Error('invalid like id');
+  }
+  return parsed;
+}
+
+function likeApiPath(kind: LikeKind, ownerId: number, objectId: number, list = false): string {
+  const suffix = list ? 'likes' : 'like';
+  if (kind === 'photo') {
+    return `/api/v1/photos/${ownerId}/${objectId}/${suffix}`;
+  }
+  if (kind === 'video') {
+    return `/api/v1/videos/${ownerId}/${objectId}/${suffix}`;
+  }
+  if (kind === 'comment') {
+    return `/api/v1/comments/${objectId}/like`;
+  }
+  return `${wallItemPath(ownerId, objectId)}/${suffix}`;
+}
+
 export const api = {
   health: async () => {
     const response = await fetch(`${API_BASE}/health`, {
-      headers: { Accept: 'application/json' },
+      headers: { Accept: 'application/json', 'X-Trace-Id': newTraceId() },
       credentials: 'same-origin',
     });
     if (!response.ok) {
-      throw new ApiError(response.status, response.statusText);
+      throw new ApiError(
+        response.status,
+        response.statusText,
+        '',
+        response.headers.get('x-trace-id') ?? '',
+      );
     }
     const body = (await response.json()) as HealthResponse;
     return {
@@ -196,17 +292,57 @@ export const api = {
       userFromPb(decode('User', bytes)),
     ),
   wall: (id: number, token: string) =>
-    requestMapped<WallPost[]>(`/api/v1/users/${id}/wall`, { token }, wallPostsFromPb),
+    requestMapped<WallPost[]>(wallCollectionPath(id), { token }, wallPostsFromPb),
   wallPost: (ownerId: number, localId: number, token: string) =>
-    requestMapped<WallPost>(`/api/v1/users/${ownerId}/wall/${localId}`, { token }, (bytes) =>
+    requestMapped<WallPost>(wallItemPath(ownerId, localId), { token }, (bytes) =>
       wallPostFromPb(decode('WallPost', bytes)),
     ),
-  writeWall: (id: number, content: string, token: string) =>
+  writeWall: (id: number, body: WriteWallBody, token: string) =>
     requestMapped<WallPost>(
-      `/api/v1/users/${id}/wall`,
-      { method: 'POST', token, body: encode('WriteWall', { content }) },
+      wallCollectionPath(id),
+      { method: 'POST', token, body: encodeWriteWall(body) },
       (bytes) => wallPostFromPb(decode('WallPost', bytes)),
     ),
+  comments: (target: CommentTarget, ownerId: number, objectId: number, token: string) =>
+    requestMapped<Comment[]>(commentPath(target, ownerId, objectId), { token }, commentsFromPb),
+  writeComment: (
+    target: CommentTarget,
+    ownerId: number,
+    objectId: number,
+    content: string,
+    token: string,
+  ) =>
+    requestMapped<Comment>(
+      commentPath(target, ownerId, objectId),
+      { method: 'POST', token, body: encode('WriteComment', { content }) },
+      (bytes) => commentFromPb(decode('Comment', bytes)),
+    ),
+  toggleLike: (kind: LikeKind, id: string, token: string) => {
+    const { ownerId, objectId } = likeCoords(kind, id);
+    return requestMapped<LikeState>(
+      likeApiPath(kind, ownerId, objectId),
+      { method: 'POST', token },
+      likeStateFromPb,
+    );
+  },
+  likeState: (kind: LikeKind, id: string, token: string) => {
+    const { ownerId, objectId } = likeCoords(kind, id);
+    return requestMapped<LikeState>(likeApiPath(kind, ownerId, objectId), { token }, likeStateFromPb);
+  },
+  likers: (kind: LikeKind, ownerId: number, objectId: number, token: string) =>
+    requestMapped<User[]>(likeApiPath(kind, ownerId, objectId, true), { token }, usersFromPb),
+  photo: (ownerId: number, id: number, token: string) =>
+    requestMapped<Photo>(`/api/v1/photos/${ownerId}/${id}`, { token }, (bytes) =>
+      photoFromPb(decode('Photo', bytes)),
+    ),
+  video: (ownerId: number, id: number, token: string) =>
+    requestMapped<Video>(`/api/v1/videos/${ownerId}/${id}`, { token }, (bytes) =>
+      videoFromPb(decode('Video', bytes)),
+    ),
+  notifications: (token: string) =>
+    requestMapped<SiteNotification[]>('/api/v1/notifications', { token }, notificationsFromPb),
+  markNotificationsSeen: (token: string) =>
+    requestBytes('/api/v1/notifications', { method: 'POST', token }),
   friends: (token: string) => requestMapped<User[]>('/api/v1/friends', { token }, usersFromPb),
   userFriends: (id: number, token: string) =>
     requestMapped<User[]>(`/api/v1/users/${id}/friends`, { token }, usersFromPb),
@@ -319,4 +455,177 @@ export const api = {
     );
   },
   groups: (token: string) => requestMapped<Group[]>('/api/v1/groups', { token }, groupsFromPb),
+  group: (id: number, token: string) =>
+    requestMapped<Group>(`/api/v1/groups/${id}`, { token }, (bytes) =>
+      groupFromPb(decode('Group', bytes)),
+    ),
+  giftCatalog: (token: string) => requestMapped<GiftCategory[]>('/api/v1/gifts', { token }, catalogFromPb),
+  userGifts: (token: string, userId: number) =>
+    requestMapped<UserGift[]>(`/api/v1/users/${userId}/gifts`, { token }, userGiftsFromPb),
+  sendGift: (
+    token: string,
+    body: { gift_id: number; receiver_id: number; caption?: string; anonymous: boolean },
+  ) =>
+    requestMapped<UserGift>(
+      '/api/v1/gifts',
+      { method: 'POST', token, body: encode('SendGift', body) },
+      (bytes) => userGiftFromPb(decode('UserGift', bytes)),
+    ),
+  transferCoins: (token: string, receiver_id: number, amount: number) =>
+    requestMapped<User>(
+      '/api/v1/coins/transfer',
+      { method: 'POST', token, body: encode('TransferCoins', { receiver_id, amount }) },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
+  redeemVoucher: (token: string, serial: string) =>
+    requestMapped<User>(
+      '/api/v1/vouchers/redeem',
+      { method: 'POST', token, body: encode('RedeemVoucher', { serial }) },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
+  tickets: (token: string, all = false) =>
+    requestMapped<Ticket[]>(`/api/v1/tickets${all ? '?all=true' : ''}`, { token }, ticketsFromPb),
+  createTicket: (token: string, subject: string, content: string) =>
+    requestMapped<Ticket>(
+      '/api/v1/tickets',
+      { method: 'POST', token, body: encode('WriteTicket', { subject, content }) },
+      (bytes) => ticketFromPb(decode('Ticket', bytes)),
+    ),
+  ticket: (token: string, id: number) =>
+    requestMapped<Ticket>(`/api/v1/tickets/${id}`, { token }, (bytes) =>
+      ticketFromPb(decode('Ticket', bytes)),
+    ),
+  replyTicket: (token: string, id: number, content: string) =>
+    requestMapped<Ticket>(
+      `/api/v1/tickets/${id}/replies`,
+      { method: 'POST', token, body: encode('WriteTicketReply', { content }) },
+      (bytes) => ticketFromPb(decode('Ticket', bytes)),
+    ),
+  closeTicket: (token: string, id: number) =>
+    requestMapped<Ticket>(`/api/v1/tickets/${id}/close`, { method: 'POST', token }, (bytes) =>
+      ticketFromPb(decode('Ticket', bytes)),
+    ),
+  deleteTicket: (token: string, id: number) =>
+    requestBytes(`/api/v1/tickets/${id}`, { method: 'DELETE', token }),
+  createReport: (
+    token: string,
+    target_type: string,
+    target_id: number,
+    reason: string,
+    owner_id?: number,
+  ) =>
+    requestMapped<SiteReport>(
+      '/api/v1/reports',
+      {
+        method: 'POST',
+        token,
+        body: encode('WriteReport', {
+          target_type,
+          target_id,
+          reason,
+          ...(owner_id ? { owner_id } : {}),
+        }),
+      },
+      (bytes) => reportFromPb(decode('Report', bytes)),
+    ),
+  reports: (token: string) => requestMapped<SiteReport[]>('/api/v1/reports', { token }, reportsFromPb),
+  report: (token: string, id: number) =>
+    requestMapped<SiteReport>(`/api/v1/reports/${id}`, { token }, (bytes) =>
+      reportFromPb(decode('Report', bytes)),
+    ),
+  reportAction: (token: string, id: number, action: string, reason?: string) =>
+    requestMapped<SiteReport>(
+      `/api/v1/reports/${id}/action`,
+      { method: 'POST', token, body: encode('ReportAction', { action, reason }) },
+      (bytes) => reportFromPb(decode('Report', bytes)),
+    ),
+  selfUnban: (token: string) =>
+    requestMapped<User>('/api/v1/unban', { method: 'POST', token }, (bytes) =>
+      userFromPb(decode('User', bytes)),
+    ),
+  bannedLink: (id: number) =>
+    requestMapped<BannedLink>(`/api/v1/away/links/${id}`, {}, (bytes) =>
+      bannedLinkFromPb(decode('BannedLink', bytes)),
+    ),
+  checkAwayUrl: (url: string) =>
+    requestMapped<BannedLink[]>(
+      `/api/v1/away/check?url=${encodeURIComponent(url)}`,
+      {},
+      bannedLinksFromPb,
+    ),
+  nospam: (token: string, query: string, delete_hits: boolean, ban_authors: boolean) =>
+    requestMapped<NospamResult>(
+      '/api/v1/nospam',
+      { method: 'POST', token, body: encode('NospamQuery', { query, delete_hits, ban_authors }) },
+      nospamFromPb,
+    ),
+  nospamRollback: (token: string, id: number) =>
+    requestBytes(`/api/v1/nospam/${id}/rollback`, { method: 'POST', token }),
+  adminOverview: (token: string) =>
+    requestMapped<AdminOverview>('/api/v1/admin/overview', { token }, overviewFromPb),
+  adminUsers: (token: string, q?: string) =>
+    requestMapped<User[]>(
+      `/api/v1/admin/users${q ? `?q=${encodeURIComponent(q)}` : ''}`,
+      { token },
+      adminUsersFromPb,
+    ),
+  adminClubs: (token: string) =>
+    requestMapped<Group[]>('/api/v1/admin/clubs', { token }, adminClubsFromPb),
+  vouchers: (token: string) => requestMapped<Voucher[]>('/api/v1/admin/vouchers', { token }, vouchersFromPb),
+  voucher: (token: string, id: number) =>
+    requestMapped<Voucher>(`/api/v1/admin/vouchers/${id}`, { token }, (bytes) =>
+      voucherFromPb(decode('Voucher', bytes)),
+    ),
+  createVoucher: (token: string, coins: number, uses: number) =>
+    requestMapped<Voucher>(
+      '/api/v1/admin/vouchers',
+      { method: 'POST', token, body: encode('CreateVoucher', { coins, uses }) },
+      (bytes) => voucherFromPb(decode('Voucher', bytes)),
+    ),
+  bannedLinks: (token: string) =>
+    requestMapped<BannedLink[]>('/api/v1/admin/banned-links', { token }, bannedLinksFromPb),
+  addBannedLink: (token: string, url: string, reason: string) =>
+    requestMapped<BannedLink>(
+      '/api/v1/admin/banned-links',
+      { method: 'POST', token, body: encode('WriteBannedLink', { url, reason }) },
+      (bytes) => bannedLinkFromPb(decode('BannedLink', bytes)),
+    ),
+  deleteBannedLink: (token: string, id: number) =>
+    requestBytes(`/api/v1/admin/banned-links/${id}`, { method: 'DELETE', token }),
+  banUser: (token: string, id: number, reason: string, until?: string) =>
+    requestMapped<User>(
+      `/api/v1/admin/users/${id}/ban`,
+      { method: 'POST', token, body: encode('BanUser', { reason, until }) },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
+  unbanUser: (token: string, id: number) =>
+    requestMapped<User>(`/api/v1/admin/users/${id}/unban`, { method: 'POST', token }, (bytes) =>
+      userFromPb(decode('User', bytes)),
+    ),
+  warnUser: (token: string, id: number, reason: string) =>
+    requestMapped<Warning>(
+      `/api/v1/admin/users/${id}/warn`,
+      { method: 'POST', token, body: encode('WarnUser', { reason }) },
+      warningFromPb,
+    ),
+  warnings: (token: string, id: number) =>
+    requestMapped<Warning[]>(`/api/v1/admin/users/${id}/warnings`, { token }, warningsFromPb),
+  setLimits: (token: string, id: number, posting_allowed: boolean, messaging_allowed: boolean) =>
+    requestMapped<User>(
+      `/api/v1/admin/users/${id}/limits`,
+      { method: 'POST', token, body: encode('SetLimits', { posting_allowed, messaging_allowed }) },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
+  supportBan: (token: string, id: number, reason: string) =>
+    requestMapped<User>(
+      `/api/v1/admin/users/${id}/support-ban`,
+      { method: 'POST', token, body: encode('BanUser', { reason }) },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
+  supportUnban: (token: string, id: number) =>
+    requestMapped<User>(
+      `/api/v1/admin/users/${id}/support-unban`,
+      { method: 'POST', token },
+      (bytes) => userFromPb(decode('User', bytes)),
+    ),
 };

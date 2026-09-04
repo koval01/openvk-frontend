@@ -168,7 +168,7 @@ const DONATE_RU: Article = {
   slug: 'donate',
   heading: 'Пожертвовать',
   blocks: [
-    p('Эта инстанция не принимает пожертвования и не продаёт монеты, ваучеры или значки.'),
+    p('Эта страница не принимает пожертвования. Монеты, ваучеры и значки — это финансы аккаунта (/settings?act=finance), не внешний магазин на /donate.'),
     p([
       'Если вы хотите поддержать исходный проект OpenVK, смотрите ',
       { href: 'https://github.com/OpenVK/openvk', text: 'репозиторий OpenVK' },
@@ -181,7 +181,7 @@ const DONATE_EN: Article = {
   slug: 'donate',
   heading: 'Donate',
   blocks: [
-    p('This instance does not take donations and does not sell coins, vouchers, or badges.'),
+    p('This page does not take donations. Coins, vouchers, and badges live in account finance (/settings?act=finance), not as a store on /donate.'),
     p([
       'If you want to support upstream OpenVK, see the ',
       { href: 'https://github.com/OpenVK/openvk', text: 'OpenVK repository' },

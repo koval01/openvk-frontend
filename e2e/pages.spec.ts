@@ -28,9 +28,11 @@ test('friends tabs, groups, notes and other stubs render their empty states', as
 
 test('messages composer keeps a local reply on the thread', async ({ page }) => {
   await login(page);
-  await openNav(page, 'My Messages');
+  await openNav(page, 'My Friends');
+  await page.getByRole('link', { name: /Anna Sokolova/ }).first().click();
+  await page.getByTestId('send-message').click();
   const stamp = `e2e im ${Date.now()}`;
-  await page.getByPlaceholder('Write a message…').fill(stamp);
+  await page.locator('textarea[name="message"]').fill(stamp);
   await page.getByRole('button', { name: 'Send' }).click();
   await expect(page.getByText(stamp)).toBeVisible();
 });

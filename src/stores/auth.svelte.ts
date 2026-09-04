@@ -1,5 +1,5 @@
 import { ApiError, api } from '../services/api';
-import { demoUser, type User } from '../services/types';
+import { demoUser, rewriteMediaUrl, type User } from '../services/types';
 import { locale } from './locale.svelte';
 import { wsStore } from './ws.svelte';
 
@@ -25,6 +25,9 @@ function loginFlash(error: unknown): AuthFlash {
     case 401:
       return flash('login_failed', 'invalid_username_or_password');
     case 403:
+      if (error.code === 'banned') {
+        return { title: locale.t('error'), message: error.message };
+      }
       return flash('error', 'forbidden');
     case 429:
       return flash('rate_limit_error', 'password_reset_rate_limit_error');
@@ -73,8 +76,19 @@ function readUser(): User | null {
 function normalizeUser(user: User): User {
   return {
     ...user,
+    avatar_url: user.avatar_url ? rewriteMediaUrl(user.avatar_url) : user.avatar_url,
     privacy_wall: user.privacy_wall ?? 'everyone',
     privacy_messages: user.privacy_messages ?? 'everyone',
+    privacy_photos: user.privacy_photos ?? 'everyone',
+    privacy_audio: user.privacy_audio ?? 'everyone',
+    privacy_profile: user.privacy_profile ?? 'everyone',
+    privacy_friends: user.privacy_friends ?? 'everyone',
+    coins: user.coins ?? 0,
+    rating: user.rating ?? 0,
+    role: user.role ?? 'user',
+    banned: Boolean(user.banned),
+    posting_allowed: user.posting_allowed !== false,
+    messaging_allowed: user.messaging_allowed !== false,
   };
 }
 

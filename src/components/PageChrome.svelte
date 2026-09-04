@@ -7,12 +7,14 @@
     note,
     right,
     centered = false,
+    header,
     children,
   }: {
     title: string;
     note?: string;
     right?: string;
     centered?: boolean;
+    header?: Snippet;
     children?: Snippet;
   } = $props();
 
@@ -27,14 +29,18 @@
   <div id="wrapH">
     <div id="wrapHI">
       <div class="page_yellowheader">
-        {title}
-        {#if note}
-          <span><b>{note}</b></span>
-        {/if}
-        {#if right}
-          <div style="float:right;">
-            <span><b>{right}</b></span>
-          </div>
+        {#if header}
+          {@render header()}
+        {:else}
+          {title}
+          {#if note}
+            <span><b>{note}</b></span>
+          {/if}
+          {#if right}
+            <div style="float:right;">
+              <span><b>{right}</b></span>
+            </div>
+          {/if}
         {/if}
       </div>
     </div>

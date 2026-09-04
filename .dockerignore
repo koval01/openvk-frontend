@@ -1,8 +1,0 @@
-node_modules
-dist
-e2e
-.git
-.DS_Store
-.env
-playwright-report
-test-results
