@@ -12,21 +12,7 @@
   import { overlay, type DialogOverlay } from '../../stores/overlay.svelte';
   import { locale } from '../../stores/locale.svelte';
   import { parsePrettyId, photoPermalink, rewriteMediaUrl, videoPermalink } from '../../services/types';
-  import type { Attachment } from 'svelte/attachments';
-
-  const toBody: Attachment<HTMLElement> = (node) => {
-    const marker = document.createComment('ovk-overlay');
-    node.parentNode?.insertBefore(marker, node);
-    document.body.appendChild(node);
-    return () => {
-      if (marker.parentNode) {
-        marker.parentNode.insertBefore(node, marker);
-        marker.remove();
-      } else {
-        node.remove();
-      }
-    };
-  };
+  import { toBody } from '../../lib/toBody';
 
   function parsePretty(id: string) {
     return parsePrettyId(id);
@@ -116,7 +102,7 @@
 <div class="dimmer" {@attach toBody} onclick={onDimmer} role="presentation">
   <div id="clickable"></div>
 </div>
-<div id="ajloader" class={['loader', overlay.loader && 'shown']}>
+<div id="ajloader" class={['loader', overlay.loader && 'shown']} {@attach toBody}>
   <img src="/assets/packages/static/openvk/img/loading_mini.gif" alt="" />
 </div>
 
@@ -170,7 +156,7 @@
   {:else if box.kind === 'photo'}
     {@const photo = box.photos[box.index]}
     {@const photoHref = photoPageHref(photo)}
-    <div class="ovk-photo-view-dimmer ovk-msg-all" data-id={box.id}>
+    <div class="ovk-photo-view-dimmer ovk-msg-all" data-id={box.id} {@attach toBody}>
       <div
         class="ovk-photo-view-overlay ovk-photo-view-overlay-left"
         role="button"
@@ -285,7 +271,7 @@
       </div>
     </div>
   {:else if box.kind === 'video' && box.hidden}
-    <div class="miniplayer" style="left:100px;top:0px;">
+    <div class="miniplayer" style="left:100px;top:0px;" {@attach toBody}>
       <div class="miniplayer-head">
         <b>{box.title}</b>
         <div class="miniplayer-head-buttons">
@@ -315,7 +301,7 @@
     {@const videoHref =
       box.href ||
       (box.ownerId && box.objectId ? videoPermalink(box.ownerId, box.objectId) : '')}
-    <div class="ovk-photo-view-dimmer ovk-msg-all" data-id={box.id}>
+    <div class="ovk-photo-view-dimmer ovk-msg-all" data-id={box.id} {@attach toBody}>
       <div
         class="ovk-photo-view-overlay ovk-photo-view-overlay-left"
         role="button"

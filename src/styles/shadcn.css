@@ -129,6 +129,20 @@
 	color: inherit;
 }
 
+.admin-app ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.admin-toaster {
+	display: contents;
+}
+
+[data-sonner-toaster] {
+	position: fixed !important;
+}
+
 /*
  * OpenVK `main.css` ships unlayered `.hidden { display: none !important }`.
  * That beats Tailwind `md:block` / `md:flex` inside the sidebar.

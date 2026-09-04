@@ -42,6 +42,7 @@
   import { locale } from '../stores/locale.svelte';
   import { theme } from '../stores/theme.svelte';
   import { toast } from 'svelte-sonner';
+  import { toBody } from '../lib/toBody';
   import '../styles/shadcn.css';
 
   const slug = $derived(router.route.slug || 'overview');
@@ -755,5 +756,7 @@
       </div>
     </Sidebar.Inset>
   </Sidebar.Provider>
-  <Toaster theme={toasterTheme} />
+  <div class="admin-toaster" {@attach toBody}>
+    <Toaster theme={toasterTheme} />
+  </div>
 </div>

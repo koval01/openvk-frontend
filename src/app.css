@@ -36,12 +36,6 @@
   margin: 8px 0;
 }
 
-#ajax_audio_player.ovk-audio-dock {
-  left: 50%;
-  bottom: 12px;
-  transform: translateX(-50%);
-}
-
 #bigAvatar {
   width: 100%;
   height: auto;

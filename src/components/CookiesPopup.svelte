@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toBody } from '../lib/toBody';
   import { locale } from '../stores/locale.svelte';
 
   const COOKIE = 'cookiesAgreed=true';
@@ -26,7 +27,7 @@
 </script>
 
 {#if !agreed}
-  <div class="cookies-popup">
+  <div class="cookies-popup" {@attach toBody}>
     <div class="contanier">
       <div class="text">
         {cookieParts.before}<a href="/privacy">{cookieParts.link}</a>{cookieParts.after}

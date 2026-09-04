@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toBody } from '../lib/toBody';
   import { audioPlayer } from '../stores/audio.svelte';
   import { rewriteMediaUrl } from '../services/types';
   import { locale } from '../stores/locale.svelte';
@@ -10,7 +11,7 @@
   );
 </script>
 
-<div id="ajax_audio_player" class={['ovk-audio-dock', !audioPlayer.current && 'hidden']}>
+<div id="ajax_audio_player" class={['ovk-audio-dock', !audioPlayer.current && 'hidden']} {@attach toBody}>
   <div id="aj_player">
     <div id="aj_player_internal_controls">
       <div id="aj_player_play">

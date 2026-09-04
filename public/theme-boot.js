@@ -1,18 +1,6 @@
 document.documentElement.dataset.theme =
   localStorage.getItem('openvk.theme') === 'dark' ? 'dark' : 'default';
 (function () {
-  var frame = 791;
-  var mobile = 771;
-  var maxZoom = 1.9;
-  function syncZoom() {
-    var width = window.innerWidth;
-    var zoom = width < mobile ? 1 : Math.min(maxZoom, Math.max(1, (width - 32) / frame));
-    document.documentElement.style.setProperty('--ovk-zoom', String(zoom));
-  }
-  syncZoom();
-  window.addEventListener('resize', syncZoom);
-})();
-(function () {
   var stored = localStorage.getItem('openvk.lang');
   var known = {
     ru: 1,

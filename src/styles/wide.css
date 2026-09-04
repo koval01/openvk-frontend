@@ -1,6 +1,6 @@
 /*
- * 2007 frame stays 791px. Wide monitors zoom that frame (--ovk-zoom from
- * theme-boot.js) instead of stretching columns. mobile.css handles <771px.
+ * 2007 frame stays 791px (main.css `.layout`). Floating chrome is pinned to
+ * the viewport in foundation.css. mobile.css handles <771px.
  */
 
 .page_header button.mobile_title {
@@ -12,12 +12,4 @@
   font: inherit;
   color: inherit;
   cursor: pointer;
-}
-
-@media (min-width: 771px) {
-  .layout {
-    width: 791px;
-    margin: 0 auto;
-    zoom: var(--ovk-zoom, 1);
-  }
 }

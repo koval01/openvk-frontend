@@ -48,19 +48,19 @@
       <hr />
     </div>
     <div id="post_page_meta">
-      <div class="item_comments" style="float: left; min-height: 100px; width: 68%;">
+      <div class="item_comments">
         <Comments target="wall" {ownerId} objectId={localId} />
       </div>
-      <div class="item_links" id="post_acts" style="float: left; min-height: 100px; padding-left: 10px; width: 30%;">
+      <div class="item_links" id="post_acts">
         <h4>{locale.t('actions')}</h4>
-        <p>
-          <a
-            href="/report/{localId}?type=wall&amp;owner={ownerId}"
-            onclick={(event) =>
-              router.handleClick(event, `/report/${localId}?type=wall&owner=${ownerId}`)}
-            >{locale.t('report')}</a
-          >
-        </p>
+        <a
+          href="/report/{localId}?type=wall&amp;owner={ownerId}"
+          class="profile_link"
+          style="display:block;width:96%;"
+          onclick={(event) =>
+            router.handleClick(event, `/report/${localId}?type=wall&owner=${ownerId}`)}
+          >{locale.t('report')}</a
+        >
       </div>
     </div>
   </PageChrome>

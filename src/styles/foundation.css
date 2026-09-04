@@ -138,12 +138,10 @@ body.dimmed .dimmer {
   display: block;
   z-index: 200;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
+  max-width: none;
   background-color: #000000cf;
   opacity: 1;
 }
@@ -156,12 +154,60 @@ body.dimmed .dimmer {
   z-index: 1024;
   position: fixed;
   width: 420px;
+  max-width: calc(100vw - 24px);
   min-height: 200px;
   top: 50%;
   left: 50%;
-  margin-right: -50%;
+  margin-right: 0;
   transform: translate(-50%, -50%);
   background-color: rgba(199, 189, 189, 0.58);
+}
+
+.ovk-photo-view-dimmer {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  overflow: auto;
+  z-index: 300;
+}
+
+.cookies-popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: none;
+  z-index: 2048;
+}
+
+.cookies-popup .contanier {
+  width: min(760px, calc(100vw - 16px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.miniplayer {
+  position: fixed;
+  z-index: 7777;
+}
+
+#ajloader {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 5555;
+}
+
+#ajax_audio_player.ovk-audio-dock {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 1025;
 }
 
 .ovk-diag {
@@ -236,4 +282,35 @@ body.dimmed .dimmer {
 
 #faqcontent {
   border-color: #d7cf9e;
+}
+
+#post_page_meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+
+#post_page_meta .item_comments {
+  min-height: 100px;
+  width: 68%;
+}
+
+#post_page_meta .item_links {
+  min-height: 100px;
+  width: 30%;
+}
+
+#post_page_meta .item_links .profile_link {
+  width: 96%;
+}
+
+#standaloneCommentBox form {
+  margin: 0;
+}
+
+#standaloneCommentBox .small-textarea {
+  display: block;
+  margin: 0;
 }
