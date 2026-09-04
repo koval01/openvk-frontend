@@ -325,9 +325,9 @@ export function tokenFromPb(bytes: Uint8Array): TokenResponse {
   };
 }
 
-export function errorMessageFromPb(bytes: Uint8Array): string | undefined {
-  const error = decode<{ message?: string }>('Error', bytes);
-  return error.message || undefined;
+export function errorFromPb(bytes: Uint8Array): { code?: string; message?: string } {
+  const error = decode<{ error?: string; message?: string }>('Error', bytes);
+  return { code: error.error || undefined, message: error.message || undefined };
 }
 
 export function encodeUpdateAccount(body: UpdateAccount): Uint8Array {

@@ -53,6 +53,11 @@ html[data-theme='dark'] {
     color: var(--ovk-muted);
   }
 
+  /* OpenVK main.css paints every span black; inherit so night mode stays readable. */
+  span {
+    color: inherit;
+  }
+
   .page_header {
     background-color: #000000;
     background-image: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.82)),
@@ -240,10 +245,38 @@ html[data-theme='dark'] {
     border: 1px solid #5a2038;
   }
 
+  /* Flash messages above the page content. */
+  .msg {
+    background: #0a1218;
+    border-color: #1e3a50;
+    color: var(--ovk-text);
+  }
+
+  .msg.msg_err {
+    background: #14080c;
+    border-color: #5a2038;
+    color: var(--ovk-error);
+  }
+
+  .msg.msg_succ {
+    background: #08140c;
+    border-color: #20503a;
+  }
+
+  .msg.msg_yellow {
+    background: var(--ovk-notice);
+    border-color: var(--ovk-notice-border);
+    color: #d8c98a;
+  }
+
   .tour {
     background: #0c0a00;
     border-color: #6e5c14;
     color: var(--ovk-text);
+  }
+
+  .tour:hover {
+    background-color: #161200;
   }
 
   .tour div {
@@ -310,7 +343,7 @@ html[data-theme='dark'] {
 
   #faqcontent {
     background: #0a0a0a;
-    border-color: #1f1f1f;
+    border-color: #6e5c14;
     color: var(--ovk-text);
   }
 

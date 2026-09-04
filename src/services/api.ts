@@ -12,7 +12,7 @@ import {
   encodeAuthRequest,
   encodeSealedPassword,
   encodeUpdateAccount,
-  errorMessageFromPb,
+  errorFromPb,
   groupsFromPb,
   messageFromPb,
   messagesFromPb,
@@ -88,7 +88,7 @@ async function requestBytes(
   }
 
   if (!response.ok) {
-    throw new ApiError(response.status, await readError(response));
+    throw await readError(response);
   }
 
   if (response.status === 204) {
@@ -107,20 +107,23 @@ async function requestMapped<T>(
   return map(bytes ?? new Uint8Array());
 }
 
-async function readError(response: Response): Promise<string> {
+async function readError(response: Response): Promise<ApiError> {
   try {
     const bytes = new Uint8Array(await response.clone().arrayBuffer());
-    return errorMessageFromPb(bytes) ?? response.statusText;
+    const { code, message } = errorFromPb(bytes);
+    return new ApiError(response.status, message ?? response.statusText, code);
   } catch {
-    return response.statusText;
+    return new ApiError(response.status, response.statusText);
   }
 }
 
 export class ApiError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  code: string;
+  constructor(status: number, message: string, code = '') {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 

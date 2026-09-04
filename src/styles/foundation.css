@@ -189,3 +189,35 @@ body.dimmed > .dimmer {
 .ovk-diag-action > .button {
   margin-left: 10px;
 }
+
+#fastLogin {
+  overflow: hidden;
+}
+
+#fastLogin .fast-login-actions {
+  white-space: nowrap;
+  margin-top: 5px;
+}
+
+#fastLogin input[type='submit'],
+#fastLogin input[type='button'],
+#fastLogin a.button {
+  display: inline-block;
+  width: auto;
+  margin: 0;
+  padding: 3px 5px;
+  font-family: Tahoma, sans-serif;
+  box-sizing: content-box;
+}
+
+#fastLogin a.button {
+  margin-left: 4px;
+}
+
+.tour:hover {
+  background-color: #fcfbf5;
+}
+
+#faqcontent {
+  border-color: #d7cf9e;
+}

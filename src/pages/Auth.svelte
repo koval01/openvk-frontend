@@ -1,4 +1,5 @@
 <script lang="ts">
+  import FlashMessage from '../components/FlashMessage.svelte';
   import Footer from '../components/Footer.svelte';
   import Header from '../components/Header.svelte';
   import LocaleHtml from '../components/LocaleHtml.svelte';
@@ -47,11 +48,11 @@
   async function submit(event: Event) {
     event.preventDefault();
     if (!turnstileToken) {
-      auth.error = locale.t('complete_security_check');
+      auth.fail('error', 'complete_security_check');
       return;
     }
     if (mode === 'register' && !agreed) {
-      auth.error = locale.t('checkbox_in_registration_unchecked');
+      auth.fail('error', 'checkbox_in_registration_unchecked');
       return;
     }
     try {
@@ -98,7 +99,10 @@
           bind:value={password}
           autocomplete="current-password"
         />
-        <div class="button-row">
+        {#key `${mode}:${challenge}:${locale.code}`}
+          <Turnstile action={mode} bind:token={turnstileToken} />
+        {/key}
+        <div class="fast-login-actions">
           <input
             type="submit"
             class="button"
@@ -116,6 +120,10 @@
             }}>{locale.t('registration')}</a
           >
         </div>
+        <br /><br />
+        <a href="/restore" onclick={(event) => router.handleClick(event, '/restore')}>
+          {locale.t('forgot_password')}
+        </a>
       </form>
     </div>
   {:else}
@@ -146,7 +154,14 @@
     </div>
     <div class="wrap2">
       <div class="wrap1">
-        <div class="page_content">
+        <div class="page_content p-3">
+          {#if auth.error}
+            <FlashMessage
+              title={auth.error.title}
+              message={auth.error.message}
+              testid="auth-error"
+            />
+          {/if}
           {#if isWelcome}
             <h2 class="welcome-lead">
               <b>{locale.t('welcome_vk_brand')}</b> - {locale.t('welcome_vk_lead')}
@@ -158,15 +173,6 @@
               <li><span>{locale.t('welcome_vk_item2')}</span></li>
               <li><span>{locale.t('welcome_vk_item3')}</span></li>
             </ul>
-            <div class="information">
-              {locale.t('demo_hint', 'id1', 'anna', 'pavel', 'openvk')}
-            </div>
-            {#key `${mode}:${challenge}:${locale.code}`}
-              <Turnstile action={mode} bind:token={turnstileToken} />
-            {/key}
-            {#if auth.error}
-              <p data-testid="auth-error" class="auth-error">{auth.error}</p>
-            {/if}
             <a href="/tour" class="noUnd" onclick={(event) => router.handleClick(event, '/tour')}>
               <div class="tour">
                 <b>{locale.t('tour_title')}</b>
@@ -231,7 +237,7 @@
                       />
                     </td>
                   </tr>
-                  <tr>
+                  <tr class="turnstile-slot">
                     <td></td>
                     <td>
                       {#key `${mode}:${challenge}:${locale.code}`}
@@ -252,12 +258,6 @@
                           <LocaleHtml html={locale.t('checkbox_in_registration')} />
                         </label>
                       </td>
-                    </tr>
-                  {/if}
-                  {#if auth.error}
-                    <tr>
-                      <td></td>
-                      <td data-testid="auth-error" class="auth-error">{auth.error}</td>
                     </tr>
                   {/if}
                 </tbody>
@@ -313,7 +313,8 @@
 
 <style>
   #fastLogin {
-    padding: 4px 2px 0;
+    padding: 0;
+    overflow: hidden;
   }
 
   #fastLogin label {
@@ -328,17 +329,22 @@
     box-sizing: border-box;
   }
 
-  #fastLogin .button-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 6px;
+  .fast-login-actions {
+    white-space: nowrap;
+    margin-top: 5px;
   }
 
-  #fastLogin .button {
+  #fastLogin .button,
+  #fastLogin input[type='submit'] {
     display: inline-block;
+    width: auto;
     margin: 0;
+    padding: 3px 5px;
     font-family: Tahoma, sans-serif;
+  }
+
+  #fastLogin a.button {
+    margin-left: 4px;
   }
 
   .welcome-lead {
@@ -352,29 +358,39 @@
     padding: 0;
   }
 
+  .welcome-listing,
+  .welcome-listing span {
+    color: var(--ovk-text);
+  }
+
   .welcome-listing li {
     margin: 4px 0;
   }
 
   .welcome-actions {
-    width: 350px;
-    margin: 8px 0 10px auto;
-    text-align: right;
+    text-align: center;
+    margin: 8px 0 10px;
   }
 
-  .welcome-actions .button,
-  .auth-actions .button,
-  #fastLogin a.button {
+  .welcome-actions .button {
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .turnstile-slot td {
+    padding: 0;
+    line-height: 0;
+    height: 0;
+  }
+
+  .auth-actions .button {
     display: inline-block;
     margin-left: 4px;
   }
 
   .auth-actions {
     text-align: center;
-  }
-
-  .auth-error {
-    color: var(--ovk-error);
   }
 
   .auth-agree {

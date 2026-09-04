@@ -5,7 +5,7 @@ export function uniqueLogin(): string {
 }
 
 export async function waitForTurnstile(page: Page) {
-  await expect(page.getByTestId('turnstile')).toBeVisible();
+  await expect(page.getByTestId('turnstile')).toBeAttached();
   await expect(page.getByTestId('auth-submit')).toBeEnabled({ timeout: 20_000 });
 }
 

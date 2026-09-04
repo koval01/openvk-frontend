@@ -4,13 +4,12 @@ import { expect, test } from './fixtures';
 
 test('the always-pass widget unlocks login and register', async ({ page }) => {
   await page.goto('/login');
-  await expect(page.getByTestId('auth-submit')).toBeDisabled();
   await waitForTurnstile(page);
-  await expect(page.getByTestId('turnstile')).toBeVisible();
+  await expect(page.getByTestId('turnstile')).toBeAttached();
 
   await page.getByTestId('auth-toggle').click();
-  await expect(page.getByTestId('auth-submit')).toBeDisabled();
   await waitForTurnstile(page);
+  await expect(page.getByTestId('turnstile')).toBeAttached();
 });
 
 test('the API rejects login without a Turnstile token', async ({ request }) => {

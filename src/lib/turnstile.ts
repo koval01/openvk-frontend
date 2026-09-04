@@ -1,13 +1,26 @@
 const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
+/** Invisible always-pass dummy. Visible dummy …AA paints a huge German “Erfolg!” box. */
+const DUMMY_PASS_VISIBLE = '1x00000000000000000000AA';
+const DUMMY_PASS_INVISIBLE = '1x00000000000000000000BB';
+export const DUMMY_TURNSTILE_TOKEN = 'XXXX.DUMMY.TOKEN.XXXX';
+
+const configuredKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 export const TURNSTILE_SITE_KEY =
-  import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+  !configuredKey || configuredKey === DUMMY_PASS_VISIBLE
+    ? DUMMY_PASS_INVISIBLE
+    : configuredKey;
+
+function isDummyPassSiteKey(sitekey: string): boolean {
+  return sitekey === DUMMY_PASS_VISIBLE || sitekey === DUMMY_PASS_INVISIBLE;
+}
 
 export type TurnstileRenderOptions = {
   sitekey: string;
   action?: string;
   theme?: 'light' | 'dark' | 'auto';
   size?: 'normal' | 'compact' | 'flexible';
+  appearance?: 'always' | 'execute' | 'interaction-only';
   callback?: (token: string) => void;
   'expired-callback'?: () => void;
   'error-callback'?: () => void;
@@ -71,6 +84,10 @@ export function attachTurnstile(
   appearance: 'light' | 'dark' = 'light',
 ) {
   return (node: HTMLElement) => {
+    if (isDummyPassSiteKey(TURNSTILE_SITE_KEY)) {
+      onToken(DUMMY_TURNSTILE_TOKEN);
+      return () => onToken('');
+    }
     let widgetId: string | undefined;
     let cancelled = false;
     void loadTurnstile()
@@ -83,6 +100,7 @@ export function attachTurnstile(
           action,
           theme: appearance,
           size: 'compact',
+          appearance: 'interaction-only',
           callback: onToken,
           'expired-callback': () => onToken(''),
           'error-callback': () => onToken(''),

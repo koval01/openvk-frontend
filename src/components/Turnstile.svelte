@@ -19,7 +19,8 @@
 
 <style>
   .cf-turnstile {
-    min-height: 65px;
+    overflow: hidden;
+    max-height: 0;
     max-width: 100%;
   }
 </style>

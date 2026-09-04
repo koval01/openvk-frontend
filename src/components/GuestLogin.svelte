@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LocaleHtml from './LocaleHtml.svelte';
   import Turnstile from './Turnstile.svelte';
   import { router } from '../lib/router.svelte';
   import { auth } from '../stores/auth.svelte';
@@ -12,7 +13,7 @@
   async function submit(event: Event) {
     event.preventDefault();
     if (!turnstileToken) {
-      auth.error = locale.t('complete_security_check');
+      auth.fail('error', 'complete_security_check');
       return;
     }
     try {
@@ -50,9 +51,12 @@
     <Turnstile action="login" bind:token={turnstileToken} />
   {/key}
   {#if auth.error}
-    <p data-testid="auth-error" class="auth-error">{auth.error}</p>
+    <div class="error auth-error" data-testid="auth-error">
+      <b>{auth.error.title}</b><br />
+      <LocaleHtml html={auth.error.message} />
+    </div>
   {/if}
-  <div class="button-row">
+  <div class="fast-login-actions">
     <input
       type="submit"
       class="button"
@@ -71,11 +75,16 @@
       }}>{locale.t('registration')}</a
     >
   </div>
+  <br /><br />
+  <a href="/restore" onclick={(event) => router.handleClick(event, '/restore')}>
+    {locale.t('forgot_password')}
+  </a>
 </form>
 
 <style>
   #fastLogin {
-    padding: 4px 2px 0;
+    padding: 0;
+    overflow: hidden;
   }
 
   #fastLogin label {
@@ -88,21 +97,28 @@
     box-sizing: border-box;
   }
 
-  .button-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 6px;
+  .fast-login-actions {
+    white-space: nowrap;
+    margin-top: 5px;
   }
 
-  #fastLogin .button {
+  #fastLogin .button,
+  #fastLogin input[type='submit'] {
     display: inline-block;
+    width: auto;
     margin: 0;
+    padding: 3px 5px;
     font-family: Tahoma, sans-serif;
   }
 
+  #fastLogin a.button {
+    margin-left: 4px;
+  }
+
   .auth-error {
-    color: var(--ovk-error);
     margin: 6px 0 0;
+    padding: 4px 5px;
+    font-size: 10px;
+    line-height: 1.3;
   }
 </style>

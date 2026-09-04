@@ -17,6 +17,34 @@ test('wrong password stays on the login form', async ({ page }) => {
   await expect(page.getByTestId('auth-error')).toBeVisible();
 });
 
+test('a failed login flashes above the welcome text, not inside it', async ({ page }) => {
+  await page.goto('/');
+  await page.getByTestId('auth-login').fill('id1');
+  await page.getByTestId('auth-password').fill('nope-nope');
+  await waitForTurnstile(page);
+  await page.getByTestId('auth-submit').click();
+
+  const flash = page.locator('.page_content > .msg.msg_err');
+  await expect(flash).toBeVisible();
+  await expect(flash).toHaveAttribute('data-testid', 'auth-error');
+  await expect(flash).toContainText('Login failed');
+  await expect(flash).toContainText('The username or password you entered is incorrect.');
+  await expect(page.locator('.page_content > *').first()).toHaveClass(/msg_err/);
+});
+
+test('a blocked request shows the access error, not a raw API string', async ({ page }) => {
+  await page.route('**/api/v1/auth/login', (route) => route.fulfill({ status: 403, body: '' }));
+  await page.goto('/login');
+  await page.getByTestId('auth-login').fill('id1');
+  await page.getByTestId('auth-password').fill('openvk');
+  await waitForTurnstile(page);
+  await page.getByTestId('auth-submit').click();
+
+  const flash = page.getByTestId('auth-error');
+  await expect(flash).toContainText('Access error');
+  await expect(flash).not.toContainText('forbidden');
+});
+
 test('new accounts can register and log out', async ({ page }) => {
   await register(page);
   await page.locator('#logout_link').click();
