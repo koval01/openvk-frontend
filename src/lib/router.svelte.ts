@@ -40,6 +40,8 @@ export type RouteName =
   | 'unban'
   | 'coins'
   | 'authorize'
+  | 'logout'
+  | 'fave'
   | 'not-found';
 
 export type Route = {
@@ -66,11 +68,18 @@ export function parsePath(pathname: string, search = window.location.search): Ro
   const path = pathname.replace(/\/+$/, '') || '/';
   const query = searchParam(search, 'q');
   const act = searchParam(search, 'act');
-  if (path === '/' || path === '/feed' || path === '/news') {
+  // First match wins, same as OpenVK `Web/routes.yml`.
+  if (path === '/' || path === '/id0') {
+    return { name: 'profile' };
+  }
+  if (path === '/feed' || path === '/news' || path === '/feed/all' || path.startsWith('/feed/hashtag/')) {
     return { name: 'feed' };
   }
-  if (path === '/login' || path === '/auth' || path === '/reg') {
+  if (path === '/login' || path === '/auth' || path === '/reg' || path === '/restore') {
     return { name: 'auth' };
+  }
+  if (path === '/logout') {
+    return { name: 'logout' };
   }
   const friendsMatch = path.match(/^\/friends(\d+)$/);
   if (friendsMatch) {
@@ -100,18 +109,22 @@ export function parsePath(pathname: string, search = window.location.search): Ro
   if (albumsMatch) {
     return { name: 'albums', userId: albumsMatch[1] };
   }
-  if (path === '/albums' || path === '/photos') {
+  const albumMatch = path.match(/^\/album(-?\d+)_(\d+)$/);
+  if (albumMatch) {
+    return { name: 'albums', userId: albumMatch[1], photoId: albumMatch[2] };
+  }
+  if (path === '/albums' || path === '/photos' || path === '/albums/create') {
     return { name: 'albums' };
   }
-  const clubMatch = path.match(/^\/club(\d+)$/);
+  const clubMatch = path.match(/^\/(club|public|event)(\d+)$/);
   if (clubMatch) {
-    return { name: 'club', groupId: clubMatch[1] };
+    return { name: 'club', groupId: clubMatch[2] };
   }
   const groupsMatch = path.match(/^\/groups(\d+)$/);
   if (groupsMatch) {
     return { name: 'groups', userId: groupsMatch[1] };
   }
-  if (path === '/groups') {
+  if (path === '/groups' || path === '/groups_create') {
     return { name: 'groups' };
   }
   const videosMatch = path.match(/^\/videos(\d+)$/);
@@ -121,17 +134,36 @@ export function parsePath(pathname: string, search = window.location.search): Ro
   if (path === '/videos') {
     return { name: 'videos' };
   }
-  if (path === '/notes') {
+  const notesOwner = path.match(/^\/notes(\d+)$/);
+  if (notesOwner) {
+    return { name: 'notes', userId: notesOwner[1] };
+  }
+  const noteMatch = path.match(/^\/note(-?\d+)_(\d+)$/);
+  if (noteMatch) {
+    return { name: 'notes', userId: noteMatch[1], postId: noteMatch[2] };
+  }
+  if (path === '/notes' || path === '/notes/create') {
     return { name: 'notes' };
   }
-  if (path === '/events') {
+  const eventsOwner = path.match(/^\/events(\d+)$/);
+  if (eventsOwner) {
+    return { name: 'events', userId: eventsOwner[1] };
+  }
+  if (path === '/events' || path === '/events_create') {
     return { name: 'events' };
+  }
+  if (path === '/fave') {
+    return { name: 'fave' };
   }
   if (path === '/notifications') {
     return { name: 'notifications' };
   }
   if (path === '/apps') {
     return { name: 'apps' };
+  }
+  const docsOwner = path.match(/^\/docs(\d+)$/);
+  if (docsOwner) {
+    return { name: 'docs', userId: docsOwner[1] };
   }
   if (path === '/docs') {
     return { name: 'docs' };
@@ -341,6 +373,10 @@ export function parsePath(pathname: string, search = window.location.search): Ro
   if (profileMatch) {
     return { name: 'profile', userId: profileMatch[1] };
   }
+  const shortCode = path.match(/^\/([a-z][a-z0-9@._]{0,30}[a-z0-9])$/i);
+  if (shortCode) {
+    return { name: 'profile', slug: shortCode[1].toLowerCase() };
+  }
   return { name: 'not-found' };
 }
 
@@ -366,12 +402,21 @@ class Router {
   constructor() {
     window.addEventListener('popstate', () => {
       overlay.dismiss();
+      document.body.classList.remove('menu-expanded');
       this.pathname = window.location.pathname;
       this.search = window.location.search;
     });
   }
 
   goto = (path: string) => {
+    this.navigate(path, 'push');
+  };
+
+  replace = (path: string) => {
+    this.navigate(path, 'replace');
+  };
+
+  navigate(path: string, mode: 'push' | 'replace') {
     const url = new URL(path, window.location.origin);
     if (
       url.pathname === this.pathname &&
@@ -382,10 +427,16 @@ class Router {
     }
     overlay.dismiss();
     overlay.flashLoader();
-    history.pushState({}, '', `${url.pathname}${url.search}${url.hash}`);
+    document.body.classList.remove('menu-expanded');
+    const href = `${url.pathname}${url.search}${url.hash}`;
+    if (mode === 'replace') {
+      history.replaceState({}, '', href);
+    } else {
+      history.pushState({}, '', href);
+    }
     this.pathname = url.pathname;
     this.search = url.search;
-  };
+  }
 
   handleClick = (event: MouseEvent, path: string) => {
     if (!isPlainLeftClick(event)) {

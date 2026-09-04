@@ -100,6 +100,8 @@ export const EXTRA_CATALOGS: Record<string, Catalog> = {
     ban: 'Заблокировать',
     support: 'Поддержка',
     warn: 'Предупредить',
+    admin_to_site: 'К сайту',
+    admin_serial: 'Серийный номер',
   },
   en: {
     appearance: 'Appearance',
@@ -199,6 +201,8 @@ export const EXTRA_CATALOGS: Record<string, Catalog> = {
     ban: 'Ban',
     support: 'Support',
     warn: 'Warn',
+    admin_to_site: 'Back to site',
+    admin_serial: 'Serial',
   },
 };
 

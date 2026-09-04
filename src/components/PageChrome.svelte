@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { documentTitle } from '../lib/pageTitle';
+  import { pageChrome } from '../stores/pageChrome.svelte';
 
   let {
     title,
@@ -19,6 +20,13 @@
   } = $props();
 
   const tabTitle = $derived(documentTitle(title));
+
+  $effect(() => {
+    pageChrome.heading = title;
+    return () => {
+      pageChrome.heading = '';
+    };
+  });
 </script>
 
 <svelte:head>
@@ -60,6 +68,7 @@
   .page_body_centered {
     float: none;
     margin: 12px auto;
-    width: 632px;
+    width: auto;
+    max-width: 720px;
   }
 </style>

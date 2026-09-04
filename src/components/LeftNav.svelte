@@ -1,15 +1,17 @@
 <script lang="ts">
   import type { RouteName } from '../lib/router.svelte';
   import { router } from '../lib/router.svelte';
+  import { userHref } from '../services/types';
   import { auth } from '../stores/auth.svelte';
   import { locale } from '../stores/locale.svelte';
 
   type NavItem = { href: string; label: string; name: RouteName; klass: string };
 
   const owner = $derived(auth.user?.id);
+  const pageHref = $derived(auth.user ? userHref(auth.user) : '/profile');
   const items = $derived<NavItem[]>([
     {
-      href: owner ? `/id${owner}` : '/profile',
+      href: pageHref,
       label: locale.t('my_page'),
       name: 'profile',
       klass: 'my_page',
@@ -39,14 +41,14 @@
       klass: 'my_audios',
     },
     { href: '/im', label: locale.t('my_messages'), name: 'messages', klass: 'my_messages' },
-    { href: '/notes', label: locale.t('my_notes'), name: 'notes', klass: 'my_notes' },
+    { href: owner ? `/notes${owner}` : '/notes', label: locale.t('my_notes'), name: 'notes', klass: 'my_notes' },
     {
       href: owner ? `/groups${owner}` : '/groups',
       label: locale.t('my_groups'),
       name: 'groups',
       klass: 'my_groups',
     },
-    { href: '/events', label: locale.t('my_events'), name: 'events', klass: 'my_groups' },
+    { href: owner ? `/events${owner}` : '/events', label: locale.t('my_events'), name: 'events', klass: 'my_groups' },
     { href: '/feed', label: locale.t('my_feed'), name: 'feed', klass: 'my_feed' },
     {
       href: '/notifications',
@@ -59,7 +61,7 @@
 
   const extras = $derived<NavItem[]>([
     { href: '/apps', label: locale.t('apps'), name: 'apps', klass: 'my_apps' },
-    { href: '/docs', label: locale.t('my_documents'), name: 'docs', klass: 'my_documents' },
+    { href: owner ? `/docs${owner}` : '/docs', label: locale.t('my_documents'), name: 'docs', klass: 'my_documents' },
     ...(auth.user?.role === 'admin'
       ? [
           { href: '/admin', label: locale.t('admin'), name: 'admin' as const, klass: 'my_apps' },
@@ -70,7 +72,24 @@
 
   function isActive(item: NavItem): boolean {
     if (item.name === 'profile') {
-      return router.route.name === 'profile' && router.route.userId === String(auth.user?.id ?? '');
+      if (router.route.name !== 'profile') {
+        return false;
+      }
+      if (!router.route.userId && !router.route.slug) {
+        return true;
+      }
+      const user = auth.user;
+      if (!user) {
+        return false;
+      }
+      if (router.route.userId && router.route.userId === String(user.id)) {
+        return true;
+      }
+      const mine = user.screen_name?.trim().toLowerCase();
+      if (mine && router.route.slug === mine) {
+        return true;
+      }
+      return Boolean(mine && router.route.userId && mine === `id${router.route.userId}`);
     }
     if (item.name === 'groups') {
       return router.route.name === 'groups' || router.route.name === 'club';

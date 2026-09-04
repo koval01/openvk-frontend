@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Locales
 
-UI copy comes from [OpenVK `locales`](https://github.com/OpenVK/openvk/tree/master/locales) (copied to `public/locales`). Russian (`ru`) is the source language and the fallback. Do not invent a second catalog for strings that already exist there.
+UI copy comes from `/Users/yaroslav.koval/VSCodeProjects/openvk/locales` (copied to `public/locales`; same as [OpenVK `locales`](https://github.com/OpenVK/openvk/tree/master/locales)). Russian (`ru`) is the source language and the fallback. Do not invent a second catalog for strings that already exist there.
 
 **Keys:** call `locale.t('key')` / `locale.count('base', n)` from `src/stores/locale.svelte.ts`. Reuse OpenVK keys (`header_home`, `my_page`, `log_in`, `select_language`, …). Rewrite-only phrases go in `src/locales/extra.ts` (Russian first, English overlay).
 

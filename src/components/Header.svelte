@@ -2,6 +2,9 @@
   import { router } from '../lib/router.svelte';
   import { auth } from '../stores/auth.svelte';
   import { locale } from '../stores/locale.svelte';
+  import { pageChrome } from '../stores/pageChrome.svelte';
+
+  const MOBILE = 770;
 
   let query = $state('');
 
@@ -10,15 +13,53 @@
     const q = query.trim();
     router.goto(q ? `/search?q=${encodeURIComponent(q)}` : '/search');
   }
+
+  function isMobile() {
+    return window.innerWidth < MOBILE;
+  }
+
+  function toggleMobileMenu(event: Event) {
+    if (!isMobile()) {
+      return;
+    }
+    event.preventDefault();
+    document.body.classList.toggle('menu-expanded');
+  }
 </script>
+
+<svelte:window
+  onresize={() => {
+    if (!isMobile()) {
+      document.body.classList.remove('menu-expanded');
+    }
+  }}
+/>
 
 <div class="page_header">
   <a
     href="/"
     class="home_button"
     title={locale.t('site_name')}
-    onclick={(event) => router.handleClick(event, '/')}
+    onclick={(event) => {
+      if (isMobile()) {
+        toggleMobileMenu(event);
+        return;
+      }
+      router.handleClick(event, '/');
+    }}
   ></a>
+  <button type="button" class="mobile_title" onclick={toggleMobileMenu}>
+    <span>{pageChrome.heading || locale.t('site_name')}</span>
+  </button>
+  {#if auth.user}
+    <a
+      id="fast_notifications"
+      href="/notifications"
+      class="mobiles_only"
+      title={locale.t('my_feedback')}
+      onclick={(event) => router.handleClick(event, '/notifications')}
+    ></a>
+  {/if}
   <div class="header_navigation">
     {#if auth.user}
       <div class="link link_long_screens">
@@ -47,11 +88,9 @@
       <div class="link">
         <a
           id="logout_link"
-          href="/login"
+          href="/logout"
           onclick={(event) => {
-            event.preventDefault();
-            auth.logout();
-            router.goto('/login');
+            router.handleClick(event, '/logout');
           }}>{locale.t('header_log_out')}</a
         >
       </div>

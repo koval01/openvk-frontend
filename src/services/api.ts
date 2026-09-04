@@ -92,19 +92,13 @@ function isUnsafe(method: string): boolean {
   return method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS';
 }
 
-function newTraceId(): string {
-  return crypto.randomUUID();
-}
-
 async function requestBytes(
   path: string,
   options: RequestOptions = {},
   retried = false,
-  traceId = newTraceId(),
 ): Promise<Uint8Array | undefined> {
   const method = options.method ?? 'GET';
   const headers = new Headers({ Accept: PROTOBUF_MIME });
-  headers.set('X-Trace-Id', traceId);
   if (options.form === undefined && options.body !== undefined) {
     headers.set('Content-Type', PROTOBUF_MIME);
   }
@@ -129,7 +123,7 @@ async function requestBytes(
     !path.startsWith('/api/v1/auth/')
   ) {
     clearCsrf();
-    return requestBytes(path, options, true, traceId);
+    return requestBytes(path, options, true);
   }
 
   if (!response.ok) {
@@ -233,7 +227,7 @@ function likeApiPath(kind: LikeKind, ownerId: number, objectId: number, list = f
 export const api = {
   health: async () => {
     const response = await fetch(`${API_BASE}/health`, {
-      headers: { Accept: 'application/json', 'X-Trace-Id': newTraceId() },
+      headers: { Accept: 'application/json' },
       credentials: 'same-origin',
     });
     if (!response.ok) {
@@ -287,8 +281,8 @@ export const api = {
   logout: (token?: string | null) => requestBytes('/api/v1/auth/logout', { method: 'POST', token }),
   about: () => requestMapped<InstanceAbout>('/api/v1/about', {}, instanceAboutFromPb),
   news: (token: string) => requestMapped<WallPost[]>('/api/v1/feed', { token }, wallPostsFromPb),
-  user: (id: number, token: string) =>
-    requestMapped<User>(`/api/v1/users/${id}`, { token }, (bytes) =>
+  user: (id: number | string, token: string) =>
+    requestMapped<User>(`/api/v1/users/${encodeURIComponent(String(id))}`, { token }, (bytes) =>
       userFromPb(decode('User', bytes)),
     ),
   wall: (id: number, token: string) =>
@@ -455,8 +449,8 @@ export const api = {
     );
   },
   groups: (token: string) => requestMapped<Group[]>('/api/v1/groups', { token }, groupsFromPb),
-  group: (id: number, token: string) =>
-    requestMapped<Group>(`/api/v1/groups/${id}`, { token }, (bytes) =>
+  group: (id: number | string, token: string) =>
+    requestMapped<Group>(`/api/v1/groups/${encodeURIComponent(String(id))}`, { token }, (bytes) =>
       groupFromPb(decode('Group', bytes)),
     ),
   giftCatalog: (token: string) => requestMapped<GiftCategory[]>('/api/v1/gifts', { token }, catalogFromPb),

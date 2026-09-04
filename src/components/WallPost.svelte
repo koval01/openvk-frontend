@@ -7,6 +7,7 @@
   import {
     displayName,
     ownerHref,
+    userHref,
     rewriteMediaUrl,
     wallHref,
     photoPermalink,
@@ -19,7 +20,7 @@
 
   let { post, showTarget = false }: { post: WallPost; showTarget?: boolean } = $props();
 
-  const authorHref = $derived(`/id${post.author.id}`);
+  const authorHref = $derived(userHref(post.author));
   const targetHref = $derived(ownerHref(post.target_id));
   const postHref = $derived(wallHref(post));
   const prettyId = $derived(`${post.target_id}_${post.id}`);

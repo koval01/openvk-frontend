@@ -1,10 +1,10 @@
 <script lang="ts">
   import MediaImg from './MediaImg.svelte';
   import { router } from '../lib/router.svelte';
-  import { displayName, type User } from '../services/types';
+  import { displayName, userHref, type User } from '../services/types';
 
   let { friend }: { friend: User } = $props();
-  const href = $derived(`/id${friend.id}`);
+  const href = $derived(userHref(friend));
 </script>
 
 <div class="scroll_node content">

@@ -164,7 +164,7 @@
       <p>{locale.t('loading')}</p>
     {:then tickets}
       {#each tickets as ticket (ticket.id)}
-        <table class="post" border="0" style="font-size: 11px; width: 610px;">
+        <table class="post" border="0" style="font-size: 11px; width: 100%;">
           <tbody>
             <tr>
               <td width="54" valign="top">

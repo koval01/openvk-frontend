@@ -26,6 +26,7 @@
   import Language from './pages/Language.svelte';
   import LikeAction from './pages/LikeAction.svelte';
   import Likers from './pages/Likers.svelte';
+  import Logout from './pages/Logout.svelte';
   import Messenger from './pages/Messenger.svelte';
   import NoSpam from './pages/NoSpam.svelte';
   import Notifications from './pages/Notifications.svelte';
@@ -70,6 +71,7 @@
         events: locale.t('my_events'),
         apps: locale.t('apps'),
         docs: locale.t('my_documents'),
+        fave: locale.t('faves'),
         'not-found': locale.t('not_found'),
       } as Record<string, string>
     )[router.route.name] ?? locale.t('site_name'),
@@ -83,7 +85,6 @@
   <CookiesPopup />
 {:else if adminShell}
   <Admin />
-  <CookiesPopup />
 {:else}
   <div class="layout">
     <div id="xhead" class="dm"></div>
@@ -161,6 +162,8 @@
       <CoinsTransfer />
     {:else if router.route.name === 'authorize'}
       <Authorize />
+    {:else if router.route.name === 'logout'}
+      <Logout />
     {:else}
       <Stub title={stubTitle} empty={locale.t('nothing_here')} />
     {/if}

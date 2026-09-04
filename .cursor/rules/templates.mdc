@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Templates
 
-UI source of truth: [OpenVK `Web/Presenters/templates`](https://github.com/OpenVK/openvk/tree/master/Web/Presenters/templates) (local clone `~/VSCodeProjects/openvk/Web/Presenters/templates`). Do not invent a second page structure. Port blocks and CSS classes, not Latte or jQuery.
+UI source of truth: `/Users/yaroslav.koval/VSCodeProjects/openvk/Web/Presenters/templates` (same tree as [OpenVK `Web/Presenters/templates`](https://github.com/OpenVK/openvk/tree/master/Web/Presenters/templates)). Do not invent a second page structure. Port blocks and CSS classes, not Latte or jQuery.
 
 **Chrome** (`@layout.latte`): `page_header` → `sidebar` → `page_body` (`page_yellowheader` + `wrap2`/`wrap1`/`page_content`) → `page_footer`. Guest header is login/reg/help; guest sidebar is the fast-login form. Signed-in “edit” goes to `/edit`. Left nav is owner-scoped: `/friends{id}`, `/albums{id}`, `/videos{id}`, `/audios{id}`, `/notes{id}`, `/groups{id}`.
 

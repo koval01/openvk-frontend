@@ -8,9 +8,10 @@
   import { router } from '../lib/router.svelte';
   import { auth } from '../stores/auth.svelte';
   import { locale } from '../stores/locale.svelte';
+  import { pageChrome } from '../stores/pageChrome.svelte';
 
   const path = $derived(router.pathname.replace(/\/+$/, '') || '/');
-  const isWelcome = $derived(path === '/' || path === '/feed' || path === '/news');
+  const isWelcome = $derived(path === '/' || path === '/id0');
   const mode = $derived(
     !isWelcome &&
       (router.pathname.replace(/\/+$/, '') === '/reg' ||
@@ -67,6 +68,13 @@
       challenge += 1;
     }
   }
+
+  $effect(() => {
+    pageChrome.heading = heading;
+    return () => {
+      pageChrome.heading = '';
+    };
+  });
 </script>
 
 <svelte:head>

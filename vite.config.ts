@@ -53,6 +53,11 @@ export default defineConfig({
   define: {
     __OPENVK_BUILD__: JSON.stringify(resolveBuild()),
   },
+  resolve: {
+    alias: {
+      $lib: path.resolve(root, 'src/lib'),
+    },
+  },
   plugins: [hashCssClasses(), tailwindcss(), svelte()],
   build: {
     target: 'es2022',

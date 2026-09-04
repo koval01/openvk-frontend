@@ -177,6 +177,10 @@ export async function collectProjectClassNames(root: string): Promise<Set<string
     ...(await walkFiles(path.join(root, 'public'), '.css')),
   ];
   for (const file of cssFiles) {
+    const normalized = file.replaceAll('\\', '/');
+    if (normalized.endsWith('/src/styles/shadcn.css')) {
+      continue;
+    }
     const css = await readFile(file, 'utf8');
     for (const name of collectClassNamesFromCss(css)) {
       names.add(name);

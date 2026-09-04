@@ -1,15 +1,16 @@
 <script lang="ts">
   import MediaImg from '../components/MediaImg.svelte';
   import PageChrome from '../components/PageChrome.svelte';
+  import Redirect from '../components/Redirect.svelte';
   import WallComposer from '../components/WallComposer.svelte';
   import WallPost from '../components/WallPost.svelte';
   import { router } from '../lib/router.svelte';
   import { api } from '../services/api';
   import {
     accountWrite,
-    demoUser,
     displayName,
     isAdmin,
+    userHref,
     type Album,
     type AudioTrack,
     type Group,
@@ -34,35 +35,65 @@
   let statusBroadcast = $state(false);
   let statusError = $state<string | null>(null);
 
-  const requestedId = $derived(Number(router.route.userId ?? auth.user?.id));
-  const isOwnPage = $derived(auth.user?.id === requestedId);
+  type ProfileView =
+    | { kind: 'user'; user: User }
+    | { kind: 'club'; href: string }
+    | { kind: 'missing' };
+
+  const profileKey = $derived(
+    router.route.slug ?? router.route.userId ?? (auth.user ? String(auth.user.id) : ''),
+  );
+
+  async function loadView(key: string, token: string): Promise<ProfileView> {
+    try {
+      return { kind: 'user', user: await api.user(key, token) };
+    } catch {
+      if (/^\d+$/.test(key)) {
+        return { kind: 'missing' };
+      }
+      try {
+        const group = await api.group(key, token);
+        return { kind: 'club', href: `/club${group.id}` };
+      } catch {
+        return { kind: 'missing' };
+      }
+    }
+  }
 
   const profilePromise = $derived.by(() => {
     void profileEpoch;
-    if (!auth.token) {
-      return Promise.resolve({ ...demoUser, id: requestedId });
+    const key = profileKey;
+    const token = auth.token;
+    if (!token || !key) {
+      return Promise.resolve({ kind: 'missing' } as ProfileView);
     }
-    return api.user(requestedId, auth.token).catch((): User => ({ ...demoUser, id: requestedId }));
+    return loadView(key, token);
   });
 
   const wallPromise = $derived.by(() => {
     void wallEpoch;
-    if (!auth.token) {
-      return Promise.resolve([] as WallPostType[]);
-    }
-    return api.wall(requestedId, auth.token).catch((): WallPostType[] => []);
+    const token = auth.token;
+    return profilePromise.then((view) =>
+      view.kind === 'user' && token
+        ? api.wall(view.user.id, token).catch((): WallPostType[] => [])
+        : [],
+    );
   });
 
   const friendsPromise = $derived(
-    auth.token
-      ? api.userFriends(requestedId, auth.token).catch((): User[] => [])
-      : Promise.resolve([] as User[]),
+    profilePromise.then((view) =>
+      view.kind === 'user' && auth.token
+        ? api.userFriends(view.user.id, auth.token).catch((): User[] => [])
+        : [],
+    ),
   );
   const albumsPromise = $derived.by(() => {
     void profileEpoch;
-    return auth.token
-      ? api.albums(auth.token, requestedId, true).catch((): Album[] => [])
-      : Promise.resolve([] as Album[]);
+    return profilePromise.then((view) =>
+      view.kind === 'user' && auth.token
+        ? api.albums(auth.token, view.user.id, true).catch((): Album[] => [])
+        : [],
+    );
   });
   const groupsPromise = $derived(
     auth.token ? api.groups(auth.token).catch((): Group[] => []) : Promise.resolve([] as Group[]),
@@ -71,9 +102,11 @@
     auth.token ? api.friends(auth.token).catch((): User[] => []) : Promise.resolve([] as User[]),
   );
   const audioPromise = $derived(
-    auth.token
-      ? api.audio(auth.token, requestedId).catch((): AudioTrack[] => [])
-      : Promise.resolve([] as AudioTrack[]),
+    profilePromise.then((view) =>
+      view.kind === 'user' && auth.token
+        ? api.audio(auth.token, view.user.id).catch((): AudioTrack[] => [])
+        : [],
+    ),
   );
 
   function registeredOn(profile: User): string {
@@ -92,7 +125,11 @@
     posting = true;
     wallError = null;
     try {
-      await submitWall(requestedId, draft, auth.token);
+      const view = await profilePromise;
+      if (view.kind !== 'user') {
+        return;
+      }
+      await submitWall(view.user.id, draft, auth.token);
       draft = '';
       wallEpoch += 1;
     } catch (error) {
@@ -175,7 +212,7 @@
   }
 
   function toggleStatus(profile: User) {
-    if (!isOwnPage) {
+    if (auth.user?.id !== profile.id) {
       return;
     }
     statusDraft = profile.status ?? '';
@@ -224,7 +261,17 @@
   <PageChrome title={locale.t('page')}>
     <p>{locale.t('loading_page')}</p>
   </PageChrome>
-{:then profile}
+{:then view}
+  {#if view.kind === 'club'}
+    <Redirect to={view.href} />
+  {:else if view.kind === 'missing'}
+    <PageChrome title={locale.t('not_found')}>
+      <div class="ovk-empty">{locale.t('nothing_here')}</div>
+    </PageChrome>
+  {:else}
+    {@const profile = view.user}
+    {@const ownerId = profile.id}
+    {@const own = auth.user?.id === ownerId}
   {#if profile.banned}
     {@const bannedHtml = locale.t('user_banned', profile.first_name)}
     {@const bannedParts = bannedHtml.match(/^(.*?)<b>(.*?)<\/b>(.*)$/s)}
@@ -263,12 +310,12 @@
   {:else}
   <PageChrome
     title={displayName(profile)}
-    note={isOwnPage ? `(${locale.t('this_is_you')})` : undefined}
+    note={own ? `(${locale.t('this_is_you')})` : undefined}
     right={locale.t('online')}
   >
     <div class="left_small_block">
       <div class="avatar_block">
-        {#if isOwnPage}
+        {#if own}
           <div class="avatar_controls">
             {#if profile.avatar_url}
               <div class="avatarDelete hoverable"></div>
@@ -322,7 +369,7 @@
         {/if}
       </div>
       <div id="profile_links">
-        {#if isOwnPage}
+        {#if own}
           <div id="profile_link" style="width: 194px;">
             <a href="/edit" class="link" onclick={(event) => router.handleClick(event, '/edit')}
               >{locale.t('edit_page')}</a
@@ -331,16 +378,16 @@
         {:else}
           <div id="profile_link" style="width: 194px;">
             <a
-              href="/im?sel={requestedId}"
+              href="/im?sel={ownerId}"
               class="link"
               data-testid="send-message"
-              onclick={(event) => router.handleClick(event, `/im?sel=${requestedId}`)}
+              onclick={(event) => router.handleClick(event, `/im?sel=${ownerId}`)}
               >{locale.t('send_message')}</a
             >
           </div>
           {#await myFriendsPromise then mine}
             <div id="profile_link" style="width: 194px;">
-              {#if mine.some((friend) => friend.id === requestedId)}
+              {#if mine.some((friend) => friend.id === ownerId)}
                 <a href="/friends" class="link" onclick={(event) => router.handleClick(event, '/friends')}
                   >{locale.t('you_are_friends')}</a
                 >
@@ -353,30 +400,30 @@
           {/await}
           <div id="profile_link" style="width: 194px;">
             <a
-              href="/gifts?act=pick&user={requestedId}"
+              href="/gifts?act=pick&user={ownerId}"
               class="link"
-              onclick={(event) => router.handleClick(event, `/gifts?act=pick&user=${requestedId}`)}
+              onclick={(event) => router.handleClick(event, `/gifts?act=pick&user=${ownerId}`)}
               >{locale.t('send_gift')}</a
             >
           </div>
           <div id="profile_link" style="width: 194px;">
             <a
-              href="/report/{requestedId}?type=user"
+              href="/report/{ownerId}?type=user"
               class="link"
-              onclick={(event) => router.handleClick(event, `/report/${requestedId}?type=user`)}
+              onclick={(event) => router.handleClick(event, `/report/${ownerId}?type=user`)}
               >{locale.t('report')}</a
             >
           </div>
         {/if}
         <div id="profile_link" style="width: 194px;">
           <a
-            href="/gifts{requestedId}"
+            href="/gifts{ownerId}"
             class="link"
-            onclick={(event) => router.handleClick(event, `/gifts${requestedId}`)}>{locale.t('gifts')}</a
+            onclick={(event) => router.handleClick(event, `/gifts${ownerId}`)}>{locale.t('gifts')}</a
           >
         </div>
       </div>
-      {#if isOwnPage}
+      {#if own}
         {@const report = completeness(profile)}
         <div class="profile-hints">
           <div class={['completeness-gauge', report.total >= 100 && 'completeness-gauge-gold']}>
@@ -404,14 +451,14 @@
           {locale.count('friends', friends.length)}
           <div style="float:right;">
             <a
-              href="/friends{requestedId}"
-              onclick={(event) => router.handleClick(event, `/friends${requestedId}`)}>{locale.t('all_title')}</a
+              href="/friends{ownerId}"
+              onclick={(event) => router.handleClick(event, `/friends${ownerId}`)}>{locale.t('all_title')}</a
             >
           </div>
         </div>
         <div class="content_list hide_on_mobiles">
           {#each friends.slice(0, 6) as friend (friend.id)}
-            {@const href = `/id${friend.id}`}
+            {@const href = userHref(friend)}
             <div class="cl_element">
               <div class="cl_avatar">
                 <a {href} onclick={(event) => router.handleClick(event, href)}>
@@ -437,8 +484,8 @@
           {locale.count('albums', albums.length)}
           <div style="float:right;">
             <a
-              href="/albums{requestedId}"
-              onclick={(event) => router.handleClick(event, `/albums${requestedId}`)}>{locale.t('all_title')}</a
+              href="/albums{ownerId}"
+              onclick={(event) => router.handleClick(event, `/albums${ownerId}`)}>{locale.t('all_title')}</a
             >
           </div>
         </div>
@@ -447,8 +494,8 @@
             <div class="ovk-album" style="display: inline-block;">
               <div style="text-align: center;float: left;height: 54pt;width: 100px;">
                 <a
-                  href="/albums{requestedId}"
-                  onclick={(event) => router.handleClick(event, `/albums${requestedId}`)}
+                  href="/albums{ownerId}"
+                  onclick={(event) => router.handleClick(event, `/albums${ownerId}`)}
                 >
                   <MediaImg
                     src={album.cover_url ?? album.photos[0]?.url}
@@ -475,8 +522,8 @@
             {locale.count('groups', groups.length)}
             <div style="float:right;">
               <a
-                href="/groups{requestedId}"
-                onclick={(event) => router.handleClick(event, `/groups${requestedId}`)}
+                href="/groups{ownerId}"
+                onclick={(event) => router.handleClick(event, `/groups${ownerId}`)}
                 >{locale.t('all_title')}</a
               >
             </div>
@@ -495,7 +542,7 @@
 
     <div class="right_big_block">
       <div class="page_info_main page_info_main_profile page_info">
-        {#if isOwnPage}
+        {#if own}
           <div class="page_status_popup" id="status_editor" style:display={statusOpen ? 'block' : 'none'}>
             <form name="status_popup_form" onsubmit={saveStatus}>
               <div style="margin-bottom: 10px;">
@@ -517,7 +564,7 @@
             <h2>{displayName(profile)}</h2>
             <div class="page_status">
               {#if profile.status}
-                {#if isOwnPage}
+                {#if own}
                   <button
                     type="button"
                     class="page_status page_status_edit_button"
@@ -529,7 +576,7 @@
                 {:else}
                   <div class="page_status">{profile.status}</div>
                 {/if}
-              {:else if isOwnPage}
+              {:else if own}
                 <button
                   type="button"
                   class="edit_link page_status_edit_button"
@@ -561,7 +608,7 @@
       </div>
 
       <div class="content_title_expanded">{locale.t('information')}</div>
-      {#if isOwnPage}
+      {#if own}
         <div style="padding: 10px 8px 15px 8px;">
           <table class="ugc-table" border="0" cellspacing="0" cellpadding="0">
             <tbody>
@@ -588,8 +635,8 @@
             {locale.t('audio')}
             <div style="float:right;">
               <a
-                href="/audios{requestedId}"
-                onclick={(event) => router.handleClick(event, `/audios${requestedId}`)}>{locale.t('all_title')}</a
+                href="/audios{ownerId}"
+                onclick={(event) => router.handleClick(event, `/audios${ownerId}`)}>{locale.t('all_title')}</a
               >
             </div>
           </div>
@@ -643,5 +690,6 @@
       {/await}
     </div>
   </PageChrome>
+  {/if}
   {/if}
 {/await}

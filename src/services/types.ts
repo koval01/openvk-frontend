@@ -80,6 +80,15 @@ export function ownerHref(ownerId: number): string {
   return ownerId < 0 ? `/club${-ownerId}` : `/id${ownerId}`;
 }
 
+/** OpenVK `User::getURL()`: `/{shortcode}` when set, else `/id{id}`. */
+export function userHref(user: Pick<User, 'id' | 'screen_name'>): string {
+  const name = user.screen_name?.trim();
+  if (name && /^[a-z][a-z0-9@._]{0,30}[a-z0-9]$/i.test(name)) {
+    return `/${name}`;
+  }
+  return `/id${user.id}`;
+}
+
 export function parsePrettyId(value: string): { ownerId: number; objectId: number } | null {
   const match = /^(-?\d+)_(\d+)$/.exec(value);
   if (!match) {

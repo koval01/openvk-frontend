@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities);
 @import './styles/foundation.css';
 @import './styles/dark.css';
+@import './styles/wide.css';
 
 @theme {
   --color-vk-link: var(--ovk-link);
@@ -63,7 +64,8 @@
 
 #page_status_text.page_status_edit_button {
   display: block;
-  width: 380px;
+  width: 100%;
+  max-width: 100%;
   border: 0;
   background: transparent;
   padding: 3px 1px;
